@@ -1,5 +1,6 @@
-export { default as Button } from './button';
-export { default as TextInput } from './text-input';
-export { default as Switch } from './switch';
-export { default as CheckboxGroup } from './checkbox';
-export { default as RadioGroup } from './radio';
+export * from './button';
+export * from './checkbox';
+export * from './radio';
+export * from './select';
+export * from './switch';
+export * from './text-input';

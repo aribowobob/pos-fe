@@ -1,6 +1,5 @@
-'use client';
 import React, { useState } from 'react';
-import TextInput from '../text-input';
+import { TextInput } from '@components';
 
 interface AutoCompleteSelectProps {
   options: string[];
