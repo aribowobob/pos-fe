@@ -1,0 +1,5 @@
+import { LoginPage } from '@modules';
+
+export default function Login() {
+  return <LoginPage />;
+}

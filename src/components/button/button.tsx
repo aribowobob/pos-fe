@@ -1,19 +1,17 @@
-import clsx from "clsx";
-import type { ReactNode } from "react";
-import React from "react";
+import type { ReactNode } from 'react';
+import React from 'react';
+
+import clsx from 'clsx';
 
 interface ButtonProps {
-  type?: "button" | "submit" | "reset";
-  color?: "primary" | "error" | "success" | "warning";
-  size?: "xs" | "sm" | "md" | "lg";
+  type?: 'button' | 'submit' | 'reset';
+  color?: 'primary' | 'danger' | 'success' | 'warning';
   block?: boolean;
   children: ReactNode;
   onClick?: () => void;
   disabled?: boolean;
   ghost?: boolean;
   className?: string;
-  iconStart?: ReactNode;
-  iconEnd?: ReactNode;
 }
 
 interface ButtonReturn {
@@ -25,41 +23,38 @@ interface ButtonReturn {
 export default function Button(props: ButtonProps) {
   const {
     children,
-    type = "button",
-    color = "primary",
-    size = "md",
+    type = 'button',
+    color = 'primary',
     block,
     onClick,
     disabled = false,
     ghost = false,
-    className = "",
-    iconStart,
-    iconEnd,
+    className = '',
   } = props;
 
   function getButtonStyle(): ButtonReturn {
-    let borderColor = "border border-slate-300";
-    let bgColor = "bg-white";
-    let textColor = "text-white";
+    let borderColor = 'border border-blue-500';
+    let bgColor = 'bg-white';
+    let textColor = 'text-white';
 
     if (disabled && !ghost) {
-      bgColor = "bg-slate-300 cursor-not-allowed";
-      textColor = "text-slate-400";
+      bgColor = 'bg-slate-300 cursor-not-allowed';
+      textColor = 'text-slate-400';
       return { borderColor, bgColor, textColor };
     }
     if (disabled && ghost) {
-      bgColor = "bg-white";
-      textColor = "text-slate-300";
+      bgColor = 'bg-white';
+      textColor = 'text-slate-300';
       return { borderColor, bgColor, textColor };
     }
 
-    let styleColor = "blue-500";
-    if (color === "success") {
-      styleColor = "teal-600";
-    } else if (color === "error") {
-      styleColor = "red-700";
-    } else if (color === "warning") {
-      styleColor = "amber-400";
+    let styleColor = 'blue-500';
+    if (color === 'success') {
+      styleColor = 'teal-600';
+    } else if (color === 'danger') {
+      styleColor = 'red-700';
+    } else if (color === 'warning') {
+      styleColor = 'amber-400';
     }
 
     borderColor = `border border-${styleColor}`;
@@ -69,7 +64,7 @@ export default function Button(props: ButtonProps) {
       textColor = `text-${styleColor}`;
     }
 
-    if (color === "warning" && !ghost) {
+    if (color === 'warning' && !ghost) {
       textColor = `text-slate-900`;
     }
 
@@ -82,25 +77,19 @@ export default function Button(props: ButtonProps) {
     <button
       type={type}
       className={clsx(
-        "px-4 py-1 rounded flex justify-center items-center",
+        'px-2 py-2.5 rounded flex justify-center items-center text-sm leading-[18px]',
         className,
         borderColor,
         bgColor,
         textColor,
-        `text-${size}`,
         {
-          "text-base h-12": size === "md",
-          "text-base h-14": size === "md",
-          "text-base h-10": size === "sm",
-          "w-full": block,
+          'w-full': block,
         }
       )}
       disabled={disabled}
       onClick={onClick}
     >
-      {iconStart ? <span className="mr-2">{iconStart}</span> : null}
       {children}
-      {iconEnd ? <span className="ml-2">{iconEnd}</span> : null}
     </button>
   );
 }
