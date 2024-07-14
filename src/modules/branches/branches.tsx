@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import { Button } from '@components';
+import { useRouter } from 'next/router';
 
 const DATA = [
   {
@@ -17,6 +18,12 @@ const DATA = [
 ];
 
 const Branches = () => {
+  const { replace } = useRouter();
+  const handleClick = () => {
+    // TODO: update ke db dulu untuk cabang/gudang yang dipilih, simpan ke context
+    replace('/dashboard');
+  };
+
   return (
     <div className="container mx-auto px-4">
       <Head>
@@ -26,7 +33,7 @@ const Branches = () => {
         <div className="p-4 flex gap-4 rounded bg-white flex-col w-full">
           <h1 className="text-2xl">Pilih Cabang/Gudang</h1>
           {DATA.map(data => (
-            <Button block ghost key={data.initial}>
+            <Button block ghost key={data.initial} onClick={handleClick}>
               {`${data.initial} (${data.name})`}
             </Button>
           ))}
