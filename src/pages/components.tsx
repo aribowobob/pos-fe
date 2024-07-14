@@ -42,9 +42,7 @@ export default function Components() {
           </div>
 
           <div className="p-1 w-60 mt-2">
-            <Button size="sm" color="primary" ghost>
-              Testing Button
-            </Button>
+            <Button ghost>Testing Button</Button>
           </div>
           <div className="p-1 w-60 mt-2">
             <CheckboxGroup
