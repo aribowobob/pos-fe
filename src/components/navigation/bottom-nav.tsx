@@ -19,6 +19,8 @@ type SubMenuType = '' | 'TRANSACTION' | 'REPORT';
 
 const cssBtn = 'flex gap-2 flex-col w-16 items-center';
 const cssLabel = 'text-sm leading-[20px]';
+const cssTriangle =
+  'border-t-slate-300 border-t-[14px] border-r-[8px] border-r-transparent border-l-[8px] border-l-transparent w-0 h-0 absolute -top-8 left-1/2 -ml-2';
 
 const BottomNav = () => {
   const { asPath, push } = useRouter();
@@ -34,7 +36,7 @@ const BottomNav = () => {
   return (
     <nav className="fixed bottom-0 bg-slate-200 w-full sm:max-w-[608px] md:max-w-[736px] lg:max-w-[992px] xl:max-w-[1248px] 2xl:max-w-[1504px]">
       <ul className="flex p-4 items-center justify-between">
-        <li>
+        <li className="relative">
           <button
             className={clsx(cssBtn, {
               'text-blue-500': isDashboard,
@@ -49,7 +51,7 @@ const BottomNav = () => {
             <span className={cssLabel}>Beranda</span>
           </button>
         </li>
-        <li>
+        <li className="relative">
           <button
             className={clsx(cssBtn, {
               'text-blue-500': isTransaction,
@@ -63,8 +65,10 @@ const BottomNav = () => {
             <ShoppingBagIcon className="w-6 h-6" />
             <span className={cssLabel}>Transaksi</span>
           </button>
+
+          {subMenu === 'TRANSACTION' && <span className={cssTriangle} />}
         </li>
-        <li>
+        <li className="relative">
           <button
             className={clsx(cssBtn, {
               'text-blue-500': isReport,
@@ -78,8 +82,10 @@ const BottomNav = () => {
             <ClipboardDocumentListIcon className="w-6 h-6" />
             <span className={cssLabel}>Laporan</span>
           </button>
+
+          {subMenu === 'REPORT' && <span className={cssTriangle} />}
         </li>
-        <li>
+        <li className="relative">
           <button
             className={clsx(cssBtn, {
               'text-blue-500': isSystem,
@@ -110,7 +116,7 @@ const BottomNav = () => {
               <ul className="flex p-2 items-center justify-center gap-4 bg-slate-300 rounded">
                 <li>
                   <button
-                    className={clsx(cssBtn, 'text-slate-800')}
+                    className={clsx(cssBtn, 'p-2 text-slate-800')}
                     onClick={() => {
                       push('/transaction/return');
                     }}
@@ -121,7 +127,7 @@ const BottomNav = () => {
                 </li>
                 <li>
                   <button
-                    className={clsx(cssBtn, 'text-slate-800')}
+                    className={clsx(cssBtn, 'p-2 text-slate-800')}
                     onClick={() => {
                       push('/transaction/stock-movement');
                     }}
@@ -132,7 +138,7 @@ const BottomNav = () => {
                 </li>
                 <li>
                   <button
-                    className={clsx(cssBtn, 'text-slate-800')}
+                    className={clsx(cssBtn, 'p-2 text-slate-800')}
                     onClick={() => {
                       push('/transaction/sales');
                     }}
@@ -148,7 +154,7 @@ const BottomNav = () => {
               <ul className="flex p-2 items-start justify-center gap-4 bg-slate-300 rounded">
                 <li>
                   <button
-                    className={clsx(cssBtn, 'text-slate-800')}
+                    className={clsx(cssBtn, 'p-2 text-slate-800')}
                     onClick={() => {
                       push('/report/stock');
                     }}
@@ -159,7 +165,7 @@ const BottomNav = () => {
                 </li>
                 <li>
                   <button
-                    className={clsx(cssBtn, 'text-slate-800')}
+                    className={clsx(cssBtn, 'p-2 text-slate-800')}
                     onClick={() => {
                       push('/report/sales');
                     }}
@@ -170,7 +176,7 @@ const BottomNav = () => {
                 </li>
                 <li>
                   <button
-                    className={clsx(cssBtn, 'text-slate-800')}
+                    className={clsx(cssBtn, 'p-2 text-slate-800')}
                     onClick={() => {
                       push('/report/sales-return');
                     }}
@@ -181,7 +187,7 @@ const BottomNav = () => {
                 </li>
                 <li>
                   <button
-                    className={clsx(cssBtn, 'text-slate-800')}
+                    className={clsx(cssBtn, 'p-2 text-slate-800')}
                     onClick={() => {
                       push('/report/inventory-audit');
                     }}
