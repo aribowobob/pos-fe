@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { Button, CheckboxGroup, RadioGroup, TextInput } from '@components';
+import { UserIcon } from '@heroicons/react/24/outline';
 
 export default function Components() {
   const [selectedRadio, setSelectedRadioOption] = useState<string | null>(null);
@@ -30,15 +31,16 @@ export default function Components() {
       <div className="p-2 flex">
         <div className="bg-slate-200 w-1/2">
           <div className="p-1 w-60">
-            <TextInput label="Username" size="md" labelType="floating" />
+            <TextInput
+              label="Username"
+              name="username"
+              message="Lorem ipsum dolor sit amet"
+              prefix="Rp"
+              suffix={<UserIcon className="w-4 h-4" />}
+            />
           </div>
           <div className="p-1 w-60 mt-2">
-            <TextInput
-              label="Password"
-              type="password"
-              size="md"
-              labelType="floating"
-            />
+            <TextInput label="Password" name="password" type="password" />
           </div>
 
           <div className="p-1 w-60 mt-2">
