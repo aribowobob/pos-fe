@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { TextInput } from '@components';
 
 interface AutoCompleteSelectProps {
+  name: string;
   options: string[];
   onSelect: (selectedOption: string) => void;
 }
 
 const AutoCompleteSelect: React.FC<AutoCompleteSelectProps> = ({
+  name,
   options,
   onSelect,
 }) => {
@@ -35,6 +37,7 @@ const AutoCompleteSelect: React.FC<AutoCompleteSelectProps> = ({
     <div className="w-full max-w-xs">
       <TextInput
         type="text"
+        name={name}
         value={inputValue}
         onChange={handleInputChange}
         placeholder="Pilih Kategori Produk"
