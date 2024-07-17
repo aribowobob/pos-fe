@@ -1,6 +1,10 @@
 import { Button, StickyFooter } from '@/components';
 
-const ContinuePayment = () => {
+type ContinuePaymentProps = {
+  onNext: () => void;
+};
+
+const ContinuePayment = ({ onNext }: ContinuePaymentProps) => {
   return (
     <StickyFooter>
       <div className="bg-white px-4 pt-4 py-6 flex gap-4 justify-between items-center">
@@ -9,7 +13,7 @@ const ContinuePayment = () => {
           <p className="text-base font-semibold leading-normal">Rp0</p>
         </div>
 
-        <Button>Lanjutkan Pembayaran</Button>
+        <Button onClick={onNext}>Lanjutkan Pembayaran</Button>
       </div>
     </StickyFooter>
   );

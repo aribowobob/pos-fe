@@ -1,4 +1,5 @@
 export * from './button';
+export * from './breadcrumb';
 export * from './checkbox';
 export * from './navigation';
 export * from './radio';
