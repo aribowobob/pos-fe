@@ -15,6 +15,8 @@ import {
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 
+import { StickyFooter } from '@/components';
+
 type SubMenuType = '' | 'TRANSACTION' | 'REPORT';
 
 const cssBtn = 'flex gap-2 flex-col w-16 items-center';
@@ -34,7 +36,7 @@ const BottomNav = () => {
   };
 
   return (
-    <nav className="fixed bottom-0 bg-slate-200 w-full sm:max-w-[608px] md:max-w-[736px] lg:max-w-[992px] xl:max-w-[1248px] 2xl:max-w-[1504px]">
+    <StickyFooter>
       <ul className="flex p-4 items-center justify-between">
         <li className="relative">
           <button
@@ -201,7 +203,7 @@ const BottomNav = () => {
           </div>
         </>
       )}
-    </nav>
+    </StickyFooter>
   );
 };
 

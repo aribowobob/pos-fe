@@ -16,7 +16,7 @@ export const Dashboard = () => {
         <TopNav
           title="Primadona Store"
           onCartClick={() => {
-            push('/cart');
+            push('/transaction/sales');
           }}
           isCartActive
         />
