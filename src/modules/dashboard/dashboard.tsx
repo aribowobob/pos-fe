@@ -1,11 +1,14 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 import { BottomNav, TopNav } from '@components';
+import { useUser } from '@store';
+
 import Info from './info';
-import { useRouter } from 'next/router';
 
 export const Dashboard = () => {
   const { push } = useRouter();
+  const { companyName } = useUser();
 
   return (
     <div className="container mx-auto sm:px-4">
@@ -14,7 +17,7 @@ export const Dashboard = () => {
       </Head>
       <div className="min-h-screen">
         <TopNav
-          title="Primadona Store"
+          title={companyName}
           onCartClick={() => {
             push('/transaction/sales');
           }}

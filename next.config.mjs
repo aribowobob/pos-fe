@@ -9,6 +9,9 @@ const nextConfig = withPWA({
 })({
   // Nextjs options
   reactStrictMode: true,
+  publicRuntimeConfig: {
+    API_URL: process.env.API_URL,
+  },
 });
 
 export default nextConfig;
