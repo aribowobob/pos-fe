@@ -2,9 +2,12 @@ import { HomeIcon, UserIcon } from '@heroicons/react/24/outline';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
 
+import { useUser } from '@store';
+
 const Info = () => {
   const currentDate = new Date();
   const formattedDate = format(currentDate, 'EEEE, d MMM yyyy', { locale: id });
+  const { fullName, initial } = useUser();
 
   return (
     <div className="w-full flex flex-col gap-4 p-4">
@@ -19,7 +22,7 @@ const Info = () => {
 
       <div className="flex gap-2 items-center text-blue-500">
         <UserIcon className="w-4 h-4" />
-        <span>JDO (John Doe)</span>
+        <span>{`${initial} (${fullName})`}</span>
       </div>
     </div>
   );
