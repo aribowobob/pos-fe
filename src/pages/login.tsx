@@ -2,10 +2,13 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { GetServerSideProps } from 'next';
 
 import { LoginPage } from '@modules';
+import { getRuntimeEnv } from '@utils';
 
 export default function Login() {
+  const clientId = getRuntimeEnv('GOOGLE_CLIENT_ID');
+
   return (
-    <GoogleOAuthProvider clientId="1072376775658-iramhlg6m2ajepo2udu1dvormujli05u.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={clientId}>
       <LoginPage />
     </GoogleOAuthProvider>
   );
