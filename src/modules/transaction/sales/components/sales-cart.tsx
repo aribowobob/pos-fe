@@ -1,11 +1,19 @@
+import { EmptyCart } from '@components';
+import { useSales } from '@store';
+
+import SalesCartItems from './sales-cart-items';
+
 const SalesCart = () => {
+  const { items } = useSales();
+
   return (
-    <ul className="mt-10">
-      <li>context</li>
-      <li>empty state</li>
-      <li>list of products</li>
-      <li>button add item</li>
-    </ul>
+    <div className="pt-4">
+      {items.length > 0 ? (
+        <SalesCartItems />
+      ) : (
+        <EmptyCart text="Sekarang keranjangmu kosong" />
+      )}
+    </div>
   );
 };
 
