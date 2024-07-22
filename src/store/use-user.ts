@@ -1,5 +1,11 @@
 import { create } from 'zustand';
 
+type StoreType = {
+  id: number;
+  name: string;
+  initial: string;
+};
+
 export type UserType = {
   id: number;
   fullName: string;
@@ -7,6 +13,7 @@ export type UserType = {
   email: string;
   companyId: number;
   companyName: string;
+  store?: StoreType;
 };
 
 interface UserState extends UserType {
@@ -20,6 +27,7 @@ const DEFAULT_USER: UserType = {
   email: '',
   companyId: 0,
   companyName: '',
+  store: undefined,
 };
 
 const useUser = create<UserState>(set => ({

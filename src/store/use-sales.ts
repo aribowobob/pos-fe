@@ -1,8 +1,9 @@
 import { create } from 'zustand';
 
-export type DiscountType = 'PERCENTAGE' | 'FIXED';
+export type DiscountType = 'PERCENTAGE' | 'FIXED' | null;
 export type SalesTransactionItemType = {
   productId: number;
+  productName: string;
   quantity: number;
   baseSalesPrice: number;
   discountType: DiscountType;
@@ -18,7 +19,7 @@ export type SalesTransactionType = {
 
 interface SalesTransactionState extends SalesTransactionType {
   setDate: (date: string) => void;
-  setItems: (items: SalesTransactionItemType[]) => void;
+  addItem: (item: SalesTransactionItemType) => void;
 }
 
 const DEFAULT_DATA: SalesTransactionType = {
@@ -29,7 +30,7 @@ const DEFAULT_DATA: SalesTransactionType = {
 const useUser = create<SalesTransactionState>(set => ({
   ...DEFAULT_DATA,
   setDate: date => set({ date }),
-  setItems: items => set({ items }),
+  addItem: item => set(state => ({ items: [...state.items, item] })),
 }));
 
 export default useUser;

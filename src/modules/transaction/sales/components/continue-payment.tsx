@@ -1,3 +1,5 @@
+import { useRouter } from 'next/router';
+
 import { Button, CircleButton, StickyFooter } from '@/components';
 
 type ContinuePaymentProps = {
@@ -5,6 +7,8 @@ type ContinuePaymentProps = {
 };
 
 const ContinuePayment = ({ onNext }: ContinuePaymentProps) => {
+  const { push } = useRouter();
+
   return (
     <StickyFooter>
       <div className="bg-white px-4 pt-4 py-6 flex gap-4 justify-between items-center relative">
@@ -15,7 +19,9 @@ const ContinuePayment = ({ onNext }: ContinuePaymentProps) => {
 
         <Button onClick={onNext}>Lanjutkan Pembayaran</Button>
         <CircleButton
-          onClick={() => {}}
+          onClick={() => {
+            push('/transaction/sales/search-product');
+          }}
           className="absolute right-4 bottom-28"
         />
       </div>
