@@ -2,6 +2,7 @@ export * from './button';
 export * from './breadcrumb';
 export * from './checkbox';
 export * from './illustrations';
+export * from './loading';
 export * from './navigation';
 export * from './provider';
 export * from './radio';

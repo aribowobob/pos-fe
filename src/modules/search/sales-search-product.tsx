@@ -1,68 +1,76 @@
+import { useState } from 'react';
+
+import Axios from 'axios';
+import { getCookie } from 'cookies-next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-import { TopNav } from '@components';
-import { useSales, useUser } from '@store';
+import { LoadingFullScreen, TopNav } from '@components';
+import { useUser } from '@store';
 import { ProductList, ProductSearchbar } from '@modules';
 import type { ProductItemType } from '@modules';
-import { useState } from 'react';
-
-const DUMMY_DATA = [
-  {
-    id: 1,
-    name: 'Lorem pulpy orange a 300ml x 12 botol @25000',
-    price: 25000,
-    stock: 25,
-  },
-  {
-    id: 2,
-    name: 'Ipsum pulpy orange a 300ml x 12 botol lorem ipsum dolor sit amet @25500',
-    price: 25500,
-    stock: 5,
-  },
-  {
-    id: 3,
-    name: 'Dolorsit pulpy orange a 300ml x 12 botol @15000',
-    price: 15000,
-    stock: 0,
-  },
-  {
-    id: 4,
-    name: 'Amet pulpy orange a 300ml x 12 botol @5000',
-    price: 5000,
-    stock: 1982,
-  },
-  {
-    id: 5,
-    name: 'Notorieq pulpy orange a 300ml x 12 botol @75000',
-    price: 75000,
-    stock: 0,
-  },
-];
+import { getRuntimeEnv } from '@utils';
 
 const TransactionSalesSearchProductPage = () => {
-  const [keyword, setKeyword] = useState('');
+  const API_URL = getRuntimeEnv('API_URL');
+  const addCartItemUrl = `${API_URL}/sales-transaction/create`;
+  const getProductsUrl = `${API_URL}/get-products`;
+  const [products, setProducts] = useState(null);
+  const [loading, setLoading] = useState(false);
   const { store } = useUser();
-  const { addItem } = useSales();
   const { back } = useRouter();
-  const handleSubmitSearch = (value: string) => {
-    setKeyword(value);
-  };
-  const handleSelectProduct = (product: ProductItemType) => {
-    const { id: productId, name: productName, price: baseSalesPrice } = product;
+  const handleSubmitSearch = async (keyword: string) => {
+    setLoading(true);
 
-    addItem({
-      productId,
-      productName,
-      quantity: 1,
-      baseSalesPrice,
-      discountType: 'FIXED',
-      discountValue: 1000,
-      discountAmount: 1000,
-      salesPrice: baseSalesPrice - 1000,
-      totalPrice: baseSalesPrice,
-    });
-    back();
+    const getProducts = await Axios.get(getProductsUrl, {
+      params: {
+        keyword,
+      },
+      headers: {
+        Authorization: `Bearer ${getCookie('token')}`,
+      },
+    })
+      .catch(() => {
+        setProducts(null);
+        alert('Error get products');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+
+    const { data: responseData } = getProducts || {};
+    const { data } = responseData || {};
+
+    setProducts(data || []);
+  };
+  const handleSelectProduct = async (product: ProductItemType) => {
+    setLoading(true);
+
+    const insertItem = await Axios.post(
+      addCartItemUrl,
+      {
+        productId: product.id,
+        quantity: 1,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${getCookie('token')}`,
+        },
+      }
+    )
+      .catch(() => {
+        alert('Error insert item');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+
+    const { data: responseData } = insertItem || {};
+    const { code, data } = responseData || {};
+
+    if (code === 200 && !!data) {
+      back();
+    }
   };
 
   return (
@@ -73,10 +81,12 @@ const TransactionSalesSearchProductPage = () => {
       <TopNav title="Pencarian Produk" onBack={back} />
       <ProductSearchbar onSubmit={handleSubmitSearch} />
       <ProductList
-        data={keyword.length ? DUMMY_DATA : []}
+        data={products || []}
         storeInitial={store?.initial || ''}
         onProductSelect={handleSelectProduct}
       />
+
+      {loading && <LoadingFullScreen />}
     </div>
   );
 };
