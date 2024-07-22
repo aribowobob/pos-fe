@@ -5,7 +5,7 @@ import { getCookie } from 'cookies-next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-import { TopNav } from '@components';
+import { LoadingFullScreen, TopNav } from '@components';
 import { useUser } from '@store';
 import { ProductList, ProductSearchbar } from '@modules';
 import type { ProductItemType } from '@modules';
@@ -86,7 +86,7 @@ const TransactionSalesSearchProductPage = () => {
         onProductSelect={handleSelectProduct}
       />
 
-      {loading && <div className="fixed inset-0 pointer-events-none" />}
+      {loading && <LoadingFullScreen />}
     </div>
   );
 };

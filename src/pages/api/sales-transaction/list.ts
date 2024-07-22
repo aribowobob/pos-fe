@@ -94,6 +94,7 @@ export default function handler(
           totalPrice: 750000,
         },
       ],
+      subTotal: 750000 + 50000 + 140000 + 300000 + 2700,
     },
     error: null,
   });

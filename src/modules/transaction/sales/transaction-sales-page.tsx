@@ -22,7 +22,7 @@ const TransactionSalesPage = () => {
       </Head>
       <TopNav title="Transaksi Penjualan" onBack={back} branchName="GUD" />
 
-      <div className="px-4 pt-4 pb-28">
+      <div className="px-4 pt-4 pb-48">
         <Breadcrumb items={breadcrumbItems} currentStep={currentStep} />
         <SalesCart />
       </div>

@@ -1,5 +1,7 @@
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
+
 import { SalesTransactionItemType } from '@store';
+import { money, numberFormat } from '@utils';
 
 type SalesCartItemProps = {
   data: SalesTransactionItemType;
@@ -11,6 +13,8 @@ const SalesCartItem = ({ data }: SalesCartItemProps) => {
     salesPrice,
     discountType,
     discountValue,
+    stock,
+    totalPrice,
   } = data;
 
   return (
@@ -25,30 +29,30 @@ const SalesCartItem = ({ data }: SalesCartItemProps) => {
       </div>
 
       <div className="flex justify-between items-end">
-        <p className="flex flex-col">
+        <p className="m-0">
           {!!discountType && ['PERCENTAGE', 'FIXED'].includes(discountType) && (
-            <span className="bg-red-500/10 text-red-500 px-2 text-[10px] leading-4 rounded">
+            <span className="bg-red-500/10 text-red-500 px-1 py-0.5 text-[10px] leading-4 rounded mb-1 inline-block">
               {discountType === 'PERCENTAGE'
-                ? `Diskon ${discountValue}%`
-                : `Diskon ${discountValue}`}
+                ? `Diskon ${numberFormat(discountValue)}%`
+                : `Diskon ${money(discountValue)}`}
             </span>
           )}
 
           <span className="flex items-start gap-1">
-            <span className="text-sm">{salesPrice}</span>
+            <span className="text-sm">{money(salesPrice)}</span>
             {baseSalesPrice !== salesPrice && (
               <span className="text-[10px] line-through text-slate-400">
-                {baseSalesPrice}
+                {money(baseSalesPrice)}
               </span>
             )}
           </span>
         </p>
 
-        <span>Stok: 99</span>
+        <span>{`Stok: ${numberFormat(stock)}`}</span>
       </div>
 
       <div className="border-t border-slate-300 pt-4 flex gap-4 justify-between w-full">
-        <span className="text-base font-semibold">{salesPrice}</span>
+        <span className="text-base font-semibold">{money(totalPrice)}</span>
         <span>-number stepper-</span>
       </div>
     </div>

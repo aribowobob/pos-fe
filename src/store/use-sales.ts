@@ -16,11 +16,13 @@ export type SalesTransactionItemType = {
 export type SalesTransactionType = {
   date: string;
   items: SalesTransactionItemType[];
+  subTotal: number;
 };
 
 const DEFAULT_DATA: SalesTransactionType = {
   date: '',
   items: [],
+  subTotal: 0,
 };
 
 interface SalesTransactionState extends SalesTransactionType {
