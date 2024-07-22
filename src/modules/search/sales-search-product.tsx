@@ -1,11 +1,15 @@
+import { useState } from 'react';
+
+import Axios from 'axios';
+import { getCookie } from 'cookies-next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import { TopNav } from '@components';
-import { useSales, useUser } from '@store';
+import { useUser } from '@store';
 import { ProductList, ProductSearchbar } from '@modules';
 import type { ProductItemType } from '@modules';
-import { useState } from 'react';
+import { getRuntimeEnv } from '@utils';
 
 const DUMMY_DATA = [
   {
@@ -41,28 +45,43 @@ const DUMMY_DATA = [
 ];
 
 const TransactionSalesSearchProductPage = () => {
+  const API_URL = getRuntimeEnv('API_URL');
+  const addCartItemUrl = `${API_URL}/sales-transaction/create`;
   const [keyword, setKeyword] = useState('');
+  const [loading, setLoading] = useState(false);
   const { store } = useUser();
-  const { addItem } = useSales();
   const { back } = useRouter();
   const handleSubmitSearch = (value: string) => {
     setKeyword(value);
   };
-  const handleSelectProduct = (product: ProductItemType) => {
-    const { id: productId, name: productName, price: baseSalesPrice } = product;
+  const handleSelectProduct = async (product: ProductItemType) => {
+    setLoading(true);
 
-    addItem({
-      productId,
-      productName,
-      quantity: 1,
-      baseSalesPrice,
-      discountType: 'FIXED',
-      discountValue: 1000,
-      discountAmount: 1000,
-      salesPrice: baseSalesPrice - 1000,
-      totalPrice: baseSalesPrice,
-    });
-    back();
+    const insertItem = await Axios.post(
+      addCartItemUrl,
+      {
+        productId: product.id,
+        quantity: 1,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${getCookie('token')}`,
+        },
+      }
+    )
+      .catch(() => {
+        alert('Error insert item');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+
+    const { data: responseData } = insertItem || {};
+    const { code, data } = responseData || {};
+
+    if (code === 200 && !!data) {
+      back();
+    }
   };
 
   return (
@@ -77,6 +96,8 @@ const TransactionSalesSearchProductPage = () => {
         storeInitial={store?.initial || ''}
         onProductSelect={handleSelectProduct}
       />
+
+      {loading && <div className="fixed inset-0 pointer-events-none" />}
     </div>
   );
 };

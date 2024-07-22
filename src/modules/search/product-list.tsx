@@ -30,7 +30,13 @@ const ProductList = ({
       {data.map(product => (
         <li
           key={product.id}
-          onClick={() => handleClick(product)}
+          onClick={() => {
+            if (product.stock > 0) {
+              handleClick(product);
+            } else {
+              alert('Stok habis');
+            }
+          }}
           className="block p-4 bg-white hover:bg-slate-100 cursor-pointer border-t border-slate-200"
         >
           <p className="font-medium text-sm m-0">{product.name}</p>
