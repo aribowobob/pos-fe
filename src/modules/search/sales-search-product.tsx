@@ -11,48 +11,37 @@ import { ProductList, ProductSearchbar } from '@modules';
 import type { ProductItemType } from '@modules';
 import { getRuntimeEnv } from '@utils';
 
-const DUMMY_DATA = [
-  {
-    id: 1,
-    name: 'Lorem pulpy orange a 300ml x 12 botol @25000',
-    price: 25000,
-    stock: 25,
-  },
-  {
-    id: 2,
-    name: 'Ipsum pulpy orange a 300ml x 12 botol lorem ipsum dolor sit amet @25500',
-    price: 25500,
-    stock: 5,
-  },
-  {
-    id: 3,
-    name: 'Dolorsit pulpy orange a 300ml x 12 botol @15000',
-    price: 15000,
-    stock: 0,
-  },
-  {
-    id: 4,
-    name: 'Amet pulpy orange a 300ml x 12 botol @5000',
-    price: 5000,
-    stock: 1982,
-  },
-  {
-    id: 5,
-    name: 'Notorieq pulpy orange a 300ml x 12 botol @75000',
-    price: 75000,
-    stock: 0,
-  },
-];
-
 const TransactionSalesSearchProductPage = () => {
   const API_URL = getRuntimeEnv('API_URL');
   const addCartItemUrl = `${API_URL}/sales-transaction/create`;
-  const [keyword, setKeyword] = useState('');
+  const getProductsUrl = `${API_URL}/get-products`;
+  const [products, setProducts] = useState(null);
   const [loading, setLoading] = useState(false);
   const { store } = useUser();
   const { back } = useRouter();
-  const handleSubmitSearch = (value: string) => {
-    setKeyword(value);
+  const handleSubmitSearch = async (keyword: string) => {
+    setLoading(true);
+
+    const getProducts = await Axios.get(getProductsUrl, {
+      params: {
+        keyword,
+      },
+      headers: {
+        Authorization: `Bearer ${getCookie('token')}`,
+      },
+    })
+      .catch(() => {
+        setProducts(null);
+        alert('Error get products');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+
+    const { data: responseData } = getProducts || {};
+    const { data } = responseData || {};
+
+    setProducts(data || []);
   };
   const handleSelectProduct = async (product: ProductItemType) => {
     setLoading(true);
@@ -92,7 +81,7 @@ const TransactionSalesSearchProductPage = () => {
       <TopNav title="Pencarian Produk" onBack={back} />
       <ProductSearchbar onSubmit={handleSubmitSearch} />
       <ProductList
-        data={keyword.length ? DUMMY_DATA : []}
+        data={products || []}
         storeInitial={store?.initial || ''}
         onProductSelect={handleSelectProduct}
       />
