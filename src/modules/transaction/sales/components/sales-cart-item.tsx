@@ -1,4 +1,5 @@
-import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
+import { NumberInput } from '@components';
+import { EllipsisVerticalIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 import { SalesTransactionItemType } from '@store';
 import { money, numberFormat } from '@utils';
@@ -15,6 +16,7 @@ const SalesCartItem = ({ data }: SalesCartItemProps) => {
     discountValue,
     stock,
     totalPrice,
+    quantity,
   } = data;
 
   return (
@@ -51,9 +53,20 @@ const SalesCartItem = ({ data }: SalesCartItemProps) => {
         <span>{`Stok: ${numberFormat(stock)}`}</span>
       </div>
 
-      <div className="border-t border-slate-300 pt-4 flex gap-4 justify-between w-full">
+      <div className="border-t border-slate-300 pt-4 flex gap-4 justify-between items-center w-full">
         <span className="text-base font-semibold">{money(totalPrice)}</span>
-        <span>-number stepper-</span>
+        <div className="flex gap-4 items-center">
+          <button>
+            <TrashIcon className="w-6 h-6 text-slate-400" />
+          </button>
+          <NumberInput
+            value={quantity}
+            onChange={() => {}}
+            min={1}
+            max={stock}
+            onClickValue={() => {}}
+          />
+        </div>
       </div>
     </div>
   );
