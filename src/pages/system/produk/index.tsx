@@ -1,9 +1,9 @@
 import { GetServerSideProps } from 'next';
 
-import { SystemPage } from '@modules';
+import { ProductPage } from '@modules';
 
 export default function System() {
-  return <SystemPage />;
+  return <ProductPage />;
 }
 
 export const getServerSideProps: GetServerSideProps = async context => {
