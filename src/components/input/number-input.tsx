@@ -9,11 +9,13 @@ type NumberInputProps = {
   min?: number;
   max?: number;
   step?: number;
+  onClickValue?: () => void;
 };
 
 const NumberInput: FC<NumberInputProps> = ({
   value,
   onChange,
+  onClickValue,
   min = 1,
   max = 999999999,
   step = 1,
@@ -49,7 +51,14 @@ const NumberInput: FC<NumberInputProps> = ({
         />
       </button>
 
-      <span className="min-w-[52px] text-center leading-6">{value}</span>
+      <span
+        className="min-w-[52px] text-center leading-6 cursor-text"
+        onClick={() => {
+          if (onClickValue) onClickValue();
+        }}
+      >
+        {value}
+      </span>
 
       <button className="p-0" onClick={handleIncrement}>
         <PlusCircleIcon

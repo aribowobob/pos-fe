@@ -64,6 +64,7 @@ const SalesCartItem = ({ data }: SalesCartItemProps) => {
             onChange={() => {}}
             min={1}
             max={stock}
+            onClickValue={() => {}}
           />
         </div>
       </div>
