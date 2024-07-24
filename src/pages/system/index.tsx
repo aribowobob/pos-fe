@@ -8,7 +8,7 @@ export default function System() {
 
 export const getServerSideProps: GetServerSideProps = async context => {
   const { req } = context;
-  /* const { cookies } = req;
+  const { cookies } = req;
 
   if (!cookies.token) {
     return {
@@ -17,7 +17,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
         permanent: false,
       },
     };
-  } */
+  }
 
   return {
     props: {},
