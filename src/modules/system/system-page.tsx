@@ -8,7 +8,9 @@ import {
   ArrowRightEndOnRectangleIcon,
   UserIcon,
   HomeIcon,
+  ArchiveBoxIcon,
 } from '@heroicons/react/24/outline';
+import { useUser } from '@store';
 
 const SystemPage = () => {
   const { back, replace, push } = useRouter();
@@ -17,19 +19,31 @@ const SystemPage = () => {
     replace('/login');
   };
 
+  const { fullName, initial, email } = useUser();
+
   return (
     <div className="container mx-auto sm:px-4">
       <Head>
         <title>POS - Sistem</title>
       </Head>
       <TopNav title="Sistem" onBack={back} />
-
+      <div className="w-full flex items-center h-24 bg-blue-500 relative mb-10">
+        <div className="block text-white ml-32">
+          <div>
+            {fullName} ({initial})
+          </div>
+          <div>{email}</div>
+        </div>
+        <div className="w-24 h-24 rounded-full bg-slate-900 text-white flex justify-center items-center absolute top-12 left-6">
+          <UserIcon className="w-10 h-10" />
+        </div>
+      </div>
       <div className="w-full flex flex-col p-4">
         <div className="w-full flex items-center font-semibold">
           Manajemen Persediaaan
         </div>
         <div className="w-full flex justify-start items-center">
-          <UserIcon className="w-6 h-6" />
+          <ArchiveBoxIcon className="w-6 h-6" />
           <button
             className="m-4"
             onClick={() => {
@@ -61,7 +75,7 @@ const SystemPage = () => {
             Pengguna Sistem
           </button>
         </div>
-        <div className="w-full flex justify-start items-center">
+        <div className="w-full flex justify-start items-center mb-4">
           <HomeIcon className="w-6 h-6" />
           <button
             className="m-4"
