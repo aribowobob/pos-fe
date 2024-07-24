@@ -35,12 +35,12 @@ const ProductPage = () => {
     setTypingTimeout(
       window.setTimeout(() => {
         handleTypingStop(value);
-      }, 500)
+      }, 600)
     ); // 1 second delay
   };
 
   const handleTypingStop = (value: string) => {
-    console.log('User stopped typing, value:', value);
+    alert(`You type ${value}`);
     // Call your function here
   };
 
@@ -63,7 +63,7 @@ const ProductPage = () => {
       </div>
 
       <Button
-        className="bg-blue-500 rounded-full fixed bottom-2 right-2 w-12 h-12"
+        className="bg-blue-500 rounded-full fixed bottom-5 right-5 w-12 h-12"
         onClick={() => setIsProductFormDisplayed(!isProductFormDisplayed)}
       >
         <PlusIcon className=" text-white" />
@@ -75,8 +75,11 @@ const ProductPage = () => {
             className="fixed inset-0 bg-gray-600 bg-opacity-50 z-40"
             onClick={() => setIsProductFormDisplayed(false)}
           ></div>
-          <div className="fixed inset-0 flex items-center justify-center z-50">
-            <AddProduct />
+          <div className="fixed inset-0 flex items-end justify-end z-50">
+            <AddProduct
+              isProductFormDisplayed={isProductFormDisplayed}
+              setIsProductFormDisplayed={setIsProductFormDisplayed}
+            />
           </div>
         </>
       )}

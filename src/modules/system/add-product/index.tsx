@@ -1,7 +1,6 @@
-import { TextInput } from '@components';
+import { Button, CurrencyInput, TextInput } from '@components';
 import React, { ChangeEvent, useState } from 'react';
 import { XCircleIcon } from '@heroicons/react/24/outline';
-import { money } from '@utils';
 
 interface IProductData {
   kode_sku: string;
@@ -11,7 +10,15 @@ interface IProductData {
   harga_satuan: string;
 }
 
-const AddProduct = () => {
+interface IAddProductProps {
+  isProductFormDisplayed: boolean;
+  setIsProductFormDisplayed: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const AddProduct: React.FC<IAddProductProps> = ({
+  isProductFormDisplayed,
+  setIsProductFormDisplayed,
+}) => {
   const productData: IProductData = {
     kode_sku: '',
     nama_produk: '',
@@ -29,13 +36,14 @@ const AddProduct = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const displayHargaJual = money(parseInt(harga_jual));
-
   return (
     <div className="w-full p-4 bg-white">
       <div className="flex justify-between text-lg mb-4">
         <label>Tambah Produk</label>
-        <XCircleIcon className="w-7 h-7" />
+        <XCircleIcon
+          className="w-7 h-7"
+          onClick={() => setIsProductFormDisplayed(!isProductFormDisplayed)}
+        />
       </div>
       <div>
         <TextInput
@@ -52,17 +60,18 @@ const AddProduct = () => {
           onChange={handleChange}
           className="mb-4"
         />
-        <TextInput
-          label="Harga Beli"
-          name="harga_beli"
+
+        <CurrencyInput
+          name="Harga Beli"
           value={harga_beli}
+          label="Harga Beli"
           onChange={handleChange}
           className="mb-4"
         />
-        <TextInput
+        <CurrencyInput
+          name="Harga Jual"
+          value={harga_jual}
           label="Harga Jual"
-          name="harga_jual"
-          value={displayHargaJual}
           onChange={handleChange}
           className="mb-4"
         />
@@ -72,8 +81,13 @@ const AddProduct = () => {
           value={harga_satuan}
           onChange={handleChange}
           className="mb-4"
+          message="Boleh dikosongkan. Apabila dikosongkan akan diberi nilai default
+          “unit”"
         />
+
+        <Button className="w-full">Simpan</Button>
       </div>
+      {/* {JSON.stringify(formData)} */}
     </div>
   );
 };

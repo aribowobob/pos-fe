@@ -42,7 +42,7 @@ const SystemPage = () => {
         <div className="w-full flex items-center font-semibold">
           Manajemen Persediaaan
         </div>
-        <div className="w-full flex justify-start items-center">
+        <div className="w-full flex justify-start items-center h-10">
           <ArchiveBoxIcon className="w-6 h-6" />
           <button
             className="m-4"
@@ -53,7 +53,7 @@ const SystemPage = () => {
             Produk
           </button>
         </div>
-        <div className="w-full flex justify-start items-center">
+        <div className="w-full flex justify-start items-center h-10">
           <UserIcon className="w-6 h-6" />
           <button
             className="m-4"
@@ -64,7 +64,7 @@ const SystemPage = () => {
             Stok Opname
           </button>
         </div>
-        <div className="w-full flex justify-start items-center">
+        <div className="w-full flex justify-start items-center h-10">
           <UserIcon className="w-6 h-6" />
           <button
             className="m-4"
@@ -75,7 +75,7 @@ const SystemPage = () => {
             Pengguna Sistem
           </button>
         </div>
-        <div className="w-full flex justify-start items-center mb-4">
+        <div className="w-full flex justify-start items-center h-10 mb-2">
           <HomeIcon className="w-6 h-6" />
           <button
             className="m-4"
@@ -87,13 +87,18 @@ const SystemPage = () => {
           </button>
         </div>
         <div className="w-full flex items-center font-semibold">Profil</div>
-        <div className="w-full flex justify-start items-center">
+        <div className="w-full flex justify-start items-center h-10">
           <UserIcon className="w-6 h-6" />
-          <button className="m-4" onClick={handleLogout}>
+          <button
+            className="m-4"
+            onClick={() => {
+              push('/system/profile');
+            }}
+          >
             Ubah Data Profile
           </button>
         </div>
-        <div className="w-full flex justify-start items-center">
+        <div className="w-full flex justify-start items-center h-10">
           <ArrowRightEndOnRectangleIcon className="w-6 h-6" />
           <button className="m-4" onClick={handleLogout}>
             Logout
