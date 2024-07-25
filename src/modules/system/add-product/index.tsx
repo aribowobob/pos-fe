@@ -1,6 +1,6 @@
 import { Button, CurrencyInput, TextInput } from '@components';
 import React, { ChangeEvent, useState } from 'react';
-import { XCircleIcon } from '@heroicons/react/24/outline';
+import { BottomSheet } from '@components';
 
 interface IProductData {
   kode_sku: string;
@@ -37,14 +37,11 @@ const AddProduct: React.FC<IAddProductProps> = ({
   };
 
   return (
-    <div className="w-full p-4 bg-white">
-      <div className="flex justify-between text-lg mb-4">
-        <label>Tambah Produk</label>
-        <XCircleIcon
-          className="w-7 h-7"
-          onClick={() => setIsProductFormDisplayed(!isProductFormDisplayed)}
-        />
-      </div>
+    <BottomSheet
+      open={isProductFormDisplayed}
+      title="Tambah Produk"
+      onClose={() => setIsProductFormDisplayed(!isProductFormDisplayed)}
+    >
       <div>
         <TextInput
           label="Kode SKU"
@@ -88,7 +85,7 @@ const AddProduct: React.FC<IAddProductProps> = ({
         <Button className="w-full">Simpan</Button>
       </div>
       {/* {JSON.stringify(formData)} */}
-    </div>
+    </BottomSheet>
   );
 };
 
