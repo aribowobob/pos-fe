@@ -16,8 +16,6 @@ const BottomSheet: React.FC<IBottomSheetProps> = ({
   title,
   className,
 }) => {
-  const drawerRef = useRef<HTMLDivElement>(null);
-
   const sheetRef = useRef<HTMLDivElement>(null);
 
   // Membuat handleClickOutside dengan useCallback
@@ -55,14 +53,11 @@ const BottomSheet: React.FC<IBottomSheetProps> = ({
         onClick={onClose}
       ></div>
       <div
-        ref={drawerRef}
-        className={`fixed bottom-0 left-0 right-0 bg-white shadow-lg transition-transform duration-300 ease-in-out ${
-          open ? 'translate-y-0' : 'translate-y-full'
+        ref={sheetRef}
+        className={`fixed left-0 right-0 bg-white shadow-lg transition-bottom duration-300 ease-in-out ${
+          open ? 'bottom-0' : '-bottom-full'
         } ${className || ''}`}
-        style={{
-          maxHeight: '100vh',
-          overflowY: 'auto',
-        }}
+        style={{ maxHeight: '50vh', overflowY: 'auto' }} // Maksimalkan tinggi dan buat overflow
       >
         <div className="w-full p-4 bg-white">
           <div className="flex justify-between text-lg mb-4">
