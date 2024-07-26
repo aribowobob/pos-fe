@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-import { Button, TextInput, TopNav } from '@components';
-import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { CircleButton, TextInput, TopNav } from '@components';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import Head from 'next/head';
 import { AddProduct } from '@modules';
 
@@ -62,27 +62,15 @@ const ProductPage = () => {
         />
       </div>
 
-      <Button
-        className="bg-blue-500 rounded-full fixed bottom-5 right-5 w-12 h-12"
+      <CircleButton
+        className="fixed bottom-5 right-5"
         onClick={() => setIsProductFormDisplayed(!isProductFormDisplayed)}
-      >
-        <PlusIcon className=" text-white" />
-      </Button>
+      />
 
-      {isProductFormDisplayed && (
-        <>
-          <div
-            className="fixed inset-0 bg-gray-600 bg-opacity-50 z-40"
-            onClick={() => setIsProductFormDisplayed(false)}
-          ></div>
-          <div className="fixed inset-0 flex items-end justify-end z-50">
-            <AddProduct
-              isProductFormDisplayed={isProductFormDisplayed}
-              setIsProductFormDisplayed={setIsProductFormDisplayed}
-            />
-          </div>
-        </>
-      )}
+      <AddProduct
+        isProductFormDisplayed={isProductFormDisplayed}
+        setIsProductFormDisplayed={setIsProductFormDisplayed}
+      />
     </div>
   );
 };
