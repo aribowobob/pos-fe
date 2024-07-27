@@ -72,7 +72,7 @@ const ProductPage: React.FC = () => {
   const handleTypingStop = (value: string) => {
     //alert(`You type ${value}`);
     // Call your function here
-    if (value === 'dion') {
+    if (value === 'dion' || value === 'bob') {
       setSearchResult([]);
     } else {
       setSearchResult(produkArray);
