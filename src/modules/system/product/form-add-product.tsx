@@ -7,15 +7,17 @@ interface IProductData {
   nama_produk: string;
   harga_beli: string;
   harga_jual: string;
-  harga_satuan: string;
+  nama_satuan: string;
 }
 
 interface IAddProductProps {
+  title?: string;
   isProductFormDisplayed: boolean;
   setIsProductFormDisplayed: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const AddProduct: React.FC<IAddProductProps> = ({
+const FormAddProduct: React.FC<IAddProductProps> = ({
+  title = 'Tambah Produk',
   isProductFormDisplayed,
   setIsProductFormDisplayed,
 }) => {
@@ -24,11 +26,11 @@ const AddProduct: React.FC<IAddProductProps> = ({
     nama_produk: '',
     harga_beli: '',
     harga_jual: '',
-    harga_satuan: '',
+    nama_satuan: '',
   };
   const [formData, setFormData] = useState<IProductData>(productData);
 
-  const { kode_sku, nama_produk, harga_beli, harga_jual, harga_satuan } =
+  const { kode_sku, nama_produk, harga_beli, harga_jual, nama_satuan } =
     formData;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -39,7 +41,7 @@ const AddProduct: React.FC<IAddProductProps> = ({
   return (
     <BottomSheet
       open={isProductFormDisplayed}
-      title="Tambah Produk"
+      title={title}
       onClose={() => setIsProductFormDisplayed(!isProductFormDisplayed)}
     >
       <div>
@@ -57,7 +59,6 @@ const AddProduct: React.FC<IAddProductProps> = ({
           onChange={handleChange}
           className="mb-4"
         />
-
         <CurrencyInput
           name="Harga Beli"
           value={harga_beli}
@@ -73,9 +74,9 @@ const AddProduct: React.FC<IAddProductProps> = ({
           className="mb-4"
         />
         <TextInput
-          label="Harga Satuan"
-          name="harga_satuan"
-          value={harga_satuan}
+          label="Nama Satuan"
+          name="nama_satuan"
+          value={nama_satuan}
           onChange={handleChange}
           className="mb-4"
           message="Boleh dikosongkan. Apabila dikosongkan akan diberi nilai default
@@ -89,4 +90,4 @@ const AddProduct: React.FC<IAddProductProps> = ({
   );
 };
 
-export default AddProduct;
+export default FormAddProduct;
