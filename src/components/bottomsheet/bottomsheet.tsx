@@ -43,6 +43,7 @@ const BottomSheet: React.FC<IBottomSheetProps> = ({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [open, handleClickOutside]);
+
   return (
     <div>
       {open && (

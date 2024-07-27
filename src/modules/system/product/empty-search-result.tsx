@@ -10,7 +10,7 @@ const EmptyProductSearchResult: React.FC<EmptySearchResultProps> = ({
   return (
     <div className="flex flex-col justify-center items-center">
       <NoSymbolIcon className="w-32 h-32 mb-8 text-slate-500 font-extralight" />
-      <div className="text-slate-500">{message}</div>
+      <div className="text-slate-500 text-center">{message}</div>
     </div>
   );
 };

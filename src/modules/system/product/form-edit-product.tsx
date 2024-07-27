@@ -1,5 +1,5 @@
 import { Button, CurrencyInput, TextInput } from '@components';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { BottomSheet } from '@components';
 import { IProductProps } from './type';
 
@@ -7,12 +7,14 @@ interface IAddProductProps {
   title?: string;
   isProductFormDisplayed: boolean;
   setIsProductFormDisplayed: React.Dispatch<React.SetStateAction<boolean>>;
+  dataProduct?: IProductProps;
 }
 
-const FormAddProduct: React.FC<IAddProductProps> = ({
-  title = 'Tambah Produk',
+const FormEditProduct: React.FC<IAddProductProps> = ({
+  title = 'Ubah Data Produk',
   isProductFormDisplayed,
   setIsProductFormDisplayed,
+  dataProduct,
 }) => {
   const productData: IProductProps = {
     kode_sku: '',
@@ -21,7 +23,15 @@ const FormAddProduct: React.FC<IAddProductProps> = ({
     harga_jual: '',
     nama_satuan: '',
   };
-  const [formData, setFormData] = useState<IProductProps>(productData);
+  const [formData, setFormData] = useState<IProductProps>(
+    dataProduct || productData
+  );
+
+  useEffect(() => {
+    if (dataProduct) {
+      setFormData(dataProduct);
+    }
+  }, [dataProduct]);
 
   const { kode_sku, nama_produk, harga_beli, harga_jual, nama_satuan } =
     formData;
@@ -75,12 +85,16 @@ const FormAddProduct: React.FC<IAddProductProps> = ({
           message="Boleh dikosongkan. Apabila dikosongkan akan diberi nilai default
           “unit”"
         />
-
-        <Button className="w-full">Simpan</Button>
+        <div className="flex gap-4">
+          <Button className="w-1/4" color="danger" ghost>
+            Hapus
+          </Button>
+          <Button className="w-3/4">Simpan Perubahan</Button>
+        </div>
       </div>
       {/* {JSON.stringify(formData)} */}
     </BottomSheet>
   );
 };
 
-export default FormAddProduct;
+export default FormEditProduct;
