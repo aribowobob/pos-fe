@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { XCircleIcon } from '@heroicons/react/24/outline';
+import { clsx } from 'clsx';
 
 interface IBottomSheetProps {
   open: boolean;
@@ -42,22 +43,25 @@ const BottomSheet: React.FC<IBottomSheetProps> = ({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [open, handleClickOutside]);
+
   return (
-    <div
-      className={`fixed inset-0 z-50 ${
-        open ? 'opacity-100' : 'opacity-0 pointer-events-none'
-      } transition-opacity duration-300 ease-in-out`}
-    >
-      <div
-        className="fixed inset-0 bg-black opacity-50"
-        onClick={onClose}
-      ></div>
+    <div>
+      {open && (
+        <div
+          className="fixed inset-0 bg-black opacity-50 z-40"
+          onClick={onClose}
+        />
+      )}
+
       <div
         ref={sheetRef}
-        className={`fixed left-0 right-0 bg-white shadow-lg transition-bottom duration-300 ease-in-out ${
-          open ? 'bottom-0' : '-bottom-full'
-        } ${className || ''}`}
-        style={{ maxHeight: '50vh', overflowY: 'auto' }} // Maksimalkan tinggi dan buat overflow
+        className={clsx(
+          'fixed left-0 right-0 z-50 bottom-0 bg-white shadow-lg transition-transform duration-300 ease-in-out max-h-[80vh] overflow-y-auto',
+          className,
+          {
+            'translate-y-full': !open,
+          }
+        )}
       >
         <div className="w-full p-4 bg-white">
           <div className="flex justify-between text-lg mb-4">
