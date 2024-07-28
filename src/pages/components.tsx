@@ -68,6 +68,59 @@ export default function Components() {
           {selectedRadio}
         </div>
       </div>
+      <div className="flex gap-4 p-4">
+        <div className="flex flex-col gap-4">
+          <Button color="primary">Testing Button</Button>
+          <Button color="primary" ghost>
+            Testing Button
+          </Button>
+          <Button color="primary" disabled>
+            Testing Button
+          </Button>
+          <Button color="primary" ghost disabled>
+            Testing Button
+          </Button>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <Button color="danger">Testing Button</Button>
+          <Button color="danger" ghost>
+            Testing Button
+          </Button>
+          <Button color="danger" disabled>
+            Testing Button
+          </Button>
+          <Button color="danger" ghost disabled>
+            Testing Button
+          </Button>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <Button color="success">Testing Button</Button>
+          <Button color="success" ghost>
+            Testing Button
+          </Button>
+          <Button color="success" disabled>
+            Testing Button
+          </Button>
+          <Button color="success" ghost disabled>
+            Testing Button
+          </Button>
+        </div>
+
+        <div className="flex flex-col gap-4">
+          <Button color="warning">Testing Button</Button>
+          <Button color="warning" ghost>
+            Testing Button
+          </Button>
+          <Button color="warning" disabled>
+            Testing Button
+          </Button>
+          <Button color="warning" ghost disabled>
+            Testing Button
+          </Button>
+        </div>
+      </div>
     </main>
   );
 }

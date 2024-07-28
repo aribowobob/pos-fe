@@ -37,35 +37,50 @@ export default function Button(props: ButtonProps) {
     let bgColor = 'bg-white';
     let textColor = 'text-white';
 
-    if (disabled && !ghost) {
+    if (color === 'success') {
+      borderColor = 'border border-teal-600';
+      bgColor = 'bg-teal-600';
+
+      if (ghost) {
+        textColor = 'text-teal-600';
+      }
+    } else if (color === 'danger') {
+      borderColor = 'border border-red-700';
+      bgColor = 'bg-red-700';
+
+      if (ghost) {
+        textColor = 'text-red-700';
+      }
+    } else if (color === 'warning') {
+      borderColor = 'border border-amber-400';
+      bgColor = 'bg-amber-400';
+      textColor = 'text-slate-900';
+
+      if (ghost) {
+        textColor = 'text-amber-400';
+      }
+    } else if (color === 'primary') {
+      borderColor = 'border border-blue-500';
+      bgColor = 'bg-blue-500';
+
+      if (ghost) {
+        textColor = 'text-blue-500';
+      }
+    }
+
+    if (ghost) {
+      bgColor = 'bg-white';
+    }
+
+    if (disabled) {
       bgColor = 'bg-slate-300 cursor-not-allowed';
       textColor = 'text-slate-400';
-      return { borderColor, bgColor, textColor };
-    }
-    if (disabled && ghost) {
-      bgColor = 'bg-white';
-      textColor = 'text-slate-300';
-      return { borderColor, bgColor, textColor };
-    }
+      borderColor = 'border border-slate-300';
 
-    let styleColor = 'blue-500';
-    if (color === 'success') {
-      styleColor = 'teal-600';
-    } else if (color === 'danger') {
-      styleColor = 'red-700';
-    } else if (color === 'warning') {
-      styleColor = 'amber-400';
-    }
-
-    borderColor = `border border-${styleColor}`;
-    if (!ghost) {
-      bgColor = `bg-${styleColor}`;
-    } else {
-      textColor = `text-${styleColor}`;
-    }
-
-    if (color === 'warning' && !ghost) {
-      textColor = `text-slate-900`;
+      if (ghost) {
+        bgColor = 'bg-slate-100 cursor-not-allowed';
+        textColor = 'text-slate-300';
+      }
     }
 
     return { borderColor, bgColor, textColor };
