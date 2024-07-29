@@ -19,7 +19,7 @@ const LoginPage: FC = () => {
     onSuccess: async codeResponse => {
       const getToken = Axios.get(getTokenUrl, {
         headers: { token: codeResponse.access_token },
-      });
+      }).catch(e => e);
       const dataToken = await getToken;
       const { code: codeGetToken, data: accessToken } = dataToken.data || {};
 
