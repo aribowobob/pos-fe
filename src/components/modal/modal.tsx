@@ -30,7 +30,7 @@ const Modal: React.FC<ModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="ml-2 mr-2 fixed -top-14 inset-0 z-50 flex items-center justify-center">
       {/* Overlay */}
       <div
         className="fixed inset-0 bg-gray-800 opacity-50"
