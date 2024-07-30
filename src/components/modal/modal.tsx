@@ -45,10 +45,10 @@ const Modal: React.FC<ModalProps> = ({
         </div>
         <div className="py-4">{children}</div>
         <div className="flex flex-col gap-2">
-          <Button onClick={onOk} className="w-full" color="primary" ghost>
+          <Button onClick={onCancel} className="w-full" color="primary" ghost>
             {cancelText}
           </Button>
-          <Button onClick={onCancel} className="w-full" color="primary">
+          <Button onClick={onOk} className="w-full" color="primary">
             {okText}
           </Button>
         </div>

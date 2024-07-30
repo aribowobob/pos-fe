@@ -115,10 +115,10 @@ const FormEditProduct: React.FC<IAddProductProps> = ({
         <Modal
           title="Konfirmasi Hapus Data"
           cancelText="Ya, hapus!"
-          onCancel={handleClose}
+          onCancel={handleDelete}
           onClose={handleClose}
           okText="Batal"
-          onOk={handleDelete}
+          onOk={handleClose}
           isResist={true} // Set to true if you don't want modal to close when overlay is clicked
         >
           <p>{`Anda ingin menghapus ${nama_produk} ?`}</p>
