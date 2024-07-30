@@ -10,3 +10,4 @@ export * from './radio';
 export * from './select';
 export * from './switch';
 export * from './bottomsheet';
+export * from './modal';
