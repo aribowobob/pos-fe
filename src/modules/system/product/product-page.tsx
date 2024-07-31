@@ -146,11 +146,11 @@ const ProductPage: React.FC = () => {
                 <div className="p-1">{nama_produk}</div>
                 <div className="flex gap-2 justify-between">
                   <div className="p-1 flex gap-2">
-                    <span className="bg-red-600 rounded-md p-1 min-w-20 text-center text-black opacity-70">
+                    <span className="bg-red-600 rounded-md p-1 min-w-20 text-center bg-opacity-30">
                       {money(parseInt(harga_beli))}
                     </span>
-                    <span className="bg-teal-600 rounded-md p-1 min-w-20 text-center opacity-70">
-                      Rp{harga_jual}
+                    <span className="bg-teal-600 rounded-md p-1 min-w-20 text-center bg-opacity-30">
+                      {money(parseInt(harga_jual))}
                     </span>
                   </div>
                   <div className="p-1">Satuan: {nama_satuan}</div>
