@@ -2,8 +2,11 @@ import { useEffect, useState } from 'react';
 
 import { getCookie } from 'cookies-next';
 
-import { useUser } from '@store';
 import axios from 'axios';
+import { useRouter } from 'next/router';
+import { deleteCookie } from 'cookies-next';
+
+import { useUser } from '@store';
 import { getRuntimeEnv } from '@utils';
 
 const UserProvider = () => {
@@ -12,6 +15,7 @@ const UserProvider = () => {
   const { id, setUser } = useUser();
   const token = getCookie('token');
   const [fetched, setFetched] = useState(false);
+  const { replace } = useRouter();
 
   useEffect(() => {
     if (!id && token && !fetched) {
@@ -23,8 +27,28 @@ const UserProvider = () => {
           const { code, data } = dataResponse || {};
 
           if (code === 200 && !!data) {
-            setUser(data);
+            const {
+              id,
+              full_name: fullName,
+              initial,
+              email,
+              company_id: companyId,
+              name: companyName,
+            } = data;
+
+            setUser({
+              id,
+              fullName,
+              initial,
+              email,
+              companyId,
+              companyName,
+            });
           }
+        })
+        .catch(() => {
+          deleteCookie('token');
+          replace('/login');
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
