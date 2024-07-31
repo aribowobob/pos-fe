@@ -18,16 +18,20 @@ const LoginPage: FC = () => {
   const loginWithGoogle = useGoogleLogin({
     onSuccess: async codeResponse => {
       const getToken = Axios.get(getTokenUrl, {
-        headers: { token: codeResponse.access_token },
+        headers: { Token: codeResponse.access_token },
+      }).catch(() => {
+        alert('Error get token.');
       });
       const dataToken = await getToken;
-      const { code: codeGetToken, data: accessToken } = dataToken.data || {};
+      const { code: codeGetToken, data: accessToken } = dataToken?.data || {};
 
       if (codeGetToken === 200 && !!accessToken) {
         const getUser = await Axios.get(`${API_URL}/get-user`, {
           headers: { Authorization: `Bearer ${accessToken}` },
+        }).catch(() => {
+          alert('Error get data user.');
         });
-        const { code, data } = getUser.data || {};
+        const { code, data } = getUser?.data || {};
 
         if (code === 200 && !!data) {
           setUser(data);
@@ -36,14 +40,12 @@ const LoginPage: FC = () => {
         }
       }
     },
-    // onError: e => {
-    //   toast(<Message text={e.message} type="error" />);
-    // },
-    // onNonOAuthError: e => {
-    //   if (e?.type !== "popup_closed") {
-    //     toast(<Message text={e.message} type="error" />);
-    //   }
-    // },
+    onError: () => {
+      alert('Error login with google.');
+    },
+    onNonOAuthError: () => {
+      alert('Unknown error. Non oauth error.');
+    },
   });
 
   return (
