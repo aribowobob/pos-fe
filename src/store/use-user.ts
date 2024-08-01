@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type StoreType = {
+export type StoreType = {
   id: number;
   name: string;
   initial: string;
@@ -13,11 +13,13 @@ export type UserType = {
   email: string;
   companyId: number;
   companyName: string;
-  store?: StoreType;
+  userStores?: StoreType[]; // All assigned stores
+  store?: StoreType; // Selected store
 };
 
 interface UserState extends UserType {
   setUser: (user: UserType) => void;
+  setStore: (store: StoreType) => void;
 }
 
 const DEFAULT_USER: UserType = {
@@ -27,6 +29,7 @@ const DEFAULT_USER: UserType = {
   email: '',
   companyId: 0,
   companyName: '',
+  userStores: undefined,
   store: undefined,
 };
 
@@ -36,6 +39,7 @@ const useUser = create<UserState>(set => ({
     set({
       ...user,
     }),
+  setStore: store => set({ store }),
 }));
 
 export default useUser;
