@@ -27,23 +27,7 @@ const UserProvider = () => {
           const { code, data } = dataResponse || {};
 
           if (code === 200 && !!data) {
-            const {
-              id,
-              full_name: fullName,
-              initial,
-              email,
-              company_id: companyId,
-              name: companyName,
-            } = data;
-
-            setUser({
-              id,
-              fullName,
-              initial,
-              email,
-              companyId,
-              companyName,
-            });
+            setUser(data);
           }
         })
         .catch(() => {

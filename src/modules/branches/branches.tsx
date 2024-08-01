@@ -1,28 +1,28 @@
 import Head from 'next/head';
-import { Button } from '@components';
 import { useRouter } from 'next/router';
 
-const DATA = [
-  {
-    name: 'Gudang Utama',
-    initial: 'GUD',
-  },
-  {
-    name: 'Cab. Tabanan',
-    initial: 'TAB',
-  },
-  {
-    name: 'Cab. Denpasar',
-    initial: 'DPS',
-  },
-];
+import { Button } from '@components';
+import { StoreType, useUser } from '@store';
+import { useEffect } from 'react';
 
 const Branches = () => {
   const { replace } = useRouter();
-  const handleClick = () => {
-    // TODO: update ke db dulu untuk cabang/gudang yang dipilih, simpan ke context
+  const { setStore, id, userStores } = useUser();
+  const storesLength = (userStores || []).length;
+
+  const handleClick = (store: StoreType) => {
+    setStore(store);
     replace('/dashboard');
   };
+
+  useEffect(() => {
+    if (!!id && storesLength < 2) {
+      replace('/dashboard');
+    }
+  }, [id, replace, storesLength]);
+
+  if (!id) return null;
+  if (storesLength < 2) return null;
 
   return (
     <div className="container mx-auto px-4">
@@ -32,8 +32,15 @@ const Branches = () => {
       <div className="h-screen flex justify-center items-center">
         <div className="p-4 flex gap-4 rounded bg-white flex-col w-full">
           <h1 className="text-2xl">Pilih Cabang/Gudang</h1>
-          {DATA.map(data => (
-            <Button block ghost key={data.initial} onClick={handleClick}>
+          {(userStores || []).map(data => (
+            <Button
+              block
+              ghost
+              key={data.initial}
+              onClick={() => {
+                handleClick(data);
+              }}
+            >
               {`${data.initial} (${data.name})`}
             </Button>
           ))}
