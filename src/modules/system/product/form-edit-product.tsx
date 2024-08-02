@@ -1,28 +1,21 @@
 import { Button, CurrencyInput, TextInput, Modal } from '@components';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { BottomSheet } from '@components';
-import { IProductProps } from './type';
+import { IProductProps, productData } from './type';
 
-interface IAddProductProps {
+interface IEditProductProps {
   title?: string;
   isProductFormDisplayed: boolean;
   setIsProductFormDisplayed: React.Dispatch<React.SetStateAction<boolean>>;
   dataProduct?: IProductProps;
 }
 
-const FormEditProduct: React.FC<IAddProductProps> = ({
+const FormEditProduct: React.FC<IEditProductProps> = ({
   title = 'Ubah Data Produk',
   isProductFormDisplayed,
   setIsProductFormDisplayed,
   dataProduct,
 }) => {
-  const productData: IProductProps = {
-    kode_sku: '',
-    nama_produk: '',
-    harga_beli: '',
-    harga_jual: '',
-    nama_satuan: '',
-  };
   const [formData, setFormData] = useState<IProductProps>(
     dataProduct || productData
   );

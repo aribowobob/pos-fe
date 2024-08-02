@@ -1,13 +1,25 @@
 import React, { ChangeEvent, useState } from 'react';
-import { cabangData, IAddCabangProps, ICabangProps } from './type';
+import { ICabangProps } from './type';
 import { BottomSheet, Button, TextInput } from '@components';
 
-const FormAddCabang: React.FC<IAddCabangProps> = ({
+interface IEditCabangProps {
+  title?: string;
+  isBranchFormDisplayed: boolean;
+  setIsBranchFormDisplayed: React.Dispatch<React.SetStateAction<boolean>>;
+  dataCabang?: ICabangProps;
+}
+const FormEditCabang: React.FC<IEditCabangProps> = ({
   title = 'Tambah Cabang/Gudang',
   isBranchFormDisplayed,
   setIsBranchFormDisplayed,
 }) => {
-  const [formData, setFormData] = useState<ICabangProps>(cabangData);
+  const cabangData: ICabangProps = {
+    namaCabang: '',
+    alias: '',
+  };
+  const [formData, setFormData] = useState<ICabangProps>(
+    cabangData || cabangData
+  );
 
   const { namaCabang, alias } = formData;
 
@@ -45,4 +57,4 @@ const FormAddCabang: React.FC<IAddCabangProps> = ({
   );
 };
 
-export default FormAddCabang;
+export default FormEditCabang;
