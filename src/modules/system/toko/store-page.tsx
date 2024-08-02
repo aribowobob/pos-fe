@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import Head from 'next/head';
 import { Button, TopNav } from '@components';
 import { useRouter } from 'next/router';
@@ -8,6 +8,7 @@ import {
   PlusIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
+import FormAddCabang from './form-add-cabang';
 
 const listCabang = [
   {
@@ -28,6 +29,11 @@ const listCabang = [
 ];
 
 const StorePage: React.FC = () => {
+  const [isAddBranchFormDisplayed, setIsAddBranchFormDisplayed] =
+    useState(false);
+  /* const [isEditBranchFormDisplayed, setIsEditBranchFormDisplayed] =
+    useState(false); */
+
   const { back } = useRouter();
   const { companyName } = useUser();
   return (
@@ -54,7 +60,11 @@ const StorePage: React.FC = () => {
         <div className="mt-4 block gap-4 rounded-md bg-white">
           <div className="p-4 text-lg flex justify-between items-center">
             <p>Daftar Cabang / Gudang</p>
-            <Button type="button" color="primary">
+            <Button
+              type="button"
+              color="primary"
+              onClick={() => setIsAddBranchFormDisplayed(true)}
+            >
               <PlusIcon className="w-3 h-3 mr-1 text-white" />
               Tambah
             </Button>
@@ -83,6 +93,12 @@ const StorePage: React.FC = () => {
           })}
         </div>
       </div>
+
+      <FormAddCabang
+        title="Tambah Cabang/Gudang"
+        isBranchFormDisplayed={isAddBranchFormDisplayed}
+        setIsBranchFormDisplayed={setIsAddBranchFormDisplayed}
+      />
     </div>
   );
 };
