@@ -54,7 +54,15 @@ const StorePage: React.FC = () => {
           </div>
           <div className="p-4 flex items-center">
             <div className="w-1/6">2</div>
-            <div className="w-4/6">GUD (Gudang 2)</div>
+            <div className="w-4/6">TAB (Cab. Tabanan)</div>
+            <div className="w-1/6 flex justify-end gap-4">
+              <PencilSquareIcon className="w-5 h-5 cursor-pointer" />
+              <TrashIcon className="w-5 h-5 cursor-pointer" />
+            </div>
+          </div>
+          <div className="p-4 flex items-center">
+            <div className="w-1/6">2</div>
+            <div className="w-4/6">DPS (Cab. Tabanan)</div>
             <div className="w-1/6 flex justify-end gap-4">
               <PencilSquareIcon className="w-5 h-5 cursor-pointer" />
               <TrashIcon className="w-5 h-5 cursor-pointer" />
