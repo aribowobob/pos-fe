@@ -14,24 +14,37 @@ export type SalesTransactionItemType = {
   totalPrice: number;
 };
 export type SalesTransactionType = {
-  date: string;
   items: SalesTransactionItemType[];
   subTotal: number;
+  loading: boolean;
 };
 
 const DEFAULT_DATA: SalesTransactionType = {
-  date: '',
   items: [],
   subTotal: 0,
+  loading: false,
 };
 
 interface SalesTransactionState extends SalesTransactionType {
-  setData: (data: SalesTransactionType) => void;
+  setItems: (value: SalesTransactionItemType[]) => void;
+  setLoading: (value: boolean) => void;
 }
 
 const useUser = create<SalesTransactionState>(set => ({
   ...DEFAULT_DATA,
-  setData: data => set({ ...data }),
+  setItems: value =>
+    set(state => {
+      const subTotal = value.reduce((acc, item) => {
+        return acc + item.totalPrice;
+      }, 0);
+
+      return {
+        ...state,
+        items: value,
+        subTotal,
+      };
+    }),
+  setLoading: value => set({ loading: value }),
 }));
 
 export default useUser;
