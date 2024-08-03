@@ -13,3 +13,15 @@ export const cabangData: ICabangProps = {
   namaCabang: '',
   alias: '',
 };
+
+export interface ICabangEditProps {
+  id: number;
+  namaCabang: string;
+  alias: string;
+}
+
+export const cabangDataEdit: ICabangEditProps = {
+  id: 0,
+  namaCabang: '',
+  alias: '',
+};

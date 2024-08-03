@@ -1,25 +1,33 @@
-import React, { ChangeEvent, useState } from 'react';
-import { ICabangProps } from './type';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import { ICabangEditProps } from './type';
 import { BottomSheet, Button, TextInput } from '@components';
 
-interface IEditCabangProps {
+interface IFormEditCabangProps {
   title?: string;
   isBranchFormDisplayed: boolean;
   setIsBranchFormDisplayed: React.Dispatch<React.SetStateAction<boolean>>;
-  dataCabang?: ICabangProps;
+  dataCabang?: ICabangEditProps;
 }
-const FormEditCabang: React.FC<IEditCabangProps> = ({
+const FormEditCabang: React.FC<IFormEditCabangProps> = ({
   title = 'Tambah Cabang/Gudang',
   isBranchFormDisplayed,
   setIsBranchFormDisplayed,
+  dataCabang,
 }) => {
-  const cabangData: ICabangProps = {
+  const cabangData: ICabangEditProps = {
+    id: 0,
     namaCabang: '',
     alias: '',
   };
-  const [formData, setFormData] = useState<ICabangProps>(
-    cabangData || cabangData
+  const [formData, setFormData] = useState<ICabangEditProps>(
+    dataCabang || cabangData
   );
+
+  useEffect(() => {
+    if (dataCabang) {
+      setFormData(dataCabang);
+    }
+  }, [dataCabang]);
 
   const { namaCabang, alias } = formData;
 
