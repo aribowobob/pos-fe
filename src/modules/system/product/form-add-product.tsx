@@ -1,26 +1,13 @@
 import { Button, CurrencyInput, TextInput } from '@components';
 import React, { ChangeEvent, useState } from 'react';
 import { BottomSheet } from '@components';
-import { IProductProps } from './type';
-
-interface IAddProductProps {
-  title?: string;
-  isProductFormDisplayed: boolean;
-  setIsProductFormDisplayed: React.Dispatch<React.SetStateAction<boolean>>;
-}
+import { IAddProductProps, IProductProps, productData } from './type';
 
 const FormAddProduct: React.FC<IAddProductProps> = ({
   title = 'Tambah Produk',
   isProductFormDisplayed,
   setIsProductFormDisplayed,
 }) => {
-  const productData: IProductProps = {
-    kode_sku: '',
-    nama_produk: '',
-    harga_beli: '',
-    harga_jual: '',
-    nama_satuan: '',
-  };
   const [formData, setFormData] = useState<IProductProps>(productData);
 
   const { kode_sku, nama_produk, harga_beli, harga_jual, nama_satuan } =

@@ -4,9 +4,13 @@ import { useRouter } from 'next/router';
 import { CircleButton, TextInput, TopNav } from '@components';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import Head from 'next/head';
-import { EmptyProductSearchResult, FormAddProduct } from '@modules';
+import {
+  EmptyProductSearchResult,
+  FormAddProduct,
+  FormEditProduct,
+} from '@modules';
 import { IProductProps } from './type';
-import FormEditProduct from './form-edit-product';
+
 import { money } from '@utils';
 
 const produkArray: IProductProps[] = [

@@ -8,34 +8,44 @@ import {
   PlusIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
-import FormAddCabang from './form-add-cabang';
+
+import { FormEditCabang, FormAddCabang } from '@modules';
+import { cabangDataEdit, ICabangEditProps } from './type';
 
 const listCabang = [
   {
     id: 1,
-    name: 'GUD (Gudang Utama)',
-    url: '',
+    namaCabang: 'Gudang Utama',
+    alias: 'GUD',
   },
   {
     id: 2,
-    name: 'TAB (Cab. Tabanan)',
-    url: '',
+    namaCabang: 'Cab. Tabanan',
+    alias: 'TAB',
   },
   {
     id: 3,
-    name: 'DPS (Cab Tabanan)',
-    url: '',
+    namaCabang: 'Cab Denpasar',
+    alias: 'DPS',
   },
 ];
 
 const StorePage: React.FC = () => {
   const [isAddBranchFormDisplayed, setIsAddBranchFormDisplayed] =
     useState(false);
-  /* const [isEditBranchFormDisplayed, setIsEditBranchFormDisplayed] =
-    useState(false); */
+  const [isEditBranchFormDisplayed, setIsEditBranchFormDisplayed] =
+    useState(false);
+  const [selectedDataToEdit, setSelectedDataToEdit] = useState(cabangDataEdit);
 
   const { back } = useRouter();
   const { companyName } = useUser();
+
+  const selectBranchToEdit = (param: ICabangEditProps) => {
+    console.log({ param });
+    setIsEditBranchFormDisplayed(true);
+    setSelectedDataToEdit(param);
+  };
+
   return (
     <div className="container mx-auto sm:px-4 relative">
       <Head>
@@ -74,14 +84,19 @@ const StorePage: React.FC = () => {
           </div>
 
           {listCabang?.map((data, index) => {
-            const { id, name } = data;
+            const { id, namaCabang, alias } = data;
             return (
               <Fragment key={index}>
                 <div className="p-4 flex items-center">
                   <div className="w-1/6">{id}</div>
-                  <div className="w-4/6">{name}</div>
+                  <div className="w-4/6">
+                    {alias} ({namaCabang})
+                  </div>
                   <div className="w-1/6 flex justify-end gap-4">
-                    <PencilSquareIcon className="w-5 h-5 cursor-pointer" />
+                    <PencilSquareIcon
+                      className="w-5 h-5 cursor-pointer"
+                      onClick={() => selectBranchToEdit(data)}
+                    />
                     <TrashIcon className="w-5 h-5 cursor-pointer" />
                   </div>
                 </div>
@@ -98,6 +113,13 @@ const StorePage: React.FC = () => {
         title="Tambah Cabang/Gudang"
         isBranchFormDisplayed={isAddBranchFormDisplayed}
         setIsBranchFormDisplayed={setIsAddBranchFormDisplayed}
+      />
+
+      <FormEditCabang
+        title="Ubah Cabang/Gudang"
+        isBranchFormDisplayed={isEditBranchFormDisplayed}
+        setIsBranchFormDisplayed={setIsEditBranchFormDisplayed}
+        dataCabang={selectedDataToEdit}
       />
     </div>
   );
