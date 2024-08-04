@@ -5,6 +5,7 @@ import { getCookie } from 'cookies-next';
 
 import { useSales, useUser } from '@store';
 import { getRuntimeEnv } from '@utils';
+import { SalesCartResponseType } from '@types';
 
 const useSalesCart = () => {
   const { store } = useUser();
@@ -15,7 +16,7 @@ const useSalesCart = () => {
 
   const fetchSalesCart = useCallback(async () => {
     setLoading(true);
-    Axios.get(getSalesCartUrl, {
+    Axios.get<SalesCartResponseType>(getSalesCartUrl, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${getCookie('token')}`,

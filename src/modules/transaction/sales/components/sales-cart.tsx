@@ -16,7 +16,7 @@ const SalesCart = () => {
       {items.length > 0 ? (
         <div className="grid grid-cols-1 gap-4">
           {items.map(item => (
-            <SalesCartItems key={item.productId} data={item} />
+            <SalesCartItems key={item.id} data={item} />
           ))}
         </div>
       ) : (

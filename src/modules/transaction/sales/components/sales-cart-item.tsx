@@ -1,29 +1,29 @@
 import { NumberInput } from '@components';
 import { EllipsisVerticalIcon, TrashIcon } from '@heroicons/react/24/outline';
 
-import { SalesTransactionItemType } from '@store';
+import type { ModifiedSalesCartItemType } from '@types';
 import { money, numberFormat } from '@utils';
 
 type SalesCartItemProps = {
-  data: SalesTransactionItemType;
+  data: ModifiedSalesCartItemType;
 };
 const SalesCartItem = ({ data }: SalesCartItemProps) => {
   const {
-    productName,
-    baseSalesPrice,
-    salesPrice,
-    discountType,
-    discountValue,
+    name,
+    base_price: basePrice,
+    sale_price: salesPrice,
+    discount_type: discountType,
+    discount_value: discountValue,
     stock,
-    totalPrice,
-    quantity,
+    qty,
   } = data;
+  const totalPrice = salesPrice * qty;
 
   return (
     <div className="bg-white p-4 flex flex-col gap-4 w-full rounded">
       <div className="flex gap-4 items-center">
         <p className="grow text-base leading-normal text-ellipsis overflow-hidden whitespace-nowrap">
-          {productName}
+          {name}
         </p>
         <button>
           <EllipsisVerticalIcon className="w-4 h-4" />
@@ -32,19 +32,21 @@ const SalesCartItem = ({ data }: SalesCartItemProps) => {
 
       <div className="flex justify-between items-end">
         <p className="m-0">
-          {!!discountType && ['PERCENTAGE', 'FIXED'].includes(discountType) && (
-            <span className="bg-red-500/10 text-red-500 px-1 py-0.5 text-[10px] leading-4 rounded mb-1 inline-block">
-              {discountType === 'PERCENTAGE'
-                ? `Diskon ${numberFormat(discountValue)}%`
-                : `Diskon ${money(discountValue)}`}
-            </span>
-          )}
+          {!!discountValue &&
+            !!discountType &&
+            ['PERCENTAGE', 'FIXED'].includes(discountType) && (
+              <span className="bg-red-500/10 text-red-500 px-1 py-0.5 text-[10px] leading-4 rounded mb-1 inline-block">
+                {discountType === 'PERCENTAGE'
+                  ? `Diskon ${numberFormat(discountValue)}%`
+                  : `Diskon ${money(discountValue)}`}
+              </span>
+            )}
 
           <span className="flex items-start gap-1">
             <span className="text-sm">{money(salesPrice)}</span>
-            {baseSalesPrice !== salesPrice && (
+            {basePrice !== salesPrice && (
               <span className="text-[10px] line-through text-slate-400">
-                {money(baseSalesPrice)}
+                {money(basePrice)}
               </span>
             )}
           </span>
@@ -60,7 +62,7 @@ const SalesCartItem = ({ data }: SalesCartItemProps) => {
             <TrashIcon className="w-6 h-6 text-slate-400" />
           </button>
           <NumberInput
-            value={quantity}
+            value={qty}
             onChange={() => {}}
             min={1}
             max={stock}
