@@ -7,8 +7,9 @@ import { useEffect } from 'react';
 
 const Branches = () => {
   const { replace } = useRouter();
-  const { setStore, id, userStores } = useUser();
+  const { setStore, id, userStores, store } = useUser();
   const storesLength = (userStores || []).length;
+  const { initial: currentStore } = store || {};
 
   const handleClick = (store: StoreType) => {
     setStore(store);
@@ -31,12 +32,15 @@ const Branches = () => {
       </Head>
       <div className="h-screen flex justify-center items-center">
         <div className="p-4 flex gap-4 rounded bg-white flex-col w-full">
-          <h1 className="text-2xl">Pilih Cabang/Gudang</h1>
+          <h1 className="text-2xl flex justify-between items-center">
+            <span>Pilih Cabang/Gudang</span>
+            {currentStore && <span className="text-sm">({currentStore})</span>}
+          </h1>
           {(userStores || []).map(data => (
             <Button
               block
               ghost
-              key={data.initial}
+              key={data.id}
               onClick={() => {
                 handleClick(data);
               }}
