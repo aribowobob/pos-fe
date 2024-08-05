@@ -1,37 +1,30 @@
+import { SalesCartData, SalesCartState } from '@types';
 import { create } from 'zustand';
 
-export type DiscountType = 'PERCENTAGE' | 'FIXED' | null;
-export type SalesTransactionItemType = {
-  productId: number;
-  productName: string;
-  stock: number;
-  quantity: number;
-  baseSalesPrice: number;
-  discountType: DiscountType;
-  discountValue: number;
-  discountAmount: number;
-  salesPrice: number;
-  totalPrice: number;
-};
-export type SalesTransactionType = {
-  date: string;
-  items: SalesTransactionItemType[];
-  subTotal: number;
-};
-
-const DEFAULT_DATA: SalesTransactionType = {
-  date: '',
+const DEFAULT_DATA: SalesCartData = {
   items: [],
   subTotal: 0,
+  loading: false,
 };
 
-interface SalesTransactionState extends SalesTransactionType {
-  setData: (data: SalesTransactionType) => void;
-}
-
-const useUser = create<SalesTransactionState>(set => ({
+const useUser = create<SalesCartState>(set => ({
   ...DEFAULT_DATA,
-  setData: data => set({ ...data }),
+  setItems: value =>
+    set(state => {
+      const subTotal = value.reduce((acc, item) => {
+        const { sale_price = 0, qty = 1 } = item || {};
+        const total = sale_price * qty;
+
+        return acc + total;
+      }, 0);
+
+      return {
+        ...state,
+        items: value,
+        subTotal,
+      };
+    }),
+  setLoading: value => set({ loading: value }),
 }));
 
 export default useUser;
