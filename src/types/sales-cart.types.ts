@@ -20,11 +20,11 @@ export interface ModifiedSalesCartItemType extends SalesCartItemType {
 export interface SalesCartResponseType
   extends BaseResponseType<ModifiedSalesCartItemType[]> {}
 export type SalesCartData = {
-  items: SalesCartItemType[];
+  items: ModifiedSalesCartItemType[];
   subTotal: number;
   loading: boolean;
 };
 export interface SalesCartState extends SalesCartData {
-  setItems: (value: SalesCartItemType[]) => void;
+  setItems: (value: ModifiedSalesCartItemType[]) => void;
   setLoading: (value: boolean) => void;
 }
