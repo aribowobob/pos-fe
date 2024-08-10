@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { ICabangEditProps } from './type';
+import { ICabangEditProps } from '../../../types/toko.types';
 import { BottomSheet, Button, TextInput } from '@components';
 
 interface IFormEditCabangProps {

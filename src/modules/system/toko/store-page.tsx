@@ -10,7 +10,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 import { FormEditCabang, FormAddCabang } from '@modules';
-import { cabangDataEdit, ICabangEditProps } from './type';
+import { cabangDataEdit, ICabangEditProps } from '@types';
 
 const listCabang = [
   {

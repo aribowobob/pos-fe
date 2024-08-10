@@ -8,8 +8,9 @@ import {
   EmptyProductSearchResult,
   FormAddProduct,
   FormEditProduct,
+  FormProduct,
 } from '@modules';
-import { IProductProps } from './type';
+import { IProductProps } from '@types';
 
 import { money } from '@utils';
 
@@ -173,6 +174,13 @@ const ProductPage: React.FC = () => {
         setIsProductFormDisplayed={setIsAddProductFormDisplayed}
       />
       <FormEditProduct
+        title="Ubah Data Produk"
+        isProductFormDisplayed={isEditProductFormDisplayed}
+        setIsProductFormDisplayed={setIsEditProductFormDisplayed}
+        dataProduct={selectedDataToEdit}
+      />
+
+      <FormProduct
         title="Ubah Data Produk"
         isProductFormDisplayed={isEditProductFormDisplayed}
         setIsProductFormDisplayed={setIsEditProductFormDisplayed}

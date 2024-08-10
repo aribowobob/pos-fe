@@ -10,7 +10,7 @@ interface IEditProductProps {
   dataProduct?: IProductProps;
 }
 
-const FormEditProduct: React.FC<IEditProductProps> = ({
+const FormProduct: React.FC<IEditProductProps> = ({
   title = 'Ubah Data Produk',
   isProductFormDisplayed,
   setIsProductFormDisplayed,
@@ -122,4 +122,4 @@ const FormEditProduct: React.FC<IEditProductProps> = ({
   );
 };
 
-export default FormEditProduct;
+export default FormProduct;
