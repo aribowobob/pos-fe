@@ -4,18 +4,14 @@ import { useRouter } from 'next/router';
 import { CircleButton, TextInput, TopNav } from '@components';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import Head from 'next/head';
-import {
-  EmptyProductSearchResult,
-  FormAddProduct,
-  FormEditProduct,
-  FormProduct,
-} from '@modules';
-import { IProductProps } from '@types';
+import { EmptyProductSearchResult, FormProduct } from '@modules';
+import { IProductProps, IProductProps2 } from '@types';
 
 import { money } from '@utils';
 
 const produkArray: IProductProps[] = [
   {
+    id: 1,
     kode_sku: 'SKU001',
     nama_produk: 'Produk A',
     harga_beli: '10000',
@@ -23,6 +19,7 @@ const produkArray: IProductProps[] = [
     nama_satuan: 'pcs',
   },
   {
+    id: 2,
     kode_sku: 'SKU002',
     nama_produk: 'Produk B',
     harga_beli: '20000',
@@ -30,6 +27,7 @@ const produkArray: IProductProps[] = [
     nama_satuan: 'pcs',
   },
   {
+    id: 3,
     kode_sku: 'SKU003',
     nama_produk: 'Produk C',
     harga_beli: '30000',
@@ -41,20 +39,17 @@ const produkArray: IProductProps[] = [
 const ProductPage: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('');
   const [searchResult, setSearchResult] = useState<IProductProps[]>([]);
-  const [selectedDataToEdit, setSelectedDataToEdit] = useState({
-    kode_sku: '',
-    nama_produk: '',
-    harga_beli: '',
-    harga_jual: '',
-    nama_satuan: '',
-  });
+
   const [typingTimeout, setTypingTimeout] = useState<number | undefined>(
     undefined
   );
-  const [isAddProductFormDisplayed, setIsAddProductFormDisplayed] =
+  /* const [isAddProductFormDisplayed, setIsAddProductFormDisplayed] =
     useState(false);
   const [isEditProductFormDisplayed, setIsEditProductFormDisplayed] =
-    useState(false);
+    useState(false); */
+
+  const [isFormDisplayed, setIsFormDisplayed] = useState(false);
+  const [paramId, setParamId] = useState(0);
 
   useEffect(() => {
     return () => {
@@ -92,9 +87,18 @@ const ProductPage: React.FC = () => {
     }
   };
 
-  const selectProductToEdit = (param: IProductProps) => {
-    setIsEditProductFormDisplayed(true);
-    setSelectedDataToEdit(param);
+  const selectProductToEdit = (param: number) => {
+    setIsFormDisplayed(true);
+    setParamId(param);
+  };
+
+  const showAddProduct = () => {
+    setIsFormDisplayed(true);
+    setParamId(0);
+  };
+
+  const submitForm = (formData: IProductProps2) => {
+    console.log(`Input : ` + formData);
   };
 
   const { back } = useRouter();
@@ -130,8 +134,9 @@ const ProductPage: React.FC = () => {
           />
         ) : null}
         {inputValue !== '' &&
-          searchResult?.map((dataPrd, index) => {
+          searchResult?.map(dataPrd => {
             const {
+              id,
               kode_sku,
               nama_produk,
               harga_beli,
@@ -141,9 +146,9 @@ const ProductPage: React.FC = () => {
 
             return (
               <div
-                key={index}
+                key={id}
                 className="w-full flex flex-col bg-white mb-4 p-4 rounded-lg cursor-pointer"
-                onClick={() => selectProductToEdit(dataPrd)}
+                onClick={() => selectProductToEdit(id)}
               >
                 <div className="p-1">
                   <span className="font-semibold">SKU</span> {kode_sku}
@@ -166,25 +171,14 @@ const ProductPage: React.FC = () => {
       </div>
       <CircleButton
         className="fixed bottom-5 right-5"
-        onClick={() => setIsAddProductFormDisplayed(!isAddProductFormDisplayed)}
-      />
-      <FormAddProduct
-        title="Tambah Produk Baru"
-        isProductFormDisplayed={isAddProductFormDisplayed}
-        setIsProductFormDisplayed={setIsAddProductFormDisplayed}
-      />
-      <FormEditProduct
-        title="Ubah Data Produk"
-        isProductFormDisplayed={isEditProductFormDisplayed}
-        setIsProductFormDisplayed={setIsEditProductFormDisplayed}
-        dataProduct={selectedDataToEdit}
+        onClick={() => showAddProduct()}
       />
 
       <FormProduct
-        title="Ubah Data Produk"
-        isProductFormDisplayed={isEditProductFormDisplayed}
-        setIsProductFormDisplayed={setIsEditProductFormDisplayed}
-        dataProduct={selectedDataToEdit}
+        open={isFormDisplayed}
+        onSubmit={submitForm}
+        onCancel={() => setIsFormDisplayed(false)}
+        id={paramId}
       />
     </div>
   );
