@@ -41,7 +41,6 @@ const StorePage: React.FC = () => {
   const { companyName } = useUser();
 
   const selectBranchToEdit = (param: ICabangEditProps) => {
-    console.log({ param });
     setIsEditBranchFormDisplayed(true);
     setSelectedDataToEdit(param);
   };

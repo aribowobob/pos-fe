@@ -26,20 +26,14 @@ const FormProduct: React.FC<IEditProductProps> = ({
 }) => {
   const [formData, setFormData] = useState<IProductProps2>(dataAwal);
 
-  console.log({ formData });
-
   const [isShowDeleteConfirm, setIsShowDeleteConfirm] = useState(false);
-  const [isEditForm, setIsEditForm] = useState(false);
 
   useEffect(() => {
-    if (id === 0 || id === undefined || id === null) {
-      console.log('Input Data');
-      setIsEditForm(false);
+    if (!id) {
       setFormData(dataAwal);
     } else {
       console.log('Update Data');
       //berarti update
-      setIsEditForm(true);
       //call api get product by Id
     }
   }, [open, id]);
@@ -62,7 +56,6 @@ const FormProduct: React.FC<IEditProductProps> = ({
   };
 
   const handleSubmit = () => {
-    console.log('Submitting formData:', formData);
     onSubmit(formData); // Kirim formData ke parent
   };
 
@@ -75,8 +68,28 @@ const FormProduct: React.FC<IEditProductProps> = ({
     <>
       <BottomSheet
         open={open}
-        title={isEditForm ? 'Update Data produk' : 'Tambah Produk Baru'}
+        title={!!id ? 'Update Data produk' : 'Tambah Produk Baru'}
         onClose={handleCancle}
+        footer={
+          !!id ? (
+            <div className="flex gap-4">
+              <Button
+                color="danger"
+                ghost
+                onClick={() => setIsShowDeleteConfirm(true)}
+              >
+                Hapus
+              </Button>
+              <Button block className="grow" onClick={() => handleSubmit()}>
+                Simpan Perubahan
+              </Button>
+            </div>
+          ) : (
+            <Button className="w-full" onClick={() => handleSubmit()}>
+              Simpan
+            </Button>
+          )
+        }
       >
         <div>
           <TextInput
@@ -116,27 +129,7 @@ const FormProduct: React.FC<IEditProductProps> = ({
             message="Boleh dikosongkan. Apabila dikosongkan akan diberi nilai default
           “unit”"
           />
-          {isEditForm ? (
-            <div className="flex gap-4">
-              <Button
-                className="w-1/4"
-                color="danger"
-                ghost
-                onClick={() => setIsShowDeleteConfirm(true)}
-              >
-                Hapus
-              </Button>
-              <Button className="w-3/4" onClick={() => handleSubmit()}>
-                Simpan Perubahan
-              </Button>
-            </div>
-          ) : (
-            <Button className="w-full" onClick={() => handleSubmit()}>
-              Simpan
-            </Button>
-          )}
         </div>
-        {/* {JSON.stringify(formData)} */}
       </BottomSheet>
       {isShowDeleteConfirm && (
         <Modal
