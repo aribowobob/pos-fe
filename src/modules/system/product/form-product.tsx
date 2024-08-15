@@ -1,8 +1,8 @@
 import { Button, CurrencyInput, TextInput, Modal } from '@components';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { BottomSheet } from '@components';
-import { IProductProps2 } from '@types';
 import { useProducts } from '@hooks';
+import { IProductProps2 } from '@types';
 
 interface IEditProductProps {
   id?: number;
