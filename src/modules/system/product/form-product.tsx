@@ -2,6 +2,7 @@ import { Button, CurrencyInput, TextInput, Modal } from '@components';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { BottomSheet } from '@components';
 import { IProductProps2 } from '@types';
+import { useProducts } from '@hooks';
 
 interface IEditProductProps {
   id?: number;
@@ -28,13 +29,29 @@ const FormProduct: React.FC<IEditProductProps> = ({
 
   const [isShowDeleteConfirm, setIsShowDeleteConfirm] = useState(false);
 
+  const { fetchData } = useProducts();
+
   useEffect(() => {
     if (!id) {
       setFormData(dataAwal);
     } else {
-      console.log('Update Data');
-      //berarti update
-      //call api get product by Id
+      const fetchDataAndUpdateForm = async () => {
+        const fetchedProducts = await fetchData({ id }); // Tunggu hingga data diambil
+
+        if (fetchedProducts.length > 0) {
+          const { kode_sku, nama_produk, harga_beli, harga_jual, nama_satuan } =
+            fetchedProducts[0]; // Menghapus `id` dari data produk
+          setFormData({
+            kode_sku,
+            nama_produk,
+            harga_beli,
+            harga_jual,
+            nama_satuan,
+          });
+        }
+      };
+
+      fetchDataAndUpdateForm();
     }
   }, [open, id]);
 
@@ -144,7 +161,6 @@ const FormProduct: React.FC<IEditProductProps> = ({
           <p>{`Anda ingin menghapus ${nama_produk} ?`}</p>
         </Modal>
       )}
-      ;
     </>
   );
 };
