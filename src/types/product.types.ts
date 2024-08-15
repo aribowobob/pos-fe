@@ -1,4 +1,13 @@
 export interface IProductProps {
+  id: number;
+  kode_sku: string;
+  nama_produk: string;
+  harga_beli: string;
+  harga_jual: string;
+  nama_satuan: string;
+}
+
+export interface IProductProps2 {
   kode_sku: string;
   nama_produk: string;
   harga_beli: string;
@@ -7,6 +16,7 @@ export interface IProductProps {
 }
 
 export const productData: IProductProps = {
+  id: 0,
   kode_sku: '',
   nama_produk: '',
   harga_beli: '',

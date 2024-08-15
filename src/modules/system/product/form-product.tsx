@@ -1,32 +1,42 @@
 import { Button, CurrencyInput, TextInput, Modal } from '@components';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { BottomSheet } from '@components';
-import { IProductProps, productData } from '@types';
+import { IProductProps2 } from '@types';
 
 interface IEditProductProps {
-  title?: string;
-  isProductFormDisplayed: boolean;
-  setIsProductFormDisplayed: React.Dispatch<React.SetStateAction<boolean>>;
-  dataProduct?: IProductProps;
+  id?: number;
+  open: boolean;
+  onSubmit: (formData: IProductProps2) => void;
+  onCancel: () => void;
 }
 
-const FormEditProduct: React.FC<IEditProductProps> = ({
-  title = 'Ubah Data Produk',
-  isProductFormDisplayed,
-  setIsProductFormDisplayed,
-  dataProduct,
+const dataAwal = {
+  kode_sku: '',
+  nama_produk: '',
+  harga_beli: '',
+  harga_jual: '',
+  nama_satuan: '',
+};
+
+const FormProduct: React.FC<IEditProductProps> = ({
+  id,
+  open,
+  onSubmit,
+  onCancel,
 }) => {
-  const [formData, setFormData] = useState<IProductProps>(
-    dataProduct || productData
-  );
+  const [formData, setFormData] = useState<IProductProps2>(dataAwal);
 
   const [isShowDeleteConfirm, setIsShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
-    if (dataProduct) {
-      setFormData(dataProduct);
+    if (!id) {
+      setFormData(dataAwal);
+    } else {
+      console.log('Update Data');
+      //berarti update
+      //call api get product by Id
     }
-  }, [dataProduct]);
+  }, [open, id]);
 
   const { kode_sku, nama_produk, harga_beli, harga_jual, nama_satuan } =
     formData;
@@ -45,12 +55,41 @@ const FormEditProduct: React.FC<IEditProductProps> = ({
     setIsShowDeleteConfirm(false);
   };
 
+  const handleSubmit = () => {
+    onSubmit(formData); // Kirim formData ke parent
+  };
+
+  const handleCancle = () => {
+    setFormData(dataAwal);
+    onCancel();
+  };
+
   return (
     <>
       <BottomSheet
-        open={isProductFormDisplayed}
-        title={title}
-        onClose={() => setIsProductFormDisplayed(!isProductFormDisplayed)}
+        open={open}
+        title={!!id ? 'Update Data produk' : 'Tambah Produk Baru'}
+        onClose={handleCancle}
+        footer={
+          !!id ? (
+            <div className="flex gap-4">
+              <Button
+                color="danger"
+                ghost
+                onClick={() => setIsShowDeleteConfirm(true)}
+              >
+                Hapus
+              </Button>
+              <Button block className="grow" onClick={() => handleSubmit()}>
+                Simpan Perubahan
+              </Button>
+            </div>
+          ) : (
+            <Button className="w-full" onClick={() => handleSubmit()}>
+              Simpan
+            </Button>
+          )
+        }
       >
         <div>
           <TextInput
@@ -68,14 +107,14 @@ const FormEditProduct: React.FC<IEditProductProps> = ({
             className="mb-4"
           />
           <CurrencyInput
-            name="Harga Beli"
+            name="harga_beli"
             value={harga_beli}
             label="Harga Beli"
             onChange={handleChange}
             className="mb-4"
           />
           <CurrencyInput
-            name="Harga Jual"
+            name="harga_jual"
             value={harga_jual}
             label="Harga Jual"
             onChange={handleChange}
@@ -90,19 +129,7 @@ const FormEditProduct: React.FC<IEditProductProps> = ({
             message="Boleh dikosongkan. Apabila dikosongkan akan diberi nilai default
           “unit”"
           />
-          <div className="flex gap-4">
-            <Button
-              className="w-1/4"
-              color="danger"
-              ghost
-              onClick={() => setIsShowDeleteConfirm(true)}
-            >
-              Hapus
-            </Button>
-            <Button className="w-3/4">Simpan Perubahan</Button>
-          </div>
         </div>
-        {/* {JSON.stringify(formData)} */}
       </BottomSheet>
       {isShowDeleteConfirm && (
         <Modal
@@ -122,4 +149,4 @@ const FormEditProduct: React.FC<IEditProductProps> = ({
   );
 };
 
-export default FormEditProduct;
+export default FormProduct;

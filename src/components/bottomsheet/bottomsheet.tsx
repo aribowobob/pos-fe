@@ -8,6 +8,7 @@ interface IBottomSheetProps {
   children: React.ReactNode;
   title?: string;
   className?: string;
+  footer?: React.ReactNode;
 }
 
 const BottomSheet: React.FC<IBottomSheetProps> = ({
@@ -16,6 +17,7 @@ const BottomSheet: React.FC<IBottomSheetProps> = ({
   children,
   title,
   className,
+  footer,
 }) => {
   const sheetRef = useRef<HTMLDivElement>(null);
 
@@ -63,12 +65,22 @@ const BottomSheet: React.FC<IBottomSheetProps> = ({
           }
         )}
       >
-        <div className="w-full p-4 bg-white">
-          <div className="flex justify-between text-lg mb-4">
-            <label>{title}</label>
-            <XCircleIcon className="w-7 h-7 cursor-pointer" onClick={onClose} />
+        <div className="w-full flex flex-col h-full">
+          <div className="sticky top-0 bg-white p-4 z-10 flex-shrink-0">
+            <div className="flex justify-between text-lg mb-4">
+              <label>{title}</label>
+              <XCircleIcon
+                className="w-7 h-7 cursor-pointer"
+                onClick={onClose}
+              />
+            </div>
           </div>
-          {children}
+          <div className="flex-1 overflow-y-auto p-4">{children}</div>
+          {footer && (
+            <div className="sticky bottom-0 p-4 bg-white flex-shrink-0">
+              {footer}
+            </div>
+          )}
         </div>
       </div>
     </div>

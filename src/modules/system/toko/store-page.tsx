@@ -10,7 +10,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 import { FormEditCabang, FormAddCabang } from '@modules';
-import { cabangDataEdit, ICabangEditProps } from './type';
+import { cabangDataEdit, ICabangEditProps } from '@types';
 
 const listCabang = [
   {
@@ -41,7 +41,6 @@ const StorePage: React.FC = () => {
   const { companyName } = useUser();
 
   const selectBranchToEdit = (param: ICabangEditProps) => {
-    console.log({ param });
     setIsEditBranchFormDisplayed(true);
     setSelectedDataToEdit(param);
   };

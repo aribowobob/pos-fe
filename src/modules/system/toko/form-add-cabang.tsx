@@ -1,5 +1,9 @@
 import React, { ChangeEvent, useState } from 'react';
-import { cabangData, IAddCabangProps, ICabangProps } from './type';
+import {
+  cabangData,
+  IAddCabangProps,
+  ICabangProps,
+} from '../../../types/toko.types';
 import { BottomSheet, Button, TextInput } from '@components';
 
 const FormAddCabang: React.FC<IAddCabangProps> = ({

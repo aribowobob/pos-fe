@@ -1,7 +1,7 @@
 import { Button, CurrencyInput, TextInput } from '@components';
 import React, { ChangeEvent, useState } from 'react';
 import { BottomSheet } from '@components';
-import { IAddProductProps, IProductProps, productData } from './type';
+import { IAddProductProps, IProductProps, productData } from '@types';
 
 const FormAddProduct: React.FC<IAddProductProps> = ({
   title = 'Tambah Produk',
