@@ -1,15 +1,11 @@
 import clsx from 'clsx';
 
-export type ProductItemType = {
-  id: number;
-  name: string;
-  price: number;
-  stock: number;
-};
+import { ProductType } from '@types';
+
 type ProductListProps = {
-  data: ProductItemType[];
+  data: ProductType[];
   storeInitial: string;
-  onProductSelect: (product: ProductItemType) => void;
+  onProductSelect: (product: ProductType) => void;
 };
 
 const ProductList = ({
@@ -17,7 +13,7 @@ const ProductList = ({
   storeInitial,
   onProductSelect,
 }: ProductListProps) => {
-  const handleClick = (product: ProductItemType) => {
+  const handleClick = (product: ProductType) => {
     onProductSelect(product);
   };
 
@@ -31,7 +27,7 @@ const ProductList = ({
         <li
           key={product.id}
           onClick={() => {
-            if (product.stock > 0) {
+            if (Number(product?.stock || 0) > 0) {
               handleClick(product);
             } else {
               alert('Stok habis');
@@ -41,7 +37,7 @@ const ProductList = ({
         >
           <p className="font-medium text-sm m-0">{product.name}</p>
           <p className="text-xs flex w-full justify-between">
-            <span className="grow">{`Harga: ${product.price}`}</span>
+            <span className="grow">{`Harga: ${product.sale_price}`}</span>
             <span
               className={clsx({ 'text-red-500': product.stock === 0 })}
             >{`Stok ${storeInitial}: ${product.stock}`}</span>

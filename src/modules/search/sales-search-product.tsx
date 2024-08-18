@@ -8,16 +8,17 @@ import { useRouter } from 'next/router';
 import { LoadingFullScreen, TopNav } from '@components';
 import { useUser } from '@store';
 import { ProductList, ProductSearchbar } from '@modules';
-import type { ProductItemType } from '@modules';
+import { ProductType } from '@types';
 import { getRuntimeEnv } from '@utils';
 
 const TransactionSalesSearchProductPage = () => {
   const API_URL = getRuntimeEnv('API_URL');
-  const addCartItemUrl = `${API_URL}/sales-transaction/create`;
+  const addCartItemUrl = `${API_URL}/add-to-sales-cart`;
   const getProductsUrl = `${API_URL}/get-products`;
   const [products, setProducts] = useState(null);
   const [loading, setLoading] = useState(false);
   const { store } = useUser();
+  const { id: storeId } = store || {};
   const { back } = useRouter();
   const handleSubmitSearch = async (keyword: string) => {
     setLoading(true);
@@ -25,6 +26,7 @@ const TransactionSalesSearchProductPage = () => {
     const getProducts = await Axios.get(getProductsUrl, {
       params: {
         keyword,
+        store: storeId,
       },
       headers: {
         Authorization: `Bearer ${getCookie('token')}`,
@@ -43,17 +45,19 @@ const TransactionSalesSearchProductPage = () => {
 
     setProducts(data || []);
   };
-  const handleSelectProduct = async (product: ProductItemType) => {
+  const handleSelectProduct = async (product: ProductType) => {
     setLoading(true);
 
     const insertItem = await Axios.post(
       addCartItemUrl,
       {
-        productId: product.id,
-        quantity: 1,
+        product: product.id,
+        qty: 1,
+        store: storeId,
       },
       {
         headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${getCookie('token')}`,
         },
       }
@@ -79,7 +83,7 @@ const TransactionSalesSearchProductPage = () => {
         <title>POS - Pencarian Produk</title>
       </Head>
       <TopNav title="Pencarian Produk" onBack={back} />
-      <ProductSearchbar onSubmit={handleSubmitSearch} />
+      {storeId && <ProductSearchbar onSubmit={handleSubmitSearch} />}
       <ProductList
         data={products || []}
         storeInitial={store?.initial || ''}

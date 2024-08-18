@@ -1,3 +1,16 @@
+import { BaseResponseType } from './common.types';
+
+export type ProductType = {
+  id: number;
+  sku: string;
+  name: string;
+  purchase_price?: number;
+  sale_price: number;
+  unit_name: string;
+  stock?: number;
+};
+export interface SearchProductResponseType
+  extends BaseResponseType<ProductType[]> {}
 export interface IProductProps {
   id: number;
   kode_sku: string;
