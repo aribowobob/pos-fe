@@ -64,7 +64,7 @@ const NumberInput: FC<NumberInputProps> = ({
         <PlusCircleIcon
           className={clsx(
             'w-6 h-6',
-            value <= min ? 'text-slate-300' : 'text-teal-600'
+            value < max ? 'text-teal-600' : 'text-slate-300'
           )}
         />
       </button>
