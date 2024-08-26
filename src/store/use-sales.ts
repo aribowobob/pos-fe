@@ -4,10 +4,10 @@ import { create } from 'zustand';
 const DEFAULT_DATA: SalesCartData = {
   items: [],
   subTotal: 0,
-  loading: false,
+  loading: true,
 };
 
-const useUser = create<SalesCartState>(set => ({
+const useSales = create<SalesCartState>(set => ({
   ...DEFAULT_DATA,
   setItems: value =>
     set(state => {
@@ -27,4 +27,4 @@ const useUser = create<SalesCartState>(set => ({
   setLoading: value => set({ loading: value }),
 }));
 
-export default useUser;
+export default useSales;

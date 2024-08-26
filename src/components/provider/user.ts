@@ -12,7 +12,7 @@ import { getRuntimeEnv } from '@utils';
 const UserProvider = () => {
   const API_URL = getRuntimeEnv('API_URL');
   const getUserUrl = `${API_URL}/get-user`;
-  const { id, setUser } = useUser();
+  const { id, setUser, setLoading } = useUser();
   const token = getCookie('token');
   const [fetched, setFetched] = useState(false);
   const { replace } = useRouter();
@@ -20,7 +20,7 @@ const UserProvider = () => {
   useEffect(() => {
     if (!id && token && !fetched) {
       setFetched(true);
-
+      setLoading(true);
       axios
         .get(getUserUrl, { headers: { Authorization: `Bearer ${token}` } })
         .then(({ data: dataResponse }) => {
@@ -33,6 +33,9 @@ const UserProvider = () => {
         .catch(() => {
           deleteCookie('token');
           replace('/login');
+        })
+        .finally(() => {
+          setLoading(false);
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

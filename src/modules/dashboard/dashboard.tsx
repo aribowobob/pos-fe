@@ -2,17 +2,15 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import { BottomNav, TopNav } from '@components';
-import { useSalesCart } from '@hooks';
 import { useSales, useUser } from '@store';
 
 import Info from './info';
 
 export const Dashboard = () => {
   const { push } = useRouter();
-  const { companyName } = useUser();
-  const { items } = useSales();
-
-  useSalesCart();
+  const { companyName, loading: loadingUser } = useUser();
+  const { items, loading: loadingSales } = useSales();
+  const isLoading = loadingUser || loadingSales;
 
   return (
     <div className="container mx-auto sm:px-4">
@@ -26,6 +24,7 @@ export const Dashboard = () => {
             push('/transaction/sales');
           }}
           isCartActive={(items || []).length > 0}
+          isLoading={isLoading}
         />
         <Info />
         <BottomNav />

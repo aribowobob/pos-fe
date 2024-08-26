@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 
 import Axios from 'axios';
 import { getCookie } from 'cookies-next';
@@ -72,12 +72,6 @@ const useSalesCart = () => {
         setLoading(false);
       });
   };
-
-  useEffect(() => {
-    if (!!storeId && fetchSalesCart) {
-      fetchSalesCart();
-    }
-  }, [fetchSalesCart, storeId]);
 
   return {
     fetchSalesCart,
