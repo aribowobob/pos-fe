@@ -4,10 +4,12 @@ import Axios from 'axios';
 import { getCookie } from 'cookies-next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
-import { LoadingFullScreen, Modal, TopNav } from '@components';
-import { useUser } from '@store';
+import { Modal, TopNav } from '@components';
+import { useSalesCart } from '@hooks';
 import { ProductList, ProductSearchbar } from '@modules';
+import { useUser } from '@store';
 import { ProductType } from '@types';
 import { getRuntimeEnv } from '@utils';
 
@@ -21,6 +23,7 @@ const TransactionSalesSearchProductPage = () => {
   const { store } = useUser();
   const { id: storeId } = store || {};
   const { back } = useRouter();
+  const { fetchSalesCart } = useSalesCart();
   const handleSubmitSearch = async (keyword: string) => {
     setLoading(true);
 
@@ -35,7 +38,7 @@ const TransactionSalesSearchProductPage = () => {
     })
       .catch(() => {
         setProducts(null);
-        alert('Error get products');
+        toast.error('Error get products');
       })
       .finally(() => {
         setLoading(false);
@@ -64,7 +67,7 @@ const TransactionSalesSearchProductPage = () => {
       }
     )
       .catch(() => {
-        alert('Error insert item');
+        toast.error('Error insert item');
       })
       .finally(() => {
         setLoading(false);
@@ -74,6 +77,8 @@ const TransactionSalesSearchProductPage = () => {
     const { code, data } = responseData || {};
 
     if (code === 200 && !!data) {
+      toast.success('Berhasil ditambahkan ke keranjang');
+      fetchSalesCart();
       back();
     }
   };
@@ -90,9 +95,9 @@ const TransactionSalesSearchProductPage = () => {
         storeInitial={store?.initial || ''}
         onProductSelect={handleSelectProduct}
         onSelectEmptyStock={() => setShowWarning(true)}
+        isLoading={loading}
       />
 
-      {loading && <LoadingFullScreen />}
       {showWarning && (
         <Modal
           title="Stok Kosong"

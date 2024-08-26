@@ -1,10 +1,12 @@
 import clsx from 'clsx';
 
 import { ProductType } from '@types';
+import { LoadingSearchProduct } from '@components';
 
 type ProductListProps = {
   data: ProductType[];
   storeInitial: string;
+  isLoading?: boolean;
   onProductSelect: (product: ProductType) => void;
   onSelectEmptyStock?: () => void;
 };
@@ -12,6 +14,7 @@ type ProductListProps = {
 const ProductList = ({
   data,
   storeInitial,
+  isLoading,
   onProductSelect,
   onSelectEmptyStock,
 }: ProductListProps) => {
@@ -19,7 +22,11 @@ const ProductList = ({
     onProductSelect(product);
   };
 
-  if (!data.length) {
+  if (isLoading) {
+    return <LoadingSearchProduct />;
+  }
+
+  if (!isLoading && !data.length) {
     return null;
   }
 

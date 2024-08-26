@@ -11,6 +11,7 @@ type TopNavProps = {
   onCartClick?: () => void;
   isCartActive?: boolean;
   branchName?: string;
+  isLoading?: boolean;
 };
 
 const TopNav = ({
@@ -19,6 +20,7 @@ const TopNav = ({
   onCartClick,
   isCartActive,
   branchName,
+  isLoading,
 }: TopNavProps) => {
   const { replace } = useRouter();
 
@@ -30,13 +32,22 @@ const TopNav = ({
         </button>
       )}
 
-      <p className="text-xl grow font-medium">{title}</p>
+      <p className="text-xl grow font-medium">
+        {isLoading || !title ? (
+          <span className="w-60 h-7 block rounded bg-slate-200 animate-pulse" />
+        ) : (
+          title
+        )}
+      </p>
 
       {typeof onCartClick === 'function' && (
         <button type="button" className="relative" onClick={onCartClick}>
           <ShoppingCartIcon className="w-6 h-6" />
           {isCartActive && (
-            <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-red-600" />
+            <>
+              <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-red-600" />
+              <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-red-600 animate-ping" />
+            </>
           )}
         </button>
       )}
