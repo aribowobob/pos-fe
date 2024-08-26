@@ -44,7 +44,10 @@ const TopNav = ({
         <button type="button" className="relative" onClick={onCartClick}>
           <ShoppingCartIcon className="w-6 h-6" />
           {isCartActive && (
-            <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-red-600" />
+            <>
+              <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-red-600" />
+              <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-red-600 animate-ping" />
+            </>
           )}
         </button>
       )}
