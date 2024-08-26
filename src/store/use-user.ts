@@ -42,6 +42,7 @@ const useUser = create<UserState>(set => ({
   setUser: user =>
     set({
       ...user,
+      loading: false,
     }),
   setStore: store => set({ store }),
 }));
