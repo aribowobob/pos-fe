@@ -7,7 +7,7 @@ import SalesCartItems from './sales-cart-item';
 const SalesCart = () => {
   const { items, loading } = useSales();
 
-  useSalesCart();
+  const { removeItem } = useSalesCart();
 
   if (loading) return <LoadingFullScreen />;
 
@@ -16,7 +16,7 @@ const SalesCart = () => {
       {items.length > 0 ? (
         <div className="grid grid-cols-1 gap-4">
           {items.map(item => (
-            <SalesCartItems key={item.id} data={item} />
+            <SalesCartItems key={item.id} data={item} onRemove={removeItem} />
           ))}
         </div>
       ) : (

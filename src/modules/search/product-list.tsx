@@ -6,12 +6,14 @@ type ProductListProps = {
   data: ProductType[];
   storeInitial: string;
   onProductSelect: (product: ProductType) => void;
+  onSelectEmptyStock?: () => void;
 };
 
 const ProductList = ({
   data,
   storeInitial,
   onProductSelect,
+  onSelectEmptyStock,
 }: ProductListProps) => {
   const handleClick = (product: ProductType) => {
     onProductSelect(product);
@@ -30,14 +32,22 @@ const ProductList = ({
             if (Number(product?.stock || 0) > 0) {
               handleClick(product);
             } else {
-              alert('Stok habis');
+              onSelectEmptyStock?.();
             }
           }}
-          className="block p-4 bg-white hover:bg-slate-100 cursor-pointer border-t border-slate-200"
+          className="block p-4 bg-white hover:bg-slate-200 cursor-pointer border-t border-slate-200 select-none"
         >
-          <p className="font-medium text-sm m-0">{product.name}</p>
+          <p
+            className={clsx('font-medium text-sm m-0', {
+              'text-slate-400': product.stock === 0,
+            })}
+          >
+            {product.name}
+          </p>
           <p className="text-xs flex w-full justify-between">
-            <span className="grow">{`Harga: ${product.sale_price}`}</span>
+            <span
+              className={clsx({ 'text-slate-400': product.stock === 0 })}
+            >{`Harga: ${product.sale_price}`}</span>
             <span
               className={clsx({ 'text-red-500': product.stock === 0 })}
             >{`Stok ${storeInitial}: ${product.stock}`}</span>

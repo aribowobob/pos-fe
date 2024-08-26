@@ -2,6 +2,7 @@ import { useCallback, useEffect } from 'react';
 
 import Axios from 'axios';
 import { getCookie } from 'cookies-next';
+import { toast } from 'react-toastify';
 
 import { useSales, useUser } from '@store';
 import { getRuntimeEnv } from '@utils';
@@ -13,6 +14,7 @@ const useSalesCart = () => {
   const { setItems, setLoading } = useSales();
   const API_URL = getRuntimeEnv('API_URL');
   const getSalesCartUrl = `${API_URL}/get-sales-cart`;
+  const deleteCartItemUrl = `${API_URL}/delete-sales-cart-item`;
 
   const fetchSalesCart = useCallback(async () => {
     setLoading(true);
@@ -42,6 +44,35 @@ const useSalesCart = () => {
       });
   }, [getSalesCartUrl, setItems, setLoading, storeId]);
 
+  const removeItem = (id: number) => {
+    setLoading(true);
+    Axios.delete(deleteCartItemUrl, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${getCookie('token')}`,
+      },
+      data: {
+        id,
+      },
+    })
+      .then(response => {
+        const { code, data } = response?.data || {};
+
+        if (code === 200 && !!data) {
+          toast.success('Berhasil dihapus dari keranjang');
+        } else {
+          toast.error('Gagal menghapus item dari keranjang');
+        }
+        fetchSalesCart();
+      })
+      .catch(() => {
+        toast.error('Error menghapus item dari keranjang');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
     if (!!storeId && fetchSalesCart) {
       fetchSalesCart();
@@ -50,6 +81,7 @@ const useSalesCart = () => {
 
   return {
     fetchSalesCart,
+    removeItem,
   };
 };
 

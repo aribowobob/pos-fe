@@ -1,7 +1,11 @@
-import '@/styles/globals.css';
-import { UserProvider } from '@components';
 import type { AppProps } from 'next/app';
 import { Poppins } from 'next/font/google';
+import { ToastContainer } from 'react-toastify';
+
+import { UserProvider } from '@components';
+
+import 'react-toastify/dist/ReactToastify.min.css';
+import '@/styles/globals.css';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -13,6 +17,19 @@ export default function App({ Component, pageProps }: AppProps) {
     <main className={poppins.className}>
       <Component {...pageProps} />
       <UserProvider />
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar
+        closeButton
+        closeOnClick={false}
+        pauseOnFocusLoss
+        draggable={false}
+        pauseOnHover={false}
+        className="px-4 mt-20"
+        stacked
+        limit={3}
+      />
     </main>
   );
 }

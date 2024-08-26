@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { FC } from 'react';
 
 import { useGoogleLogin } from '@react-oauth/google';
@@ -9,18 +10,21 @@ import { useRouter } from 'next/router';
 import { Button } from '@components';
 import { useUser } from '@store';
 import { getRuntimeEnv } from '@utils';
+import { toast } from 'react-toastify';
 
 const LoginPage: FC = () => {
   const API_URL = getRuntimeEnv('API_URL');
   const getTokenUrl = `${API_URL}/get-token`;
   const { replace } = useRouter();
   const { setUser } = useUser();
+  const [loading, setLoading] = useState(false);
   const loginWithGoogle = useGoogleLogin({
     onSuccess: async codeResponse => {
       const getToken = Axios.get(getTokenUrl, {
         headers: { Token: codeResponse.access_token },
       }).catch(() => {
-        alert('Error get token.');
+        toast.error('Error get token.');
+        setLoading(false);
       });
       const dataToken = await getToken;
       const { code: codeGetToken, data: accessToken } = dataToken?.data || {};
@@ -29,7 +33,8 @@ const LoginPage: FC = () => {
         const getUser = await Axios.get(`${API_URL}/get-user`, {
           headers: { Authorization: `Bearer ${accessToken}` },
         }).catch(() => {
-          alert('Error get data user.');
+          toast.error('Error get data user.');
+          setLoading(false);
         });
         const { code, data } = getUser?.data || {};
 
@@ -41,10 +46,12 @@ const LoginPage: FC = () => {
       }
     },
     onError: () => {
-      alert('Error login with google.');
+      toast.error('Error login with google.');
+      setLoading(false);
     },
     onNonOAuthError: () => {
-      alert('Unknown error. Non oauth error.');
+      toast.error('Unknown error. Non oauth error.');
+      setLoading(false);
     },
   });
 
@@ -56,7 +63,15 @@ const LoginPage: FC = () => {
       <div className="h-screen flex justify-center items-center">
         <div className="p-4 flex gap-4 rounded bg-white flex-col w-full">
           <h1 className="text-2xl">Login</h1>
-          <Button block ghost onClick={loginWithGoogle}>
+          <Button
+            block
+            ghost
+            disabled={loading}
+            onClick={() => {
+              setLoading(true);
+              loginWithGoogle();
+            }}
+          >
             Login dengan Google
           </Button>
         </div>
