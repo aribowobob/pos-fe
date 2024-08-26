@@ -4,8 +4,8 @@ import React from 'react';
 
 interface ModalProps {
   title: string;
-  cancelText: string;
-  onCancel: () => void;
+  cancelText?: string;
+  onCancel?: () => void;
   onClose: () => void;
   okText: string;
   onOk: () => void;
@@ -38,16 +38,18 @@ const Modal: React.FC<ModalProps> = ({
       />
 
       {/* Modal Content */}
-      <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6 z-10">
+      <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-4 pb-8 z-10">
         <div className="flex justify-between items-center">
-          <h3 className="text-lg font-medium">{title}</h3>
-          <XCircleIcon className="w-7 h-7 cursor-pointer" onClick={onClose} />
+          <p className="text-xl">{title}</p>
+          <XCircleIcon className="w-6 h-6 cursor-pointer" onClick={onClose} />
         </div>
-        <div className="py-4">{children}</div>
+        <div className="py-6">{children}</div>
         <div className="flex flex-col gap-2">
-          <Button onClick={onCancel} className="w-full" color="primary" ghost>
-            {cancelText}
-          </Button>
+          {!!cancelText && typeof onCancel === 'function' && (
+            <Button onClick={onCancel} className="w-full" color="primary" ghost>
+              {cancelText}
+            </Button>
+          )}
           <Button onClick={onOk} className="w-full" color="primary">
             {okText}
           </Button>

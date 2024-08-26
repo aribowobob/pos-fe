@@ -5,7 +5,7 @@ import { getCookie } from 'cookies-next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-import { LoadingFullScreen, TopNav } from '@components';
+import { LoadingFullScreen, Modal, TopNav } from '@components';
 import { useUser } from '@store';
 import { ProductList, ProductSearchbar } from '@modules';
 import { ProductType } from '@types';
@@ -17,6 +17,7 @@ const TransactionSalesSearchProductPage = () => {
   const getProductsUrl = `${API_URL}/get-products`;
   const [products, setProducts] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
   const { store } = useUser();
   const { id: storeId } = store || {};
   const { back } = useRouter();
@@ -88,9 +89,20 @@ const TransactionSalesSearchProductPage = () => {
         data={products || []}
         storeInitial={store?.initial || ''}
         onProductSelect={handleSelectProduct}
+        onSelectEmptyStock={() => setShowWarning(true)}
       />
 
       {loading && <LoadingFullScreen />}
+      {showWarning && (
+        <Modal
+          title="Stok Kosong"
+          onClose={() => setShowWarning(false)}
+          onOk={() => setShowWarning(false)}
+          okText="OK"
+        >
+          <p>Produk ini sedang habis, tidak bisa ditambahkan ke keranjang.</p>
+        </Modal>
+      )}
     </div>
   );
 };
