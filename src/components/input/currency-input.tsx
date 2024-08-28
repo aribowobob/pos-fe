@@ -1,13 +1,16 @@
-import React, { ChangeEvent } from 'react';
+import type { ChangeEvent, ReactNode } from 'react';
 import { NumericFormat } from 'react-number-format';
 import TextInput from './text-input';
 
 type CurrencyInputProps = {
-  value: string;
+  value: string | number;
   name: string;
   label: string;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   className?: string;
+  prefixElement?: string | ReactNode;
+  suffixElement?: string | ReactNode;
+  allowNegative?: boolean;
 };
 
 const CurrencyInput = ({
@@ -16,8 +19,11 @@ const CurrencyInput = ({
   label = 'Contoh',
   onChange,
   className,
+  prefixElement,
+  suffixElement,
+  allowNegative = false,
 }: CurrencyInputProps) => {
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
     if (typeof onChange === 'function') {
       onChange(e);
     }
@@ -27,10 +33,14 @@ const CurrencyInput = ({
       name={name}
       value={value}
       label={label}
+      prefixElement={prefixElement}
+      suffixElement={suffixElement}
       customInput={TextInput}
       onChange={handleChange}
       className={className}
       thousandSeparator
+      allowNegative={allowNegative}
+      decimalScale={0}
     />
   );
 };

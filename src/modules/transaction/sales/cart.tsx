@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
@@ -9,11 +7,10 @@ import { useUser } from '@store';
 import { ContinuePayment, SalesCart } from './components';
 import { STEPS } from '../constants';
 
-const TransactionSalesPage = () => {
-  const { back } = useRouter();
+const TransactionSalesCart = () => {
+  const { back, push } = useRouter();
   const { store } = useUser();
   const { initial = '' } = store || {};
-  const [currentStep, setCurrentStep] = useState(0);
   const breadcrumbItems = STEPS.map(step => ({
     label: step,
   }));
@@ -26,13 +23,17 @@ const TransactionSalesPage = () => {
       <TopNav title="Transaksi Penjualan" onBack={back} branchName={initial} />
 
       <div className="px-4 pt-4 pb-48">
-        <Breadcrumb items={breadcrumbItems} currentStep={currentStep} />
+        <Breadcrumb items={breadcrumbItems} currentStep={0} />
         <SalesCart />
       </div>
 
-      <ContinuePayment onNext={() => setCurrentStep(currentStep + 1)} />
+      <ContinuePayment
+        onNext={() => {
+          push('/transaction/sales/payment');
+        }}
+      />
     </div>
   );
 };
 
-export default TransactionSalesPage;
+export default TransactionSalesCart;

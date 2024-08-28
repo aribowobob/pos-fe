@@ -8,7 +8,7 @@ type TextInputProps = {
   message?: string | ReactNode;
   name: string;
   type?: 'text' | 'date' | 'password' | 'email' | 'number';
-  value?: string;
+  value?: string | number;
   isError?: boolean;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
@@ -20,9 +20,10 @@ type TextInputProps = {
   className?: string;
   placeholder?: string;
   maxLength?: number;
-  prefix?: string | ReactNode;
-  suffix?: string | ReactNode;
+  prefixElement?: string | ReactNode;
+  suffixElement?: string | ReactNode;
   inputMode?: 'text' | 'numeric';
+  max?: string | number;
 };
 
 export default function TextInput({
@@ -42,9 +43,10 @@ export default function TextInput({
   className,
   placeholder,
   maxLength,
-  prefix,
-  suffix,
+  prefixElement,
+  suffixElement,
   inputMode = 'text',
+  max,
 }: TextInputProps) {
   const [isFocused, setIsFocused] = useState(false);
   const [isShowPassword, setisShowPassword] = useState(false);
@@ -77,8 +79,8 @@ export default function TextInput({
     }
   }
 
-  const hasPrefix = !!prefix;
-  const hasSuffix = !!suffix;
+  const hasPrefix = !!prefixElement;
+  const hasSuffix = !!suffixElement;
 
   const passwordStyle = 'absolute top-1/2 right-2 transform -translate-y-1/2';
   const addOnsStyle =
@@ -121,7 +123,7 @@ export default function TextInput({
               borderColor
             )}
           >
-            <span className="p-2">{prefix}</span>
+            <span className="p-2">{prefixElement}</span>
           </div>
         )}
         <div className="relative w-full">
@@ -137,10 +139,11 @@ export default function TextInput({
             required={required}
             readOnly={readOnly}
             className={clsx(
-              'flex justify-center text-slate-800 items-center px-4 h-10 border border-solid w-full outline-none focus:outline-none',
+              'flex justify-center text-slate-800 items-center px-4 h-10 border border-solid outline-none focus:outline-none',
               borderColor,
               textColor,
               bgColor,
+              inputType === 'date' ? 'w-auto' : 'w-full',
               {
                 'rounded-l': !hasPrefix,
                 'rounded-r': !hasSuffix,
@@ -153,6 +156,7 @@ export default function TextInput({
             inputMode={inputMode}
             disabled={disabled}
             autoComplete="off"
+            max={max}
           />
           {type === 'password' && (
             <button
@@ -178,7 +182,7 @@ export default function TextInput({
               textColor
             )}
           >
-            <span>{suffix}</span>
+            <span>{suffixElement}</span>
           </div>
         )}
       </div>
