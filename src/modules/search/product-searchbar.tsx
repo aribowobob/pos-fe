@@ -24,7 +24,7 @@ const SearchProduct: FC<SearchProductProps> = ({ onSubmit }) => {
           type="text"
           name="keyword"
           placeholder="Cari produk apa?"
-          prefix={
+          prefixElement={
             <button type="submit" className="p-0 m-0 flex items-center">
               <MagnifyingGlassIcon className="w-6 h-6" />
             </button>

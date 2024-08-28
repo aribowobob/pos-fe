@@ -4,10 +4,11 @@ import { useRouter } from 'next/router';
 import { Breadcrumb, TopNav } from '@components';
 import { useUser } from '@store';
 
+import { ContinuePayment, SalesCart } from './components';
 import { STEPS } from '../constants';
 
-const TransactionSalesPaymentPage = () => {
-  const { back } = useRouter();
+const TransactionSalesCart = () => {
+  const { back, push } = useRouter();
   const { store } = useUser();
   const { initial = '' } = store || {};
   const breadcrumbItems = STEPS.map(step => ({
@@ -22,10 +23,17 @@ const TransactionSalesPaymentPage = () => {
       <TopNav title="Transaksi Penjualan" onBack={back} branchName={initial} />
 
       <div className="px-4 pt-4 pb-48">
-        <Breadcrumb items={breadcrumbItems} currentStep={1} />
+        <Breadcrumb items={breadcrumbItems} currentStep={0} />
+        <SalesCart />
       </div>
+
+      <ContinuePayment
+        onNext={() => {
+          push('/transaction/sales/payment');
+        }}
+      />
     </div>
   );
 };
 
-export default TransactionSalesPaymentPage;
+export default TransactionSalesCart;

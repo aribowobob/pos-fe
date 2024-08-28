@@ -111,7 +111,7 @@ const ProductPage: React.FC = () => {
       <TopNav title="Produk" onBack={back} />
       <div className="w-full flex flex-col p-4 border-t-2 border-slate-500 bg-white">
         <TextInput
-          prefix={<MagnifyingGlassIcon className="w-6 h-6" />}
+          prefixElement={<MagnifyingGlassIcon className="w-6 h-6" />}
           onChange={handleChange}
           value={inputValue}
           name="search"

@@ -2,7 +2,7 @@ import type { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
 
 const TransactionSalesSearchPage = dynamic(async () => {
-  const Page = await import('@/modules');
+  const Page = await import('@/modules/search');
   return Page.SalesSearchProduct;
 });
 

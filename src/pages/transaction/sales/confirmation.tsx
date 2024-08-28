@@ -1,13 +1,13 @@
 import type { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
 
-const TransactionSalesPaymentPage = dynamic(async () => {
+const TransactionSalesConfirmPage = dynamic(async () => {
   const Page = await import('@/modules/transaction/sales');
-  return Page.TransactionSalesPayment;
+  return Page.TransactionSalesConfirmation;
 });
 
-export default function SalesPayment() {
-  return <TransactionSalesPaymentPage />;
+export default function SalesConfirmation() {
+  return <TransactionSalesConfirmPage />;
 }
 
 export const getServerSideProps: GetServerSideProps = async context => {
