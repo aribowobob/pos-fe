@@ -2,8 +2,8 @@ import type { GetServerSideProps } from 'next';
 import dynamic from 'next/dynamic';
 
 const TransactionSalesPaymentPage = dynamic(async () => {
-  const Page = await import('@/modules/transaction/sales');
-  return Page.TransactionSalesPayment;
+  const Page = await import('@/modules/transaction/sales/payment');
+  return Page;
 });
 
 export default function SalesPayment() {
