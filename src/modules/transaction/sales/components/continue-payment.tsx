@@ -10,7 +10,8 @@ type ContinuePaymentProps = {
 
 const ContinuePayment = ({ onNext }: ContinuePaymentProps) => {
   const { push } = useRouter();
-  const { subTotal } = useSales();
+  const { items, subTotal } = useSales();
+  const isEmtpyCart = (items || []).length === 0;
 
   return (
     <StickyFooter>
@@ -22,7 +23,9 @@ const ContinuePayment = ({ onNext }: ContinuePaymentProps) => {
           </p>
         </div>
 
-        <Button onClick={onNext}>Lanjutkan Pembayaran</Button>
+        <Button onClick={onNext} disabled={isEmtpyCart}>
+          Lanjutkan Pembayaran
+        </Button>
         <CircleButton
           onClick={() => {
             push('/transaction/sales/search-product');

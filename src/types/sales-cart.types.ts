@@ -28,3 +28,13 @@ export interface SalesCartState extends SalesCartData {
   setItems: (value: ModifiedSalesCartItemType[]) => void;
   setLoading: (value: boolean) => void;
 }
+export type CreateSalesOrderPayload = {
+  date: string;
+  payment_cash: number;
+  payment_non_cash: number;
+};
+export interface CreateSalesOrderRequestBody extends CreateSalesOrderPayload {
+  store_id: number;
+}
+export interface CreateSalesOrderResponse
+  extends BaseResponseType<{ order_id: number }> {}
