@@ -42,3 +42,7 @@ export function money(val: number, currency = `Rp`) {
 
   return `${currency}${formattedVal}`;
 }
+
+export function parseNumber(val: string): number {
+  return Number(val.replace(/,/g, ''));
+}
