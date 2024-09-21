@@ -37,15 +37,19 @@ const CheckboxGroup: FC<CheckboxGroupProps> = ({
   return (
     <div className={clsx('relative', className)}>
       {label && <p className="block mb-2">{label}</p>}
-      {options.map((option, index) => (
-        <Checkbox
-          key={index}
-          label={option.label}
-          id={option.value}
-          isChecked={selectedOptions.includes(option.value)}
-          onChange={handleChange}
-        />
-      ))}
+      {options.map((option, index) => {
+        const id = `cb-${index}`;
+
+        return (
+          <Checkbox
+            key={index}
+            label={option.label}
+            id={id}
+            isChecked={selectedOptions.includes(option.value as string)}
+            onChange={handleChange}
+          />
+        );
+      })}
     </div>
   );
 };
