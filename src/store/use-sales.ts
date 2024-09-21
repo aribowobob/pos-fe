@@ -5,6 +5,7 @@ const DEFAULT_DATA: SalesCartData = {
   items: [],
   subTotal: 0,
   loading: true,
+  editId: 0,
 };
 
 const useSales = create<SalesCartState>(set => ({
@@ -25,6 +26,7 @@ const useSales = create<SalesCartState>(set => ({
       };
     }),
   setLoading: value => set({ loading: value }),
+  setEditId: value => set({ editId: value }),
 }));
 
 export default useSales;

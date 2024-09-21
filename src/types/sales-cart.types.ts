@@ -23,10 +23,12 @@ export type SalesCartData = {
   items: ModifiedSalesCartItemType[];
   subTotal: number;
   loading: boolean;
+  editId: number;
 };
 export interface SalesCartState extends SalesCartData {
   setItems: (value: ModifiedSalesCartItemType[]) => void;
   setLoading: (value: boolean) => void;
+  setEditId: (value: number) => void;
 }
 export type CreateSalesOrderPayload = {
   date: string;
@@ -38,3 +40,18 @@ export interface CreateSalesOrderRequestBody extends CreateSalesOrderPayload {
 }
 export interface CreateSalesOrderResponse
   extends BaseResponseType<{ order_id: number }> {}
+export interface UpdateCartItemResponse extends BaseResponseType<boolean> {}
+export type FetchSalesCartArgs = {
+  fetchLoading: boolean;
+};
+export type SalesCartItemProps = {
+  data: ModifiedSalesCartItemType;
+  onRemove: (id: number) => void;
+  onEdit: (id: number) => void;
+};
+export type DeleteConfirmationProps = {
+  open: boolean;
+  name: string;
+  onCancel: () => void;
+  onDelete: () => void;
+};

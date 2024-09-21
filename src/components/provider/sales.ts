@@ -11,7 +11,7 @@ const SalesProvider = () => {
 
   useEffect(() => {
     if (!!storeId && fetchSalesCart) {
-      fetchSalesCart();
+      fetchSalesCart({ fetchLoading: true });
     }
   }, [fetchSalesCart, storeId]);
 

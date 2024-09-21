@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { Breadcrumb, TopNav } from '@components';
 import { useUser } from '@store';
 
-import { ContinuePayment, SalesCart } from './components';
+import { ContinuePayment, SalesCart, EditItemForm } from './components';
 import { STEPS } from '../constants';
 
 const TransactionSalesCart = () => {
@@ -32,6 +32,8 @@ const TransactionSalesCart = () => {
           push('/transaction/sales/payment');
         }}
       />
+
+      <EditItemForm />
     </div>
   );
 };

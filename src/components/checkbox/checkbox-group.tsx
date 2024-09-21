@@ -1,17 +1,20 @@
-import React, { useState, ChangeEvent, useEffect } from 'react';
+import { useState, ChangeEvent, useEffect } from 'react';
+import type { FC } from 'react';
+import clsx from 'clsx';
 
-interface Option {
-  value: string;
-  label: string;
-}
+import { Option } from '@types';
+
+import Checkbox from './checkbox';
 
 interface CheckboxGroupProps {
+  className?: string;
   label: string;
   options: Option[];
   onChange: (selectedOption: string[] | []) => void;
 }
 
-const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
+const CheckboxGroup: FC<CheckboxGroupProps> = ({
+  className,
   label,
   options,
   onChange,
@@ -32,20 +35,21 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   };
 
   return (
-    <div>
-      <p className="p-1">{label}</p>
-      {options.map((option, index) => (
-        <label key={index} className="mr-2 block">
-          <input
-            type="checkbox"
-            value={option.value}
-            checked={selectedOptions.includes(option.value)}
+    <div className={clsx('relative', className)}>
+      {label && <p className="block mb-2">{label}</p>}
+      {options.map((option, index) => {
+        const id = `cb-${index}`;
+
+        return (
+          <Checkbox
+            key={index}
+            label={option.label}
+            id={id}
+            isChecked={selectedOptions.includes(option.value as string)}
             onChange={handleChange}
-            className="mr-1"
           />
-          {option.label}
-        </label>
-      ))}
+        );
+      })}
     </div>
   );
 };
