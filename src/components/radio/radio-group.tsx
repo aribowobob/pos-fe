@@ -1,45 +1,45 @@
-import React, { useState, ChangeEvent } from 'react';
-
-interface Option {
-  label: string;
-  value: string;
-}
+import type { ChangeEvent, FC } from 'react';
+import clsx from 'clsx';
+import { Option } from '@types';
+import Radio from './radio';
 
 interface RadioGroupProps {
-  label: string;
+  className?: string;
+  label?: string;
+  name: string;
   options: Option[];
-  onChange: (selectedOption: string | null) => void;
+  value: string | number | null;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-const RadioGroup: React.FC<RadioGroupProps> = ({
+const RadioGroup: FC<RadioGroupProps> = ({
+  className,
   label,
+  name,
   options,
+  value,
   onChange,
 }) => {
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
-
-  function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    const newValue = event.target.value;
-    setSelectedOption(newValue);
-    onChange(newValue);
-  }
-
   return (
-    <div>
-      <p>{label}</p>
-      {options.map(option => (
-        <label key={option.value} className="mr-2 block">
-          <input
-            type="radio"
-            name="radioGroup"
-            value={option.value}
-            checked={selectedOption === option.value}
-            onChange={handleChange}
-            className="mr-2"
+    <div className={clsx('relative', className)}>
+      {label && <p>{label}</p>}
+      {options.map(option => {
+        const { label: lbl, value: val } = option;
+        const id = `${name}${val}`;
+
+        return (
+          <Radio
+            key={id}
+            id={id}
+            className="first:mt-0 mt-2"
+            label={lbl}
+            name={name}
+            value={val}
+            isChecked={val === value}
+            onChange={onChange}
           />
-          {option.label}
-        </label>
-      ))}
+        );
+      })}
     </div>
   );
 };

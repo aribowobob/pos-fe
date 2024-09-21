@@ -1,16 +1,22 @@
-import { Modal, NumberInput } from '@components';
-import { EllipsisVerticalIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { useEffect, useState } from 'react';
 
-import type { ModifiedSalesCartItemType } from '@types';
+import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { useDebounce } from 'use-debounce';
+
+import { NumberInput } from '@components';
+import { useSalesCart } from '@hooks';
+import {
+  DeleteConfirmation,
+  Price,
+} from '@modules/transaction/sales/components';
+import type { SalesCartItemProps } from '@types';
 import { money, numberFormat } from '@utils';
-import { useState } from 'react';
 
-type SalesCartItemProps = {
-  data: ModifiedSalesCartItemType;
-  onRemove: (id: number) => void;
-};
-const SalesCartItem = ({ data, onRemove }: SalesCartItemProps) => {
+const SalesCartItem = ({ data, onRemove, onEdit }: SalesCartItemProps) => {
+  const { updateSalesCartItem } = useSalesCart();
   const [showModal, setShowModal] = useState(false);
+  const [qty, setQty] = useState(0);
+  const [nextQty] = useDebounce(qty, 1000);
   const {
     id,
     name,
@@ -19,9 +25,23 @@ const SalesCartItem = ({ data, onRemove }: SalesCartItemProps) => {
     discount_type: discountType,
     discount_value: discountValue,
     stock,
-    qty,
+    qty: cartQty,
   } = data;
   const totalPrice = salesPrice * qty;
+
+  useEffect(() => {
+    if (cartQty !== qty) {
+      setQty(cartQty);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cartQty]);
+
+  useEffect(() => {
+    if (nextQty === qty && nextQty > 0 && nextQty !== cartQty) {
+      updateSalesCartItem({ ...data, qty: nextQty });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nextQty]);
 
   return (
     <>
@@ -30,32 +50,23 @@ const SalesCartItem = ({ data, onRemove }: SalesCartItemProps) => {
           <p className="grow text-base leading-normal text-ellipsis overflow-hidden whitespace-nowrap">
             {name}
           </p>
-          <button>
-            <EllipsisVerticalIcon className="w-4 h-4" />
+          <button
+            type="button"
+            onClick={() => {
+              onEdit(id);
+            }}
+          >
+            <PencilSquareIcon className="w-4 h-4" />
           </button>
         </div>
 
         <div className="flex justify-between items-end">
-          <p className="m-0">
-            {!!discountValue &&
-              !!discountType &&
-              ['PERCENTAGE', 'FIXED'].includes(discountType) && (
-                <span className="bg-red-500/10 text-red-500 px-1 py-0.5 text-[10px] leading-4 rounded mb-1 inline-block">
-                  {discountType === 'PERCENTAGE'
-                    ? `Diskon ${numberFormat(discountValue)}%`
-                    : `Diskon ${money(discountValue)}`}
-                </span>
-              )}
-
-            <span className="flex items-start gap-1">
-              <span className="text-sm">{money(salesPrice)}</span>
-              {basePrice !== salesPrice && (
-                <span className="text-[10px] line-through text-slate-400">
-                  {money(basePrice)}
-                </span>
-              )}
-            </span>
-          </p>
+          <Price
+            basePrice={basePrice}
+            salesPrice={salesPrice}
+            discountType={discountType}
+            discountValue={discountValue}
+          />
 
           <span>{`Stok: ${numberFormat(stock)}`}</span>
         </div>
@@ -68,27 +79,23 @@ const SalesCartItem = ({ data, onRemove }: SalesCartItemProps) => {
             </button>
             <NumberInput
               value={qty}
-              onChange={() => {}}
+              onChange={setQty}
               min={1}
               max={stock}
-              onClickValue={() => {}}
+              onClickValue={() => {
+                onEdit(id);
+              }}
             />
           </div>
         </div>
       </div>
 
-      {showModal && (
-        <Modal
-          title="Konfirmasi Hapus Data"
-          onClose={() => setShowModal(false)}
-          cancelText="Ya, hapus!"
-          onCancel={() => onRemove(id)}
-          okText="Batal"
-          onOk={() => setShowModal(false)}
-        >
-          <p>{`Apakah kamu yakin akan menghapus ${name} dari keranjang transaksi penjualan?`}</p>
-        </Modal>
-      )}
+      <DeleteConfirmation
+        open={showModal}
+        name={name}
+        onCancel={() => setShowModal(false)}
+        onDelete={() => onRemove(id)}
+      />
     </>
   );
 };

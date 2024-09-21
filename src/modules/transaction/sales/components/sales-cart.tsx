@@ -2,10 +2,10 @@ import { EmptyCart, LoadingSalesCartItem } from '@components';
 import { useSalesCart } from '@hooks';
 import { useSales } from '@store';
 
-import SalesCartItems from './sales-cart-item';
+import { SalesCartItems } from '@modules/transaction/sales/components';
 
 const SalesCart = () => {
-  const { items, loading } = useSales();
+  const { items, loading, setEditId } = useSales();
   const { removeItem } = useSalesCart();
 
   if (loading) {
@@ -27,7 +27,12 @@ const SalesCart = () => {
       {items.length > 0 ? (
         <div className="grid grid-cols-1 gap-4">
           {items.map(item => (
-            <SalesCartItems key={item.id} data={item} onRemove={removeItem} />
+            <SalesCartItems
+              key={item.id}
+              data={item}
+              onRemove={removeItem}
+              onEdit={setEditId}
+            />
           ))}
         </div>
       ) : (

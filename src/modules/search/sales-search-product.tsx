@@ -78,7 +78,7 @@ const TransactionSalesSearchProductPage = () => {
 
     if (code === 200 && !!data) {
       toast.success('Berhasil ditambahkan ke keranjang');
-      fetchSalesCart();
+      fetchSalesCart({ fetchLoading: true });
       back();
     }
   };

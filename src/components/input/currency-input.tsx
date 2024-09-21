@@ -11,6 +11,7 @@ type CurrencyInputProps = {
   prefixElement?: string | ReactNode;
   suffixElement?: string | ReactNode;
   allowNegative?: boolean;
+  disabled?: boolean;
 };
 
 const CurrencyInput = ({
@@ -22,6 +23,7 @@ const CurrencyInput = ({
   prefixElement,
   suffixElement,
   allowNegative = false,
+  disabled = false,
 }: CurrencyInputProps) => {
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     if (typeof onChange === 'function') {
@@ -41,6 +43,7 @@ const CurrencyInput = ({
       thousandSeparator
       allowNegative={allowNegative}
       decimalScale={0}
+      disabled={disabled}
     />
   );
 };
