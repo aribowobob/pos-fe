@@ -11,7 +11,10 @@ export type ProductType = {
 };
 export interface SearchProductResponseType
   extends BaseResponseType<ProductType[]> {}
-export interface IProductProps {
+
+export interface SearchProductResponseByIdType
+  extends BaseResponseType<ProductType> {}
+/* export interface IProductProps {
   id: number;
   kode_sku: string;
   nama_produk: string;
@@ -35,7 +38,7 @@ export const productData: IProductProps = {
   harga_beli: '',
   harga_jual: '',
   nama_satuan: '',
-};
+}; */
 
 export interface IAddProductProps {
   title?: string;
