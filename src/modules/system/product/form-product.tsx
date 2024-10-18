@@ -29,7 +29,8 @@ const FormProduct: React.FC<IEditProductProps> = ({
   const [formData, setFormData] = useState<ProductType>(dataAwal);
 
   const {
-    data: productById,
+    product: productById,
+    setDataProduct,
     selectedById,
     deletedById,
     setDeletedById,
@@ -40,27 +41,23 @@ const FormProduct: React.FC<IEditProductProps> = ({
   useEffect(() => {
     if (selectedById === null || selectedById === 0) {
       setFormData(dataAwal);
+    } else {
+      fetchDataProductById();
     }
   }, [open, selectedById]);
 
   useEffect(() => {
-    if (selectedById !== null && selectedById > 0) {
-      console.log(
-        `id yang mau di update ${selectedById}, id yang di delete ${deletedById}`
-      );
-      fetchDataProductById();
+    console.log('productById : ', productById);
+    if (!!productById && !Array.isArray(productById)) {
+      setFormData({
+        id: productById?.id,
+        name: productById?.name,
+        sku: productById?.sku,
+        purchase_price: productById?.purchase_price,
+        sale_price: productById?.sale_price,
+        unit_name: productById?.unit_name,
+      });
     }
-  }, [selectedById]);
-
-  useEffect(() => {
-    setFormData({
-      id: productById?.id,
-      name: productById?.name,
-      sku: productById?.sku,
-      purchase_price: productById?.purchase_price,
-      sale_price: productById?.sale_price,
-      unit_name: productById?.unit_name,
-    });
   }, [productById]);
 
   const { sku, name, purchase_price, sale_price, unit_name } = formData;
@@ -76,6 +73,21 @@ const FormProduct: React.FC<IEditProductProps> = ({
   };
 
   const handleSubmit = () => {
+    if (typeof formData.sale_price === 'string') {
+      formData.sale_price = parseInt(
+        (formData.sale_price as string).replace(/,/g, ''),
+        10
+      );
+    }
+
+    // purchase_price sudah dalam bentuk number, tidak perlu diubah jika sudah number
+    if (typeof formData.purchase_price === 'string') {
+      formData.purchase_price = parseInt(
+        (formData.purchase_price as string).replace(/,/g, ''),
+        10
+      );
+    }
+    setDataProduct(formData);
     onSubmit(formData); // Kirim formData ke parent
   };
 

@@ -15,27 +15,35 @@ import { useProducts } from '@hooks';
 
 const ProductPage: React.FC = () => {
   const {
-    itemSearchResult: products,
+    products,
     keywords,
     selectedById,
     setSelectedById,
     setKeywords,
+    product,
   } = useConfigProducts();
+  const { fetchDataProducts, addProduct } = useProducts();
   const finalProducts = products || [];
 
-  const { fetchDataProducts } = useProducts();
+  //console.log('keywords : ', keywords);
 
   const handleSubmitSearch = (value: string) => {
     setKeywords(value);
   };
 
   useEffect(() => {
-    if (keywords !== '' && keywords !== undefined) {
+    if (keywords) {
       fetchDataProducts();
     }
   }, [keywords]);
 
-  const handleFormSubmit = () => {};
+  const handleFormSubmit = () => {
+    if ((selectedById === null || selectedById === 0) && product !== null) {
+      addProduct(product);
+    } else {
+      console.log('Update Product');
+    }
+  };
 
   const { back } = useRouter();
 

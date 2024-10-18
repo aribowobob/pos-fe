@@ -8,6 +8,7 @@ import {
 import { getRuntimeEnv } from '@utils';
 
 import { useConfigProducts } from '@store';
+import { toast } from 'react-toastify';
 
 const API_URL = getRuntimeEnv('API_URL');
 
@@ -15,11 +16,12 @@ const useProducts = () => {
   const {
     selectedById,
     keywords,
+    setDataProducts,
+    setDataProduct,
     setInitFetch,
-    setSuccessFetching,
     setErrorFetching,
-    setItemSearchResult,
-    data,
+    product,
+    products,
   } = useConfigProducts();
 
   const headers = {
@@ -29,6 +31,7 @@ const useProducts = () => {
 
   const urlSearchProduct = `${API_URL}/get-products`;
   const urlGetProductById = `${API_URL}/get-product`;
+  const urlAddProduct = `${API_URL}/create-product`;
 
   // Fetch data function
 
@@ -48,16 +51,12 @@ const useProducts = () => {
       const { code, message, data } = response.data;
 
       if (code === 200 && Array.isArray(data)) {
-        setSuccessFetching(data);
-        setItemSearchResult(data);
-        return data;
+        setDataProducts(data);
       } else {
         setErrorFetching(message);
-        return [];
       }
     } catch (err) {
       setErrorFetching('Err..');
-      return [];
     } finally {
       console.log('Final Execution complete');
     }
@@ -78,29 +77,42 @@ const useProducts = () => {
       );
       const { code, message, data } = response.data;
 
-      if (code === 200) {
-        console.log(`data products by id fetched...`, data);
-        setSuccessFetching(data);
-        return data;
+      if (code === 200 && data !== null) {
+        setDataProduct(data);
       } else {
         setErrorFetching(message);
-        return [];
       }
     } catch (err) {
       setErrorFetching('Err..');
-      return [];
     } finally {
       console.log('Get Product By Id Execution complete');
     }
   };
 
-  const finalProducts = (data as ProductType[] | ProductType) || [];
+  const addProduct = async (product: ProductType) => {
+    setInitFetch();
+    try {
+      const response = await Axios.post(urlAddProduct, product, {
+        headers,
+      });
+      const { code, message, data } = response.data;
+      if (code === 200 && data > 0) {
+        toast.success('Produk Baru berhasil ditambahkan');
+      } else {
+        setErrorFetching(message);
+        toast.error('Produk Baru gagal ditambahkan');
+      }
+    } catch (err) {
+      setErrorFetching('Err..');
+    }
+  };
 
   return {
-    data: finalProducts,
+    product,
+    products,
     fetchDataProducts,
     fetchDataProductById,
-    //addProduct,
+    addProduct,
     //updateProduct,
     //deleteProduct,
   };

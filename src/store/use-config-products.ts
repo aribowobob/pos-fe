@@ -1,32 +1,35 @@
 import { ProductType } from '@types';
 import { create } from 'zustand';
 
-type ConfigProductsState = {
+type TInitialConfigProductState = {
   loading: boolean;
   error: boolean;
   errorMessage: string | null;
-  data: ProductType[] | ProductType | null;
+  product: ProductType | null;
   keywords: string;
-  itemSearchResult: ProductType[] | [];
+  products: ProductType[] | [];
   selectedById: number | null;
   deletedById: number | null;
+};
+
+interface ConfigProductsState extends TInitialConfigProductState {
   setInitFetch: () => void;
-  setSuccessFetching: (data: ProductType[] | ProductType) => void;
+  setDataProduct: (data: ProductType) => void;
   setErrorFetching: (errorMessage: string) => void;
   setKeywords: (keywords: string) => void;
   setSelectedById: (value: number | null) => void;
   setDeletedById: (value: number | null) => void;
-  setItemSearchResult: (data: ProductType[] | []) => void;
-};
+  setDataProducts: (data: ProductType[] | []) => void;
+}
 
 // Inisialisasi state fetch dengan tipe generik T
-const INITIAL_CONFIG_PRODUCTS_STATE = {
+const INITIAL_CONFIG_PRODUCTS_STATE: TInitialConfigProductState = {
   loading: false,
   error: false,
   errorMessage: null,
-  data: null,
+  product: null,
   keywords: '',
-  itemSearchResult: [],
+  products: [],
   selectedById: null, //0=for insert, 1 for update
   deletedById: null,
 };
@@ -41,8 +44,8 @@ const useConfigProducts = create<ConfigProductsState>(set => ({
   },
 
   // Set data dan ubah loading menjadi false saat fetch berhasil
-  setSuccessFetching: (data: ProductType[] | ProductType) => {
-    set(() => ({ data, loading: false, error: false }));
+  setDataProduct: (product: ProductType) => {
+    set(() => ({ product, loading: false, error: false }));
   },
 
   // Set error dan ubah loading menjadi false saat fetch gagal
@@ -62,12 +65,11 @@ const useConfigProducts = create<ConfigProductsState>(set => ({
     set(() => ({ deletedById: value }));
   },
 
-  setItemSearchResult: (value: ProductType[] | []) => {
+  setDataProducts: (value: ProductType[] | []) => {
     set(() => ({
-      data: value,
       loading: false,
       error: false,
-      itemSearchResult: value,
+      products: value,
     }));
   },
 }));
