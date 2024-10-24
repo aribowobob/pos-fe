@@ -1,45 +1,66 @@
 import { Button, CurrencyInput, TextInput, Modal } from '@components';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { BottomSheet } from '@components';
-import { IProductProps2 } from '@types';
+import { useConfigProducts } from '@store';
+import { ProductType } from '@types';
+import { useProducts } from '@hooks';
 
 interface IEditProductProps {
-  id?: number;
+  id?: number | null | undefined;
   open: boolean;
-  onSubmit: (formData: IProductProps2) => void;
+  onSubmit: (formData: ProductType) => void;
   onCancel: () => void;
 }
 
 const dataAwal = {
-  kode_sku: '',
-  nama_produk: '',
-  harga_beli: '',
-  harga_jual: '',
-  nama_satuan: '',
+  id: 0,
+  sku: '',
+  name: '',
+  purchase_price: 0,
+  sale_price: 0,
+  unit_name: '',
 };
 
 const FormProduct: React.FC<IEditProductProps> = ({
-  id,
   open,
   onSubmit,
   onCancel,
 }) => {
-  const [formData, setFormData] = useState<IProductProps2>(dataAwal);
+  const [formData, setFormData] = useState<ProductType>(dataAwal);
 
-  const [isShowDeleteConfirm, setIsShowDeleteConfirm] = useState(false);
+  const {
+    product: productById,
+    setDataProduct,
+    selectedById,
+    deletedById,
+    setDeletedById,
+  } = useConfigProducts();
+
+  const { fetchDataProductById } = useProducts();
 
   useEffect(() => {
-    if (!id) {
+    if (selectedById === null || selectedById === 0) {
       setFormData(dataAwal);
     } else {
-      console.log('Update Data');
-      //berarti update
-      //call api get product by Id
+      fetchDataProductById();
     }
-  }, [open, id]);
+  }, [open, selectedById]);
 
-  const { kode_sku, nama_produk, harga_beli, harga_jual, nama_satuan } =
-    formData;
+  useEffect(() => {
+    console.log('productById : ', productById);
+    if (!!productById && !Array.isArray(productById)) {
+      setFormData({
+        id: productById?.id,
+        name: productById?.name,
+        sku: productById?.sku,
+        purchase_price: productById?.purchase_price,
+        sale_price: productById?.sale_price,
+        unit_name: productById?.unit_name,
+      });
+    }
+  }, [productById]);
+
+  const { sku, name, purchase_price, sale_price, unit_name } = formData;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
@@ -47,15 +68,26 @@ const FormProduct: React.FC<IEditProductProps> = ({
   };
 
   const handleDelete = () => {
-    alert(`Data ${nama_produk} sudah dihapus`);
-    setIsShowDeleteConfirm(false);
-  };
-
-  const handleClose = () => {
-    setIsShowDeleteConfirm(false);
+    alert(`Data ${name} sudah dihapus`);
+    setDeletedById(deletedById);
   };
 
   const handleSubmit = () => {
+    if (typeof formData.sale_price === 'string') {
+      formData.sale_price = parseInt(
+        (formData.sale_price as string).replace(/,/g, ''),
+        10
+      );
+    }
+
+    // purchase_price sudah dalam bentuk number, tidak perlu diubah jika sudah number
+    if (typeof formData.purchase_price === 'string') {
+      formData.purchase_price = parseInt(
+        (formData.purchase_price as string).replace(/,/g, ''),
+        10
+      );
+    }
+    setDataProduct(formData);
     onSubmit(formData); // Kirim formData ke parent
   };
 
@@ -68,15 +100,19 @@ const FormProduct: React.FC<IEditProductProps> = ({
     <>
       <BottomSheet
         open={open}
-        title={!!id ? 'Update Data produk' : 'Tambah Produk Baru'}
+        title={
+          selectedById !== null && selectedById > 0
+            ? 'Update Data produk'
+            : 'Tambah Produk Baru'
+        }
         onClose={handleCancle}
         footer={
-          !!id ? (
+          selectedById !== null && selectedById > 0 ? (
             <div className="flex gap-4">
               <Button
                 color="danger"
                 ghost
-                onClick={() => setIsShowDeleteConfirm(true)}
+                onClick={() => setDeletedById(selectedById)}
               >
                 Hapus
               </Button>
@@ -94,36 +130,36 @@ const FormProduct: React.FC<IEditProductProps> = ({
         <div>
           <TextInput
             label="Kode SKU"
-            name="kode_sku"
-            value={kode_sku}
+            name="sku"
+            value={sku}
             onChange={handleChange}
             className="mb-4"
           />
           <TextInput
             label="Nama Produk"
-            name="nama_produk"
-            value={nama_produk}
+            name="name"
+            value={name}
             onChange={handleChange}
             className="mb-4"
           />
           <CurrencyInput
-            name="harga_beli"
-            value={harga_beli}
+            name="purchase_price"
+            value={purchase_price || 0}
             label="Harga Beli"
             onChange={handleChange}
             className="mb-4"
           />
           <CurrencyInput
-            name="harga_jual"
-            value={harga_jual}
+            name="sale_price"
+            value={sale_price}
             label="Harga Jual"
             onChange={handleChange}
             className="mb-4"
           />
           <TextInput
             label="Nama Satuan"
-            name="nama_satuan"
-            value={nama_satuan}
+            name="unit_name"
+            value={unit_name}
             onChange={handleChange}
             className="mb-4"
             message="Boleh dikosongkan. Apabila dikosongkan akan diberi nilai default
@@ -131,20 +167,19 @@ const FormProduct: React.FC<IEditProductProps> = ({
           />
         </div>
       </BottomSheet>
-      {isShowDeleteConfirm && (
+      {deletedById !== null && deletedById > 0 && (
         <Modal
           title="Konfirmasi Hapus Data"
           cancelText="Ya, hapus!"
           onCancel={handleDelete}
-          onClose={handleClose}
+          onClose={() => setDeletedById}
           okText="Batal"
-          onOk={handleClose}
+          onOk={() => setDeletedById(null)}
           isResist={true} // Set to true if you don't want modal to close when overlay is clicked
         >
-          <p>{`Anda ingin menghapus ${nama_produk} ?`}</p>
+          <p>{`Anda ingin menghapus ${name} ?`}</p>
         </Modal>
       )}
-      ;
     </>
   );
 };
