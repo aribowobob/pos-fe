@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 
-import { getCookie } from 'cookies-next';
-
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { deleteCookie } from 'cookies-next';
@@ -11,23 +9,31 @@ import { getRuntimeEnv } from '@utils';
 
 const UserProvider = () => {
   const API_URL = getRuntimeEnv('API_URL');
-  const getUserUrl = `${API_URL}/get-user`;
+  const getUserUrl = `${API_URL}/api/user/get-user`;
   const { id, setUser, setLoading } = useUser();
-  const token = getCookie('token');
   const [fetched, setFetched] = useState(false);
   const { replace } = useRouter();
 
   useEffect(() => {
-    if (!id && token && !fetched) {
+    if (!id && !fetched) {
       setFetched(true);
       setLoading(true);
+      
       axios
-        .get(getUserUrl, { headers: { Authorization: `Bearer ${token}` } })
+        .get(getUserUrl, { withCredentials: true })
         .then(({ data: dataResponse }) => {
-          const { code, data } = dataResponse || {};
+          const { message, data } = dataResponse || {};
 
-          if (code === 200 && !!data) {
-            setUser(data);
+          if (message === 'success' && !!data) {
+            setUser({
+              id: data.id,
+              fullName: data.full_name,
+              initial: data.initial,
+              email: data.email,
+              companyId: data.company_id,
+              companyName: data.company_name,
+              userStores: data.stores,
+            });
           }
         })
         .catch(() => {

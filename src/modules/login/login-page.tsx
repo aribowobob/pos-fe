@@ -3,7 +3,6 @@ import type { FC } from 'react';
 
 import { useGoogleLogin } from '@react-oauth/google';
 import Axios from 'axios';
-import { setCookie } from 'cookies-next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
@@ -14,34 +13,48 @@ import { toast } from 'react-toastify';
 
 const LoginPage: FC = () => {
   const API_URL = getRuntimeEnv('API_URL');
-  const getTokenUrl = `${API_URL}/get-token`;
+  const getTokenUrl = `${API_URL}/auth/google`;
   const { replace } = useRouter();
   const { setUser } = useUser();
   const [loading, setLoading] = useState(false);
   const loginWithGoogle = useGoogleLogin({
     onSuccess: async codeResponse => {
-      const getToken = Axios.get(getTokenUrl, {
-        headers: { Token: codeResponse.access_token },
+      const getToken = Axios.post(getTokenUrl, {
+        token: codeResponse.access_token
+      }, {
+        withCredentials: true,
       }).catch(() => {
         toast.error('Error get token.');
         setLoading(false);
       });
       const dataToken = await getToken;
-      const { code: codeGetToken, data: accessToken } = dataToken?.data || {};
+      const { message } = dataToken?.data || {};
 
-      if (codeGetToken === 200 && !!accessToken) {
-        const getUser = await Axios.get(`${API_URL}/get-user`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
+      if (message === 'success') {
+        const getUser = await Axios.get(`${API_URL}/api/user/get-user`, {
+          withCredentials: true,
         }).catch(() => {
           toast.error('Error get data user.');
           setLoading(false);
         });
-        const { code, data } = getUser?.data || {};
 
-        if (code === 200 && !!data) {
-          setUser(data);
-          setCookie('token', accessToken);
+        const { data, message } = getUser?.data || {};
+
+        if (message === 'success' && !!data) {
+          setUser({
+            id: data.id,
+            fullName: data.full_name,
+            initial: data.initial,
+            email: data.email,
+            companyId: data.company_id,
+            companyName: data.company_name,
+            userStores: data.stores,
+          });
+
           replace('/branches');
+        } else {
+          toast.error('Error get data user.');
+          setLoading(false);
         }
       }
     },

@@ -17,7 +17,7 @@ import { useUser } from '@store';
 const SystemPage = () => {
   const { back, replace, push } = useRouter();
   const handleLogout = () => {
-    deleteCookie('token');
+    deleteCookie('access_token');
     replace('/login');
   };
 

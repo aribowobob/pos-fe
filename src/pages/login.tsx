@@ -18,7 +18,7 @@ export const getServerSideProps: GetServerSideProps = async context => {
   const { req } = context;
   const { cookies } = req;
 
-  if (cookies.token) {
+  if (cookies.access_token) {
     return {
       redirect: {
         destination: '/dashboard',
