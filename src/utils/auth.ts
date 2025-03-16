@@ -1,18 +1,17 @@
 import { UserType } from '@store';
 import { getRuntimeEnv } from '@utils';
 
-export const getUserByToken = async (
-  token?: string
-): Promise<UserType | null> => {
+export const getUserByToken = async (): Promise<UserType | null> => {
   const API_URL = getRuntimeEnv('API_URL');
-  const getUserUrl = `${API_URL}/get-user`;
+  const getUserUrl = `${API_URL}/api/users/get-user`;
   const getUser = await fetch(getUserUrl, {
-    headers: { Authorization: `Bearer ${token}` },
+    method: 'GET',
+    credentials: 'include',
   });
   const getUserResponse = await getUser.json();
-  const { code, data } = getUserResponse || {};
+  const { status, data } = getUserResponse || {};
 
-  if (code === 200 && !!data) {
+  if (status === 'success' && !!data) {
     return data;
   }
 

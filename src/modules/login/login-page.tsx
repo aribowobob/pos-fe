@@ -19,28 +19,32 @@ const LoginPage: FC = () => {
   const [loading, setLoading] = useState(false);
   const loginWithGoogle = useGoogleLogin({
     onSuccess: async codeResponse => {
-      const getToken = Axios.post(getTokenUrl, {
-        token: codeResponse.access_token
-      }, {
-        withCredentials: true,
-      }).catch(() => {
+      const getToken = Axios.post(
+        getTokenUrl,
+        {
+          token: codeResponse.access_token,
+        },
+        {
+          withCredentials: true,
+        }
+      ).catch(() => {
         toast.error('Error get token.');
         setLoading(false);
       });
       const dataToken = await getToken;
-      const { message } = dataToken?.data || {};
+      const { status } = dataToken?.data || {};
 
-      if (message === 'success') {
-        const getUser = await Axios.get(`${API_URL}/api/user/get-user`, {
+      if (status === 'success') {
+        const getUser = await Axios.get(`${API_URL}/api/users/get-user`, {
           withCredentials: true,
         }).catch(() => {
           toast.error('Error get data user.');
           setLoading(false);
         });
 
-        const { data, message } = getUser?.data || {};
+        const { data, status: getUserStatus } = getUser?.data || {};
 
-        if (message === 'success' && !!data) {
+        if (getUserStatus === 'success' && !!data) {
           setUser({
             id: data.id,
             fullName: data.full_name,

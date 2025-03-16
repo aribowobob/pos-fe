@@ -9,7 +9,7 @@ import { getRuntimeEnv } from '@utils';
 
 const UserProvider = () => {
   const API_URL = getRuntimeEnv('API_URL');
-  const getUserUrl = `${API_URL}/api/user/get-user`;
+  const getUserUrl = `${API_URL}/api/users/get-user`;
   const { id, setUser, setLoading } = useUser();
   const [fetched, setFetched] = useState(false);
   const { replace } = useRouter();
@@ -18,13 +18,13 @@ const UserProvider = () => {
     if (!id && !fetched) {
       setFetched(true);
       setLoading(true);
-      
+
       axios
         .get(getUserUrl, { withCredentials: true })
         .then(({ data: dataResponse }) => {
-          const { message, data } = dataResponse || {};
+          const { status, data } = dataResponse || {};
 
-          if (message === 'success' && !!data) {
+          if (status === 'success' && !!data) {
             setUser({
               id: data.id,
               fullName: data.full_name,
