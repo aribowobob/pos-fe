@@ -6,14 +6,18 @@ export interface User {
 }
 
 export interface AuthResponse {
-  user: User;
-  token: string;
+  data: {
+    cookie_enabled: boolean;
+    token: string;
+  };
+  message: string;
+  status: string;
 }
 
-export interface LoginCredentials {
-  email: string;
-  password: string;
-}
+// export interface LoginCredentials {
+//   email: string;
+//   password: string;
+// }
 
 export interface GoogleLoginPayload {
   token: string;
