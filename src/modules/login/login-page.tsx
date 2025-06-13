@@ -3,6 +3,7 @@ import type { FC } from 'react';
 
 import { useGoogleLogin } from '@react-oauth/google';
 import Axios from 'axios';
+import { setCookie } from 'cookies-next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
@@ -32,7 +33,11 @@ const LoginPage: FC = () => {
         setLoading(false);
       });
       const dataToken = await getToken;
-      const { status } = dataToken?.data || {};
+      const { status, data } = dataToken?.data || {};
+      const { token } = data || {};
+      setCookie('refresh_token', token, {
+        maxAge: 60 * 60 * 4, // 4 hours
+      });
 
       if (status === 'success') {
         const getUser = await Axios.get(`${API_URL}/api/users/get-user`, {

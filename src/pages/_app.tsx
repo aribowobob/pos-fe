@@ -15,9 +15,10 @@ const poppins = Poppins({
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <main className={poppins.className}>
-      <Component {...pageProps} />
-      <UserProvider />
-      <SalesProvider />
+      <UserProvider>
+        <Component {...pageProps} />
+        <SalesProvider />
+      </UserProvider>
       <ToastContainer
         position="top-center"
         autoClose={3000}

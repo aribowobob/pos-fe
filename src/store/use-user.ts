@@ -18,7 +18,9 @@ export type UserType = {
 };
 
 interface UserState extends UserType {
+  fetched: boolean;
   loading: boolean;
+  setFetched: (value: boolean) => void;
   setLoading: (value: boolean) => void;
   setUser: (user: UserType) => void;
   setStore: (store: StoreType) => void;
@@ -37,7 +39,9 @@ const DEFAULT_USER: UserType = {
 
 const useUser = create<UserState>(set => ({
   ...DEFAULT_USER,
-  loading: true,
+  fetched: false,
+  loading: false,
+  setFetched: value => set({ fetched: value }),
   setLoading: value => set({ loading: value }),
   setUser: user =>
     set({

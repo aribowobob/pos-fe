@@ -1,5 +1,4 @@
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import { GetServerSideProps } from 'next';
 
 import { LoginPage } from '@modules';
 import { getRuntimeEnv } from '@utils';
@@ -13,21 +12,3 @@ export default function Login() {
     </GoogleOAuthProvider>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async context => {
-  const { req } = context;
-  const { cookies } = req;
-
-  if (cookies.access_token) {
-    return {
-      redirect: {
-        destination: '/dashboard',
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
-};
