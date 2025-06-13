@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Modern POS System
+
+A completely revamped Point of Sale (POS) system built with the latest technologies:
+
+- Next.js 14+
+- TypeScript
+- Tailwind CSS
+- Shadcn UI
+- Tanstack React Query
+- Zustand
+- PWA Support
+
+## Features
+
+- Modern and responsive UI design
+- Role-based authentication
+- Product management
+- Sales transaction processing
+- Cart management
+- Reports and analytics
+- User settings
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
+
+1. Install dependencies
+```bash
+npm install
+# or
+yarn
+```
+
+2. Create an `.env` file based on `.env.example`
+```bash
+cp .env.example .env
+```
+
+3. Run the development server
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+/app                # Next.js 14 App Router
+  /(auth)           # Authentication routes
+  /(dashboard)      # Protected dashboard routes
+  /(marketing)      # Public marketing pages
+/components         # Reusable UI components
+  /ui               # Shadcn UI components
+  /forms            # Form components
+  /layouts          # Layout components
+/lib                # Utility functions and hooks
+  /api              # API client and endpoints
+  /hooks            # Custom React hooks
+  /store            # Zustand stores
+  /types            # TypeScript types
+/public             # Static assets
+```
 
-## Learn More
+## Deployment
 
-To learn more about Next.js, take a look at the following resources:
+This application is designed for easy deployment to various platforms:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Vercel
+- Netlify
+- Docker
+- Standard Node.js hosting
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## PWA Support
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The application includes Progressive Web App (PWA) support for installation on mobile devices and offline capabilities.
