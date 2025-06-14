@@ -1,16 +1,40 @@
 import { create } from 'zustand';
-import { User } from '../types/auth';
+import { BranchStore, GetCurrentUserRes, UserState } from '../types/auth';
 
-interface UserState {
-  user: User | null;
+interface UserStoreState {
+  user: UserState | null;
   isLoading: boolean;
-  setUser: (user: User | null) => void;
+  setUser: (data: GetCurrentUserRes) => void;
+  setStore: (store: BranchStore) => void;
   setLoading: (loading: boolean) => void;
 }
 
-export const useUserStore = create<UserState>((set) => ({
+export const useUserStore = create<UserStoreState>(set => ({
   user: null,
   isLoading: false,
-  setUser: (user) => set({ user }),
-  setLoading: (loading) => set({ isLoading: loading }),
+  setUser: userData =>
+    set(state => {
+      // If there's only one store, automatically set it as the active store
+      const userStores = userData?.stores || [];
+      const currentStore =
+        state.user?.store ||
+        (userStores.length === 1 ? userStores[0] : undefined);
+
+      return {
+        user: {
+          ...userData,
+          store: currentStore,
+        },
+      };
+    }),
+  setStore: store =>
+    set(state => ({
+      user: state.user
+        ? {
+            ...state.user,
+            store,
+          }
+        : null,
+    })),
+  setLoading: loading => set({ isLoading: loading }),
 }));

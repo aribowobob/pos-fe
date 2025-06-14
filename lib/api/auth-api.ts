@@ -2,7 +2,11 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { postData, getData } from './api-client';
-import type { AuthResponse, GoogleLoginPayload, User } from '../types/auth';
+import type {
+  AuthResponse,
+  GetCurrentUserRes,
+  GoogleLoginPayload,
+} from '../types/auth';
 import { toast } from 'sonner';
 
 export const useGoogleLogin = () => {
@@ -38,7 +42,7 @@ export const useLogout = () => {
 export const useCurrentUser = () => {
   return useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => getData<User>('/auth/me'),
+    queryFn: () => getData<GetCurrentUserRes>('/users/get-user'),
     enabled: !!getCookie('access_token'),
   });
 };
