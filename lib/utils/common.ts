@@ -7,6 +7,16 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
+ * Logging function that only logs in development mode
+ * @param args Arguments to log
+ */
+export const devLog = (...args: unknown[]): void => {
+  if (process.env.NODE_ENV === 'development') {
+    console.log(...args);
+  }
+};
+
+/**
  * Format a number as currency with Indonesian Rupiah format
  * @param value Number to format
  * @param options Formatting options

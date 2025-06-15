@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { postData, getData } from './api-client';
 import type {
@@ -20,40 +19,25 @@ export const useGoogleLogin = () => {
       postData<AuthResponse>('/auth/google', payload),
     onSuccess: async data => {
       if (data.status === 'success' && data.data.token) {
-        console.log('[useGoogleLogin] Login successful');
-
         try {
-          // Cookie is set by the server in HTTP response
-          // We just need to fetch user data and update UI state
-
           // Fetch user data directly
-          try {
-            const userData = await getData<{
-              data: GetCurrentUserRes;
-              status: string;
-              message: string;
-            }>('/users/get-user');
+          const userData = await getData<{
+            data: GetCurrentUserRes;
+            status: string;
+            message: string;
+          }>('/users/get-user');
 
-            if (userData && userData.data) {
-              // Set user in store
-              setUser(userData.data);
-              console.log('[useGoogleLogin] User data fetched and stored');
-            }
-          } catch (error) {
-            console.error('[useGoogleLogin] Error fetching user data:', error);
+          if (userData && userData.data) {
+            // Set user in store
+            setUser(userData.data);
           }
 
           // Invalidate query to ensure fresh data
           queryClient.invalidateQueries({ queryKey: ['currentUser'] });
 
-          // Navigate directly without setTimeout
-          console.log('[useGoogleLogin] Redirecting to dashboard');
+          // Navigate to dashboard
           router.replace('/dashboard');
-        } catch (error) {
-          console.error(
-            '[useGoogleLogin] Error during post-login process:',
-            error
-          );
+        } catch {
           toast.error('Terjadi kesalahan saat masuk. Silakan coba lagi.');
         }
       } else {
@@ -68,23 +52,19 @@ export const useGoogleLogin = () => {
 
 export const useLogout = () => {
   const router = useRouter();
-  const { setUser } = useUserStore();
+  const { resetUser } = useUserStore();
   const queryClient = useQueryClient();
 
   const logout = async () => {
     try {
-      console.log('[useLogout] Calling logout API endpoint');
-
       // Call logout API endpoint to clear server-side cookie
       await postData('/auth/logout', {});
 
       // Clear user data from store
-      setUser({} as GetCurrentUserRes);
+      resetUser();
 
       // Invalidate any existing queries
       queryClient.clear();
-
-      console.log('[useLogout] Successfully logged out, redirecting to login');
 
       // Navigate to login page
       router.push('/login');
@@ -99,38 +79,43 @@ export const useLogout = () => {
 };
 
 export const useCurrentUser = () => {
-  const token = getCookie('access_token');
-  const tokenExists = !!token;
+  // We can't check for HTTP-only cookies directly from JS
+  // We'll use lazy query to fetch user data only when needed
 
-  console.log('[useCurrentUser] Token exists:', tokenExists);
+  const queryClient = useQueryClient();
 
-  return useQuery({
+  const fetchUserFn = async () => {
+    try {
+      // Fetch user data from the API
+      const response = await getData<{
+        data: GetCurrentUserRes;
+        status: string;
+        message: string;
+      }>('/users/get-user');
+      // User data fetched successfully
+      return response.data;
+    } catch (error) {
+      // Error fetching current user
+      throw error;
+    }
+  };
+
+  const queryResult = useQuery({
     queryKey: ['currentUser'],
-    queryFn: async () => {
-      try {
-        console.log('[useCurrentUser] Fetching user data');
-        const response = await getData<{
-          data: GetCurrentUserRes;
-          status: string;
-          message: string;
-        }>('/users/get-user');
-        console.log('[useCurrentUser] User data fetched successfully');
-        return response.data;
-      } catch (error) {
-        console.error('[useCurrentUser] Error fetching current user:', error);
-        throw error;
-      }
-    },
-    enabled: tokenExists,
+    queryFn: fetchUserFn,
     staleTime: 5 * 60 * 1000, // 5 minutes
     refetchOnWindowFocus: false,
     retry: 1,
+    enabled: false, // Start with disabled (lazy)
   });
-};
 
-export const useCheckAuth = () => {
-  const token = getCookie('access_token');
-  const isAuthenticated = !!token;
-  console.log('[useCheckAuth] Is user authenticated:', isAuthenticated);
-  return isAuthenticated;
+  // Return query result with added fetch method
+  return {
+    ...queryResult,
+    fetch: () =>
+      queryClient.fetchQuery({
+        queryKey: ['currentUser'],
+        queryFn: fetchUserFn,
+      }),
+  };
 };

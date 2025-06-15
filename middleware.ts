@@ -1,16 +1,18 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { devLog } from '@/lib/utils/common';
 
 export function middleware(request: NextRequest) {
   // Get the pathname of the request
   const path = request.nextUrl.pathname;
-  console.log(`[Middleware] Processing request to: ${path}`);
+  devLog(`[Middleware] Processing request to: ${path}`);
 
+  // Since middleware runs on the server, we can access cookies directly
   // Get access_token from cookies
   const token = request.cookies.get('access_token')?.value;
   const isAuthenticated = !!token;
 
-  console.log(`[Middleware] User is authenticated: ${isAuthenticated}`);
+  devLog(`[Middleware] User is authenticated: ${isAuthenticated}`);
 
   // Define auth routes that should redirect to dashboard when authenticated
   const isAuthRoute = path === '/login';
@@ -18,14 +20,13 @@ export function middleware(request: NextRequest) {
   // Define protected routes that require authentication
   const isProtectedRoute =
     path === '/dashboard' ||
-    path.startsWith('/products') ||
     path.startsWith('/reports') ||
-    path.startsWith('/sales') ||
+    path.startsWith('/transactions') ||
     path.startsWith('/settings');
 
   // If user is on auth route and is authenticated, redirect to dashboard
   if (isAuthRoute && isAuthenticated) {
-    console.log(
+    devLog(
       '[Middleware] Authenticated user accessing auth route, redirecting to dashboard'
     );
     return NextResponse.redirect(new URL('/dashboard', request.url));
@@ -33,7 +34,7 @@ export function middleware(request: NextRequest) {
 
   // If user is on protected route and is not authenticated, redirect to login
   if (isProtectedRoute && !isAuthenticated) {
-    console.log(
+    devLog(
       '[Middleware] Unauthenticated user accessing protected route, redirecting to login'
     );
     return NextResponse.redirect(new URL('/login', request.url));
@@ -42,12 +43,12 @@ export function middleware(request: NextRequest) {
   // For root path, redirect to appropriate page based on auth status
   if (path === '/') {
     if (isAuthenticated) {
-      console.log(
+      devLog(
         '[Middleware] Authenticated user accessing root, redirecting to dashboard'
       );
       return NextResponse.redirect(new URL('/dashboard', request.url));
     } else {
-      console.log(
+      devLog(
         '[Middleware] Unauthenticated user accessing root, redirecting to login'
       );
       return NextResponse.redirect(new URL('/login', request.url));
@@ -63,9 +64,8 @@ export const config = {
     '/',
     '/login',
     '/dashboard',
-    '/products/:path*',
     '/reports/:path*',
-    '/sales/:path*',
+    '/transactions/:path*',
     '/settings/:path*',
   ],
 };

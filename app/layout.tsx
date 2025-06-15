@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'POS System',
+  title: 'Flux POS',
   description: 'Point of Sale System',
   manifest: '/manifest.json',
 };

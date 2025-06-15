@@ -7,6 +7,7 @@ interface UserStoreState {
   setUser: (data: GetCurrentUserRes) => void;
   setStore: (store: BranchStore) => void;
   setLoading: (loading: boolean) => void;
+  resetUser: () => void;
 }
 
 export const useUserStore = create<UserStoreState>(set => ({
@@ -37,4 +38,9 @@ export const useUserStore = create<UserStoreState>(set => ({
         : null,
     })),
   setLoading: loading => set({ isLoading: loading }),
+  resetUser: () =>
+    set(() => ({
+      user: null,
+      isLoading: false,
+    })),
 }));

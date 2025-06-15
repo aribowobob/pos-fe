@@ -1,6 +1,6 @@
 {
-  "name": "POS System",
-  "short_name": "POS",
+  "name": "Flux POS",
+  "short_name": "Flux POS",
   "icons": [
     {
       "src": "/static/icons/icon-192x192.png",
