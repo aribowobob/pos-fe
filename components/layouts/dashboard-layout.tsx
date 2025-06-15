@@ -3,7 +3,7 @@
 import { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/common';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 
@@ -13,7 +13,7 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname();
-  
+
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: 'HomeIcon' },
     { name: 'Products', href: '/products', icon: 'PackageIcon' },
@@ -34,7 +34,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <ul className="flex flex-1 flex-col gap-y-7">
               <li>
                 <ul className="-mx-2 space-y-1">
-                  {navigation.map((item) => (
+                  {navigation.map(item => (
                     <li key={item.name}>
                       <Link
                         href={item.href}
@@ -70,15 +70,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
         </div>
 
-        <main className="flex-1 p-4 md:p-6">
-          {children}
-        </main>
+        <main className="flex-1 p-4 md:p-6">{children}</main>
       </div>
 
       {/* Mobile bottom navigation */}
       <div className="fixed bottom-0 left-0 z-50 h-16 w-full border-t bg-white md:hidden">
         <div className="mx-auto grid h-full max-w-lg grid-cols-5">
-          {navigation.map((item) => (
+          {navigation.map(item => (
             <Link
               key={item.name}
               href={item.href}

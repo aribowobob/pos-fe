@@ -10,10 +10,16 @@ export const apiClient = axios.create({
   },
 });
 
-// Request interceptor to enable sending cookies
+// Request interceptor to handle cookies
 apiClient.interceptors.request.use(config => {
   // Set withCredentials to true to send cookies with every request
+  // This is crucial for HTTP-only cookies to be included with requests
   config.withCredentials = true;
+
+  // We don't need to manually add Authorization header
+  // since HTTP-only cookie will be sent automatically by the browser
+  // and the backend will extract the token from the cookie
+
   return config;
 });
 
@@ -23,10 +29,22 @@ apiClient.interceptors.response.use(
   (error: AxiosError) => {
     // Handle expired tokens, unauthorized access, etc.
     if (error.response?.status === 401) {
-      // Redirect to login page
-      if (typeof window !== 'undefined') {
-        window.location.href = '/login';
-      }
+      console.log('[API Client] Received 401 Unauthorized error');
+
+      // No need to manually clear cookies - they are HTTP-only from server
+      // We'll use the logout endpoint to clear cookies on unauthorized access
+      console.log(
+        '[API Client] Calling logout endpoint to clear HTTP-only cookies'
+      );
+      apiClient.post('/auth/logout', {}).catch(() => {
+        // Silently ignore errors from logout endpoint
+      });
+
+      // Let middleware handle redirects instead of forcing it here
+      // This avoids competing redirects with React components
+      console.log(
+        '[API Client] Token cleared, will rely on middleware for redirect'
+      );
     }
     return Promise.reject(error);
   }

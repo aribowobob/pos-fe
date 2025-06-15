@@ -2,7 +2,6 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import { useState, type ReactNode } from 'react';
 
 interface ProvidersProps {
@@ -23,14 +22,9 @@ export default function Providers({ children }: ProvidersProps) {
       })
   );
 
-  // Use environment variable for Google client ID
-  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
-
   return (
     <QueryClientProvider client={queryClient}>
-      <GoogleOAuthProvider clientId={googleClientId}>
-        {children}
-      </GoogleOAuthProvider>
+      {children}
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

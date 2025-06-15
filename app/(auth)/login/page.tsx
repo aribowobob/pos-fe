@@ -9,12 +9,23 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useGoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { useGoogleLogin as useGoogleLoginMutation } from '@/lib/api/auth-api';
 import { toast } from 'sonner';
 import { ShoppingBasket } from 'lucide-react';
 
 export default function LoginPage() {
+  // Use environment variable for Google client ID
+  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
+
+  return (
+    <GoogleOAuthProvider clientId={googleClientId}>
+      <LoginContent />
+    </GoogleOAuthProvider>
+  );
+}
+
+function LoginContent() {
   const [isLoading, setIsLoading] = useState(false);
   const { mutate: googleLoginMutation } = useGoogleLoginMutation();
 
