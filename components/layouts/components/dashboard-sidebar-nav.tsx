@@ -10,7 +10,7 @@ const DashboardSidebarNav = ({ navigation }: DashboardNavProps) => {
   const pathname = usePathname();
 
   return (
-    <div className="hidden md:flex md:w-64 md:flex-col">
+    <div className="hidden md:flex md:w-50 md:flex-col">
       <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6">
         <div className="flex h-16 gap-4 shrink-0 items-center">
           <Image
