@@ -6,7 +6,7 @@
  * Base response structure for API responses
  */
 export interface APIResponse<T> {
-  code: number;
+  status: string;
   message: string;
   data: T;
 }
@@ -15,15 +15,24 @@ export interface APIResponse<T> {
  * Pagination metadata for paginated responses
  */
 export interface PaginationMeta {
-  currentPage: number;
-  pageSize: number;
-  totalPages: number;
-  totalItems: number;
+  page: number;
+  size: number;
+  total: number;
+  total_pages: number;
+}
+
+/**
+ * Paginated data structure
+ */
+export interface PaginatedData<T> extends PaginationMeta {
+  items: T[];
 }
 
 /**
  * Paginated response structure
  */
-export interface PaginatedResponse<T> extends APIResponse<T> {
-  meta: PaginationMeta;
+export interface PaginatedResponse<T> {
+  status: string;
+  message: string;
+  data: PaginatedData<T>;
 }
