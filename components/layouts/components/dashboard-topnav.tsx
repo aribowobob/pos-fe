@@ -9,11 +9,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { LogOut, User } from 'lucide-react';
+import { LogOut, User, Warehouse } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 
 const DashboardTopNav = () => {
-  const { user } = useUserStore();
+  const { user, setStore } = useUserStore();
   const { logout } = useLogout();
 
   return (
@@ -25,6 +25,26 @@ const DashboardTopNav = () => {
           </h1>
         </div>
         <div className="flex items-center gap-x-4 lg:gap-x-6">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Warehouse className="h-4 w-4" />
+                {user?.store?.initial || 'Pilih Toko'}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {user?.stores?.map(store => (
+                <DropdownMenuItem
+                  key={`store-${store.id}`}
+                  className="cursor-pointer"
+                  onClick={() => setStore(store)}
+                >
+                  {store.initial} - {store.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm">

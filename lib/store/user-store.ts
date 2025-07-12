@@ -15,11 +15,13 @@ export const useUserStore = create<UserStoreState>(set => ({
   isLoading: false,
   setUser: userData =>
     set(state => {
-      // If there's only one store, automatically set it as the active store
       const userStores = userData?.stores || [];
-      const currentStore =
-        state.user?.store ||
-        (userStores.length === 1 ? userStores[0] : undefined);
+      let currentStore = state.user?.store;
+
+      // If current store is not set, use the first store from user data
+      if (!currentStore && userStores.length > 0) {
+        currentStore = userStores[0];
+      }
 
       return {
         user: {
