@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+.next/
+
+# Test setup files
+jest.setup.js
+jest.setup.ts
+
+# Configuration files
+jest.config.js
+next.config.js
+next.config.ts
+next.config.mjs

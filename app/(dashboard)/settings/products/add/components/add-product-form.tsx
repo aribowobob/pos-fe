@@ -1,9 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { useAddProductForm } from '../hooks/useAddProductForm';
 import {
   Form,
   FormField,
@@ -23,61 +20,15 @@ import {
 } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-// Form validation schema
-const formSchema = z.object({
-  sku: z.string().min(1, 'SKU harus diisi').max(32, 'SKU maksimal 32 karakter'),
-  name: z
-    .string()
-    .min(1, 'Nama harus diisi')
-    .max(128, 'Nama maksimal 128 karakter'),
-  purchase_price: z
-    .string()
-    .min(1, 'Harga beli harus diisi')
-    .regex(/^\d+$/, 'Harga beli harus berupa angka'),
-  sale_price: z
-    .string()
-    .min(1, 'Harga jual harus diisi')
-    .regex(/^\d+$/, 'Harga jual harus berupa angka'),
-  unit_name: z
-    .string()
-    .min(1, 'Satuan harus diisi')
-    .max(8, 'Satuan maksimal 8 karakter'),
-  category_id: z.string().min(1, 'Kategori harus dipilih'),
-});
-
-type FormData = z.infer<typeof formSchema>;
-
-// Dummy category options
-const categoryOptions = [
-  { id: '1', name: 'Makanan & Minuman' },
-  { id: '2', name: 'Elektronik' },
-  { id: '3', name: 'Pakaian' },
-  { id: '4', name: 'Kesehatan & Kecantikan' },
-  { id: '5', name: 'Peralatan Rumah Tangga' },
-];
-
 export function AddProductForm() {
-  const router = useRouter();
-
-  const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      sku: '',
-      name: '',
-      purchase_price: '',
-      sale_price: '',
-      unit_name: 'pcs',
-      category_id: '',
-    },
-  });
-
-  const onSubmit = (data: FormData) => {
-    // Empty function as requested
-    console.log('Form submitted:', data);
-
-    // Redirect to product list page
-    router.push('/settings/products');
-  };
+  const {
+    form,
+    onSubmit,
+    isSubmitting,
+    back,
+    categoriesData,
+    categoriesLoading,
+  } = useAddProductForm();
 
   return (
     <Card>
@@ -99,6 +50,12 @@ export function AddProductForm() {
                         placeholder="Masukkan SKU produk"
                         maxLength={32}
                         {...field}
+                        onChange={e => {
+                          const value = e.target.value
+                            .replace(/[^a-zA-Z0-9-]/g, '')
+                            .toUpperCase();
+                          field.onChange(value);
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
@@ -193,15 +150,25 @@ export function AddProductForm() {
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
+                      disabled={categoriesLoading}
                     >
                       <FormControl>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Pilih kategori produk" />
+                          <SelectValue
+                            placeholder={
+                              categoriesLoading
+                                ? 'Memuat kategori...'
+                                : 'Pilih kategori produk'
+                            }
+                          />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {categoryOptions.map(category => (
-                          <SelectItem key={category.id} value={category.id}>
+                        {categoriesData?.data?.items?.map(category => (
+                          <SelectItem
+                            key={category.id}
+                            value={category.id.toString()}
+                          >
                             {category.name}
                           </SelectItem>
                         ))}
@@ -214,11 +181,14 @@ export function AddProductForm() {
             </div>
 
             <div className="flex gap-4 pt-6">
-              <Button type="submit">Simpan Produk</Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Menyimpan...' : 'Simpan Produk'}
+              </Button>
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => router.push('/settings/products')}
+                onClick={back}
+                disabled={isSubmitting}
               >
                 Batal
               </Button>
