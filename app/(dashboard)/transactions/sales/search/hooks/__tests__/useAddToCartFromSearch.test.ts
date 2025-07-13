@@ -33,12 +33,12 @@ jest.mock('@/lib/api/api-client', () => ({
   handleApiError: jest.fn(() => 'An error occurred'),
 }));
 
-jest.mock('../../../fetchers/add-item', () => ({
+jest.mock('../../fetchers', () => ({
   addToSalesCartFn: jest.fn(),
 }));
 
 import { toast } from 'sonner';
-import { addToSalesCartFn } from '../../../fetchers/add-item';
+import { addToSalesCartFn } from '../../fetchers';
 
 const mockUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 const mockAddToSalesCartFn = addToSalesCartFn as jest.MockedFunction<

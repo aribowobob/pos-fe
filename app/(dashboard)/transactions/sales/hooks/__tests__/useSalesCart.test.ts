@@ -35,10 +35,6 @@ jest.mock('../../fetchers/get-items', () => ({
   }),
 }));
 
-jest.mock('../../fetchers/add-item', () => ({
-  addToSalesCartFn: jest.fn(),
-}));
-
 jest.mock('../../fetchers/update-item', () => ({
   updateSalesCartItemFn: jest.fn(),
 }));

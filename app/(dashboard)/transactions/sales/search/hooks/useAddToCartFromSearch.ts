@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useUserStore } from '@/lib/store/user-store';
 import { handleApiError } from '@/lib/api/api-client';
 import { AddToCartRequest, ProductType } from '@/lib/types';
-import { addToSalesCartFn } from '../../fetchers/add-item';
+import { addToSalesCartFn } from '../fetchers';
 
 export const useAddToCartFromSearch = () => {
   const { user } = useUserStore();

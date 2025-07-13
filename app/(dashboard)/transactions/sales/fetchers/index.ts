@@ -1,4 +1,3 @@
-export { addToSalesCartFn } from './add-item';
 export { getSalesCartItemsFn } from './get-items';
 export { updateSalesCartItemFn } from './update-item';
 export { deleteSalesCartItemFn } from './delete-item';
