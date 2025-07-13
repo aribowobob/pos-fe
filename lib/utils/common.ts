@@ -23,7 +23,7 @@ export const devLog = (...args: unknown[]): void => {
  * @returns Formatted currency string
  */
 export function formatCurrency(
-  value: number,
+  value: number | string,
   options?: { withSymbol?: boolean }
 ): string {
   const withSymbol = options?.withSymbol ?? true;
@@ -33,6 +33,12 @@ export function formatCurrency(
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   });
+  if (typeof value === 'string') {
+    value = parseFloat(value);
+  }
+  if (isNaN(value)) {
+    return '';
+  }
 
   return formatter.format(value);
 }

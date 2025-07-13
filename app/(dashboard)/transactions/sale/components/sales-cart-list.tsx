@@ -1,18 +1,3 @@
-'use client';
-
-import { useState } from 'react';
-import { Trash2, AlertTriangle } from 'lucide-react';
-
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import { SalesCartItem, CreateOrderRequest } from '@/lib/types';
 import { SalesCartItemCard } from './sales-cart-item-card';
 import { EmptyCartState } from './empty-cart-state';
@@ -52,13 +37,6 @@ export const SalesCartList = ({
   onClearCart,
   onCreateOrder,
 }: SalesCartListProps) => {
-  const [isClearDialogOpen, setIsClearDialogOpen] = useState(false);
-
-  const handleClearConfirm = () => {
-    onClearCart();
-    setIsClearDialogOpen(false);
-  };
-
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -92,52 +70,7 @@ export const SalesCartList = ({
   }
 
   return (
-    <div className="space-y-6">
-      {/* Cart Header with Clear Button */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">
-          Keranjang Penjualan ({cartSummary.itemCount} item)
-        </h2>
-
-        <Dialog open={isClearDialogOpen} onOpenChange={setIsClearDialogOpen}>
-          <DialogTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-red-600 hover:text-red-700 hover:bg-red-50"
-              disabled={isClearingCart || items.length === 0}
-            >
-              <Trash2 className="w-4 h-4 mr-2" />
-              Kosongkan Keranjang
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-amber-500" />
-                Konfirmasi Kosongkan Keranjang
-              </DialogTitle>
-              <DialogDescription>
-                Apakah Anda yakin ingin mengosongkan semua item dari keranjang
-                penjualan? Semua item yang ada akan dihapus dan tindakan ini
-                tidak dapat dibatalkan.
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <Button
-                variant="outline"
-                onClick={() => setIsClearDialogOpen(false)}
-              >
-                Batal
-              </Button>
-              <Button variant="destructive" onClick={handleClearConfirm}>
-                Kosongkan Keranjang
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
-
+    <div className="space-y-4">
       {/* Cart Items */}
       <div className="space-y-4">
         {items.map(item => (
@@ -157,6 +90,8 @@ export const SalesCartList = ({
       <SalesCartSummary
         summary={cartSummary}
         onCreateOrder={onCreateOrder}
+        onClearCart={onClearCart}
+        isClearingCart={isClearingCart}
         isCreatingOrder={isCreatingOrder}
       />
     </div>

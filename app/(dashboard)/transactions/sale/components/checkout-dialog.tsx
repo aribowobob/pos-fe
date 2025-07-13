@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { CreditCard, Receipt } from 'lucide-react';
+import { BanknoteArrowUp, CreditCard } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -92,12 +92,12 @@ export const CheckoutDialog = ({
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button
-          className="w-full"
+          className="w-fit"
           size="lg"
           disabled={disabled || cartSummary.itemCount === 0}
         >
-          <Receipt className="w-4 h-4 mr-2" />
-          Checkout ({formatCurrency(cartSummary.totalAmount)})
+          <BanknoteArrowUp className="w-4 h-4 mr-2" />
+          Lanjutkan ke Pembayaran
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">

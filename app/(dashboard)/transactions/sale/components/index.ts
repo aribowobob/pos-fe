@@ -4,3 +4,4 @@ export { SalesCartList } from './sales-cart-list';
 export { SalesCartSummary } from './sales-cart-summary';
 export { AddToCartDialog } from './add-to-cart-dialog';
 export { CheckoutDialog } from './checkout-dialog';
+export { ClearCartDialog } from './clear-cart-dialog';

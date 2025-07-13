@@ -7,7 +7,7 @@ interface EmptyCartStateProps {
 
 export const EmptyCartState = ({
   title = 'Keranjang Penjualan Kosong',
-  description = 'Belum ada item yang ditambahkan ke keranjang penjualan. Tambahkan produk untuk memulai transaksi.',
+  description = 'Belum ada produk yang ditambahkan ke keranjang penjualan. Tambahkan produk untuk memulai transaksi.',
 }: EmptyCartStateProps) => {
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 text-center">

@@ -115,19 +115,19 @@ export const AddToCartDialog = ({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full">
-          <Plus className="w-4 h-4 mr-2" />
-          Tambah Item ke Keranjang
+        <Button className="w-fit">
+          <Plus className="size-4" />
+          Tambah Produk ke Keranjang
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <ShoppingCart className="w-5 h-5" />
-            Tambah Item ke Keranjang
+            Tambah Produk ke Keranjang
           </DialogTitle>
           <DialogDescription>
-            Pilih produk dan atur quantity serta diskon untuk menambahkan ke
+            Pilih produk dan atur kuantitas dan diskon untuk menambahkan ke
             keranjang penjualan.
           </DialogDescription>
         </DialogHeader>
@@ -169,7 +169,7 @@ export const AddToCartDialog = ({
               {/* Quantity */}
               <div className="space-y-2">
                 <Label htmlFor="quantity">
-                  Quantity ({selectedProduct.unit_name})
+                  Jumlah ({selectedProduct.unit_name})
                 </Label>
                 <Input
                   id="quantity"

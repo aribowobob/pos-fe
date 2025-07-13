@@ -1,6 +1,7 @@
 import { CheckoutDialog } from './checkout-dialog';
 import { CreateOrderRequest } from '@/lib/types';
 import { formatCurrency } from '@/lib/utils/common';
+import { ClearCartDialog } from './clear-cart-dialog';
 
 interface SalesCartSummaryProps {
   summary: {
@@ -10,13 +11,17 @@ interface SalesCartSummaryProps {
     itemCount: number;
   };
   onCreateOrder?: (order: CreateOrderRequest) => void;
+  onClearCart: () => void;
   isCreatingOrder?: boolean;
+  isClearingCart?: boolean;
 }
 
 export const SalesCartSummary = ({
   summary,
   onCreateOrder,
+  onClearCart,
   isCreatingOrder = false,
+  isClearingCart = false,
 }: SalesCartSummaryProps) => {
   const subtotal = summary.totalAmount + summary.totalDiscount;
 
@@ -24,7 +29,7 @@ export const SalesCartSummary = ({
     <div className="border border-border rounded-lg p-4 bg-gray-50 space-y-3">
       <h3 className="font-semibold text-lg mb-4">Ringkasan Keranjang</h3>
 
-      <div className="space-y-2 text-sm">
+      <div className="space-y-1 text-sm">
         <div className="flex justify-between">
           <span className="text-muted-foreground">Total Item:</span>
           <span className="font-medium">{summary.totalItems} item</span>
@@ -52,16 +57,22 @@ export const SalesCartSummary = ({
         </div>
       </div>
 
-      {onCreateOrder && (
-        <div className="pt-4">
+      <div className="pt-4 flex items-center justify-between">
+        <ClearCartDialog
+          itemCount={summary.itemCount}
+          onClearCart={onClearCart}
+          isClearingCart={isClearingCart}
+        />
+
+        {onCreateOrder && (
           <CheckoutDialog
             onCreateOrder={onCreateOrder}
             cartSummary={summary}
             isLoading={isCreatingOrder}
             disabled={summary.itemCount === 0}
           />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
