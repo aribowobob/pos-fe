@@ -1,5 +1,7 @@
 'use client';
 
+import { Plus } from 'lucide-react';
+import Link from 'next/link';
 import { DashboardLayout } from '@/components/layouts/dashboard-layout';
 import {
   Breadcrumb,
@@ -9,8 +11,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { Button } from '@/components/ui/button';
 
-import { SalesCartList, AddToCartDialog } from './components';
+import { SalesCartList } from './components';
 import { useSalesCart } from './hooks/useSalesCart';
 
 export default function Page() {
@@ -22,13 +25,11 @@ export default function Page() {
     isDeletingItem,
     isClearingCart,
     isCreatingOrder,
-    addItem,
     incrementQuantity,
     decrementQuantity,
     deleteItem,
     clearCart,
     createOrder,
-    isAddingItem,
   } = useSalesCart();
 
   return (
@@ -52,7 +53,12 @@ export default function Page() {
 
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-semibold">Transaksi Penjualan</h1>
-          <AddToCartDialog onAddToCart={addItem} isLoading={isAddingItem} />
+          <Button asChild>
+            <Link href="/transactions/sales/search">
+              <Plus className="h-4 w-4 mr-2" />
+              Tambah Produk ke Keranjang
+            </Link>
+          </Button>
         </div>
 
         <SalesCartList

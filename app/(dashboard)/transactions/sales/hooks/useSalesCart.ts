@@ -8,14 +8,12 @@ import { useUserStore } from '@/lib/store/user-store';
 import { handleApiError } from '@/lib/api/api-client';
 import {
   SalesCartItem,
-  AddToCartRequest,
   UpdateCartItemRequest,
   CreateOrderRequest,
 } from '@/lib/types';
 
 // Import fetcher functions
 import { getSalesCartItemsFn } from '../fetchers/get-items';
-import { addToSalesCartFn } from '../fetchers/add-item';
 import { updateSalesCartItemFn } from '../fetchers/update-item';
 import { deleteSalesCartItemFn } from '../fetchers/delete-item';
 import { clearSalesCartFn } from '../fetchers/clear-sales-cart';
@@ -62,19 +60,6 @@ export const useSalesCart = () => {
       itemCount: items.length,
     };
   }, [cartItems]);
-
-  // Add item to cart mutation
-  const addItemMutation = useMutation({
-    mutationFn: addToSalesCartFn,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sales-cart', storeId] });
-      toast.success('Item berhasil ditambahkan ke keranjang');
-    },
-    onError: error => {
-      const errorMessage = handleApiError(error);
-      toast.error(errorMessage);
-    },
-  });
 
   // Update item mutation
   const updateItemMutation = useMutation({
@@ -142,13 +127,6 @@ export const useSalesCart = () => {
   });
 
   // Helper functions
-  const addItem = useCallback(
-    (item: AddToCartRequest) => {
-      addItemMutation.mutate(item);
-    },
-    [addItemMutation]
-  );
-
   const updateItem = useCallback(
     (itemId: number, update: UpdateCartItemRequest) => {
       updateItemMutation.mutate({ itemId, update });
@@ -221,14 +199,12 @@ export const useSalesCart = () => {
     isProcessingOrder,
 
     // Mutation states
-    isAddingItem: addItemMutation.isPending,
     isUpdatingItem: updateItemMutation.isPending,
     isDeletingItem: deleteItemMutation.isPending,
     isClearingCart: clearCartMutation.isPending,
     isCreatingOrder: createOrderMutation.isPending,
 
     // Actions
-    addItem,
     updateItem,
     deleteItem,
     clearCart,

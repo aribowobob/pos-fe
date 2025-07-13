@@ -99,7 +99,6 @@ describe('useSalesCart - Basic Functionality', () => {
 
     // Check that initial states are correct
     expect(result.current.cartItems).toEqual([]);
-    expect(result.current.isAddingItem).toBe(false);
     expect(result.current.isUpdatingItem).toBe(false);
     expect(result.current.isDeletingItem).toBe(false);
     expect(result.current.isClearingCart).toBe(false);
@@ -157,7 +156,6 @@ describe('useSalesCart - Basic Functionality', () => {
     const { result } = renderHook(() => useSalesCart(), { wrapper });
 
     // Verify all required functions are present
-    expect(typeof result.current.addItem).toBe('function');
     expect(typeof result.current.updateItem).toBe('function');
     expect(typeof result.current.deleteItem).toBe('function');
     expect(typeof result.current.clearCart).toBe('function');
@@ -206,132 +204,6 @@ describe('useSalesCart - Basic Functionality', () => {
 
     // Verify the function completed without errors
     expect(typeof result.current.incrementQuantity).toBe('function');
-  });
-});
-
-describe('useSalesCart - Add Item to Cart', () => {
-  let queryClient: QueryClient;
-
-  const wrapper = ({ children }: { children: React.ReactNode }) => {
-    return React.createElement(
-      QueryClientProvider,
-      { client: queryClient },
-      children
-    );
-  };
-
-  beforeEach(() => {
-    queryClient = new QueryClient({
-      defaultOptions: {
-        queries: {
-          retry: false,
-          refetchOnWindowFocus: false,
-        },
-        mutations: {
-          retry: false,
-        },
-      },
-    });
-
-    jest.clearAllMocks();
-  });
-
-  afterEach(() => {
-    queryClient.clear();
-  });
-
-  it('should successfully add item to cart - success case', async () => {
-    const mockCartItem = {
-      base_price: '10000',
-      discount_amount: '0',
-      discount_type: 'fixed' as const,
-      discount_value: 0,
-      product_id: 1,
-      qty: 1,
-      sale_price: '10000',
-      store_id: 1,
-    };
-
-    // Get mocked functions from the individual modules
-    const { addToSalesCartFn } = jest.requireMock('../../fetchers/add-item');
-    const { toast } = jest.requireMock('sonner');
-
-    // Mock successful response
-    addToSalesCartFn.mockResolvedValueOnce({
-      status: 'success',
-      message: 'Item added successfully',
-      data: {
-        id: 1,
-        ...mockCartItem,
-        user_id: 1,
-        created_at: '2024-01-01T00:00:00Z',
-        updated_at: '2024-01-01T00:00:00Z',
-      },
-    });
-
-    const { result } = renderHook(() => useSalesCart(), { wrapper });
-
-    await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-    });
-
-    // Execute add item
-    await act(async () => {
-      result.current.addItem(mockCartItem);
-    });
-
-    // Wait for any async operations
-    await waitFor(() => {
-      // Verify success toast was called
-      expect(toast.success).toHaveBeenCalledWith(
-        'Item berhasil ditambahkan ke keranjang'
-      );
-    });
-
-    // Verify the mutation was called with correct parameters
-    expect(addToSalesCartFn).toHaveBeenCalledWith(mockCartItem);
-  });
-
-  it('should handle add item to cart - error case', async () => {
-    const mockCartItem = {
-      base_price: '10000',
-      discount_amount: '0',
-      discount_type: 'fixed' as const,
-      discount_value: 0,
-      product_id: 1,
-      qty: 1,
-      sale_price: '10000',
-      store_id: 1,
-    };
-
-    const mockError = new Error('Failed to add item to cart');
-
-    // Get mocked functions from the individual modules
-    const { addToSalesCartFn } = jest.requireMock('../../fetchers/add-item');
-    const { toast } = jest.requireMock('sonner');
-
-    // Mock error response
-    addToSalesCartFn.mockRejectedValueOnce(mockError);
-
-    const { result } = renderHook(() => useSalesCart(), { wrapper });
-
-    await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-    });
-
-    // Execute add item
-    await act(async () => {
-      result.current.addItem(mockCartItem);
-    });
-
-    // Wait for any async operations
-    await waitFor(() => {
-      // Verify error toast was called
-      expect(toast.error).toHaveBeenCalledWith('An error occurred');
-    });
-
-    // Verify the mutation was called with correct parameters
-    expect(addToSalesCartFn).toHaveBeenCalledWith(mockCartItem);
   });
 });
 
