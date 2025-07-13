@@ -8,7 +8,7 @@ export default function DashboardPage() {
         <h1 className="text-2xl font-semibold tracking-tight">Transaksi</h1>
 
         <Link
-          href="/transactions/sale"
+          href="/transactions/sales"
           className="text-blue-500 hover:underline"
         >
           Transaksi Penjualan
