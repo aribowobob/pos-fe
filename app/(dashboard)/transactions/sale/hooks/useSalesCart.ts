@@ -1,0 +1,242 @@
+'use client';
+
+import { useState, useCallback } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+
+import { useUserStore } from '@/lib/store/user-store';
+import { handleApiError } from '@/lib/api/api-client';
+import {
+  SalesCartItem,
+  AddToCartRequest,
+  UpdateCartItemRequest,
+  CreateOrderRequest,
+} from '@/lib/types';
+
+// Import fetcher functions
+import { getSalesCartItemsFn } from '../fetchers/get-items';
+import { addToSalesCartFn } from '../fetchers/add-item';
+import { updateSalesCartItemFn } from '../fetchers/update-item';
+import { deleteSalesCartItemFn } from '../fetchers/delete-item';
+import { clearSalesCartFn } from '../fetchers/clear-sales-cart';
+import { createSalesOrderFn } from '../fetchers/create-order';
+
+export const useSalesCart = () => {
+  const { user } = useUserStore();
+  const queryClient = useQueryClient();
+  const [isProcessingOrder, setIsProcessingOrder] = useState(false);
+
+  const storeId = user?.store?.id;
+
+  // Query to get cart items
+  const {
+    data: cartItems,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['sales-cart', storeId],
+    queryFn: () => {
+      if (!storeId) throw new Error('Store ID is required');
+      return getSalesCartItemsFn(storeId);
+    },
+    enabled: !!storeId,
+  });
+
+  // Calculate cart totals
+  const cartSummary = useCallback(() => {
+    const items = cartItems?.data || [];
+    const totalItems = items.reduce((sum, item) => sum + item.qty, 0);
+    const totalAmount = items.reduce(
+      (sum, item) => sum + parseFloat(item.sale_price),
+      0
+    );
+    const totalDiscount = items.reduce(
+      (sum, item) => sum + parseFloat(item.discount_amount),
+      0
+    );
+
+    return {
+      totalItems,
+      totalAmount,
+      totalDiscount,
+      itemCount: items.length,
+    };
+  }, [cartItems]);
+
+  // Add item to cart mutation
+  const addItemMutation = useMutation({
+    mutationFn: addToSalesCartFn,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sales-cart', storeId] });
+      toast.success('Item berhasil ditambahkan ke keranjang');
+    },
+    onError: error => {
+      const errorMessage = handleApiError(error);
+      toast.error(errorMessage);
+    },
+  });
+
+  // Update item mutation
+  const updateItemMutation = useMutation({
+    mutationFn: ({
+      itemId,
+      update,
+    }: {
+      itemId: number;
+      update: UpdateCartItemRequest;
+    }) => updateSalesCartItemFn(itemId, update),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sales-cart', storeId] });
+      toast.success('Item berhasil diperbarui');
+    },
+    onError: error => {
+      const errorMessage = handleApiError(error);
+      toast.error(errorMessage);
+    },
+  });
+
+  // Delete item mutation
+  const deleteItemMutation = useMutation({
+    mutationFn: deleteSalesCartItemFn,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sales-cart', storeId] });
+      toast.success('Item berhasil dihapus dari keranjang');
+    },
+    onError: error => {
+      const errorMessage = handleApiError(error);
+      toast.error(errorMessage);
+    },
+  });
+
+  // Clear cart mutation
+  const clearCartMutation = useMutation({
+    mutationFn: () => {
+      if (!storeId) throw new Error('Store ID is required');
+      return clearSalesCartFn(storeId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sales-cart', storeId] });
+      toast.success('Keranjang berhasil dikosongkan');
+    },
+    onError: error => {
+      const errorMessage = handleApiError(error);
+      toast.error(errorMessage);
+    },
+  });
+
+  // Create order mutation
+  const createOrderMutation = useMutation({
+    mutationFn: createSalesOrderFn,
+    onSuccess: data => {
+      queryClient.invalidateQueries({ queryKey: ['sales-cart', storeId] });
+      toast.success(
+        `Order berhasil dibuat dengan nomor: ${data.data.order.order_number}`
+      );
+      setIsProcessingOrder(false);
+    },
+    onError: error => {
+      const errorMessage = handleApiError(error);
+      toast.error(errorMessage);
+      setIsProcessingOrder(false);
+    },
+  });
+
+  // Helper functions
+  const addItem = useCallback(
+    (item: AddToCartRequest) => {
+      addItemMutation.mutate(item);
+    },
+    [addItemMutation]
+  );
+
+  const updateItem = useCallback(
+    (itemId: number, update: UpdateCartItemRequest) => {
+      updateItemMutation.mutate({ itemId, update });
+    },
+    [updateItemMutation]
+  );
+
+  const deleteItem = useCallback(
+    (itemId: number) => {
+      deleteItemMutation.mutate(itemId);
+    },
+    [deleteItemMutation]
+  );
+
+  const clearCart = useCallback(() => {
+    clearCartMutation.mutate();
+  }, [clearCartMutation]);
+
+  const createOrder = useCallback(
+    (order: CreateOrderRequest) => {
+      setIsProcessingOrder(true);
+      createOrderMutation.mutate(order);
+    },
+    [createOrderMutation]
+  );
+
+  // Increment item quantity
+  const incrementQuantity = useCallback(
+    (item: SalesCartItem) => {
+      const newQty = item.qty + 1;
+      const unitPrice = parseFloat(item.base_price) / item.qty; // Get unit price
+      const newBasePrice = unitPrice * newQty;
+
+      updateItem(item.id, {
+        base_price: newBasePrice.toString(),
+        discount_type: item.discount_type,
+        discount_value: item.discount_value,
+        qty: newQty,
+      });
+    },
+    [updateItem]
+  );
+
+  // Decrement item quantity
+  const decrementQuantity = useCallback(
+    (item: SalesCartItem) => {
+      if (item.qty <= 1) return; // Don't allow quantity below 1
+
+      const newQty = item.qty - 1;
+      const unitPrice = parseFloat(item.base_price) / item.qty; // Get unit price
+      const newBasePrice = unitPrice * newQty;
+
+      updateItem(item.id, {
+        base_price: newBasePrice.toString(),
+        discount_type: item.discount_type,
+        discount_value: item.discount_value,
+        qty: newQty,
+      });
+    },
+    [updateItem]
+  );
+
+  return {
+    // Data
+    cartItems: cartItems?.data || [],
+    cartSummary: cartSummary(),
+
+    // Loading states
+    isLoading,
+    isProcessingOrder,
+
+    // Mutation states
+    isAddingItem: addItemMutation.isPending,
+    isUpdatingItem: updateItemMutation.isPending,
+    isDeletingItem: deleteItemMutation.isPending,
+    isClearingCart: clearCartMutation.isPending,
+    isCreatingOrder: createOrderMutation.isPending,
+
+    // Actions
+    addItem,
+    updateItem,
+    deleteItem,
+    clearCart,
+    createOrder,
+    incrementQuantity,
+    decrementQuantity,
+
+    // Error
+    error,
+  };
+};

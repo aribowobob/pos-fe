@@ -1,0 +1,227 @@
+'use client';
+
+import { useState } from 'react';
+import { CreditCard, Receipt } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { CreateOrderRequest } from '@/lib/types';
+import { useUserStore } from '@/lib/store/user-store';
+import { formatCurrency } from '@/lib/utils/common';
+
+interface CheckoutDialogProps {
+  onCreateOrder: (order: CreateOrderRequest) => void;
+  cartSummary: {
+    totalItems: number;
+    totalAmount: number;
+    totalDiscount: number;
+    itemCount: number;
+  };
+  isLoading?: boolean;
+  disabled?: boolean;
+}
+
+export const CheckoutDialog = ({
+  onCreateOrder,
+  cartSummary,
+  isLoading = false,
+  disabled = false,
+}: CheckoutDialogProps) => {
+  const { user } = useUserStore();
+  const [isOpen, setIsOpen] = useState(false);
+  const [orderNumber, setOrderNumber] = useState('');
+  const [paymentCash, setPaymentCash] = useState('');
+  const [paymentNonCash, setPaymentNonCash] = useState('0');
+
+  const generateOrderNumber = () => {
+    const now = new Date();
+    const timestamp = now.getTime().toString().slice(-6);
+    return `ORD${timestamp}`;
+  };
+
+  const handleOpenChange = (open: boolean) => {
+    if (open) {
+      // Generate new order number when dialog opens
+      setOrderNumber(generateOrderNumber());
+      // Set default cash payment to total amount
+      setPaymentCash(cartSummary.totalAmount.toString());
+      setPaymentNonCash('0');
+    }
+    setIsOpen(open);
+  };
+
+  const handleCreateOrder = () => {
+    if (!user?.store?.id) return;
+
+    const totalPayment =
+      parseFloat(paymentCash || '0') + parseFloat(paymentNonCash || '0');
+    if (totalPayment < cartSummary.totalAmount) {
+      alert('Total pembayaran tidak boleh kurang dari total tagihan!');
+      return;
+    }
+
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+
+    const order: CreateOrderRequest = {
+      order_number: orderNumber,
+      store_id: user.store.id,
+      date: today,
+      payment_cash: paymentCash || '0',
+      payment_non_cash: paymentNonCash || '0',
+    };
+
+    onCreateOrder(order);
+    setIsOpen(false);
+  };
+
+  const totalPayment =
+    parseFloat(paymentCash || '0') + parseFloat(paymentNonCash || '0');
+  const change = totalPayment - cartSummary.totalAmount;
+
+  return (
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>
+        <Button
+          className="w-full"
+          size="lg"
+          disabled={disabled || cartSummary.itemCount === 0}
+        >
+          <Receipt className="w-4 h-4 mr-2" />
+          Checkout ({formatCurrency(cartSummary.totalAmount)})
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <CreditCard className="w-5 h-5" />
+            Checkout Penjualan
+          </DialogTitle>
+          <DialogDescription>
+            Konfirmasi pembayaran untuk menyelesaikan transaksi penjualan.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          {/* Order Summary */}
+          <div className="border rounded-lg p-3 bg-gray-50 space-y-2">
+            <h4 className="font-medium mb-2">Ringkasan Pesanan</h4>
+            <div className="flex justify-between text-sm">
+              <span>Total Item:</span>
+              <span>{cartSummary.totalItems} item</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span>Subtotal:</span>
+              <span>
+                {formatCurrency(
+                  cartSummary.totalAmount + cartSummary.totalDiscount
+                )}
+              </span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span>Total Diskon:</span>
+              <span className="text-red-600">
+                -{formatCurrency(cartSummary.totalDiscount)}
+              </span>
+            </div>
+            <div className="flex justify-between text-lg font-semibold border-t pt-2">
+              <span>Total Tagihan:</span>
+              <span className="text-green-600">
+                {formatCurrency(cartSummary.totalAmount)}
+              </span>
+            </div>
+          </div>
+
+          {/* Order Number */}
+          <div className="space-y-2">
+            <Label htmlFor="order-number">Nomor Pesanan</Label>
+            <Input
+              id="order-number"
+              value={orderNumber}
+              onChange={e => setOrderNumber(e.target.value)}
+              placeholder="Masukkan nomor pesanan"
+              required
+            />
+          </div>
+
+          {/* Payment Cash */}
+          <div className="space-y-2">
+            <Label htmlFor="payment-cash">Pembayaran Tunai (Rp)</Label>
+            <Input
+              id="payment-cash"
+              type="number"
+              min="0"
+              value={paymentCash}
+              onChange={e => setPaymentCash(e.target.value)}
+              placeholder="0"
+            />
+          </div>
+
+          {/* Payment Non-Cash */}
+          <div className="space-y-2">
+            <Label htmlFor="payment-non-cash">Pembayaran Non-Tunai (Rp)</Label>
+            <Input
+              id="payment-non-cash"
+              type="number"
+              min="0"
+              value={paymentNonCash}
+              onChange={e => setPaymentNonCash(e.target.value)}
+              placeholder="0"
+            />
+          </div>
+
+          {/* Payment Summary */}
+          <div className="border rounded-lg p-3 bg-blue-50 space-y-2">
+            <div className="flex justify-between text-sm">
+              <span>Total Pembayaran:</span>
+              <span className="font-medium">
+                {formatCurrency(totalPayment)}
+              </span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span>Kembalian:</span>
+              <span
+                className={`font-medium ${
+                  change >= 0 ? 'text-green-600' : 'text-red-600'
+                }`}
+              >
+                {formatCurrency(Math.max(0, change))}
+              </span>
+            </div>
+            {totalPayment < cartSummary.totalAmount && (
+              <p className="text-xs text-red-600 mt-1">
+                Pembayaran kurang{' '}
+                {formatCurrency(cartSummary.totalAmount - totalPayment)}
+              </p>
+            )}
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setIsOpen(false)}>
+            Batal
+          </Button>
+          <Button
+            onClick={handleCreateOrder}
+            disabled={
+              !orderNumber ||
+              totalPayment < cartSummary.totalAmount ||
+              isLoading
+            }
+          >
+            {isLoading ? 'Memproses...' : 'Buat Pesanan'}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
