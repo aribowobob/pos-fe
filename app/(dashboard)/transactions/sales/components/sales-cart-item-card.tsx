@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Minus, Plus, Trash2, AlertTriangle, MoreVertical } from 'lucide-react';
+import { Minus, Plus, Trash2, AlertTriangle, SquarePen } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -61,9 +61,9 @@ export const SalesCartItemCard = ({
           </h3>
         </div>
 
-        <button>
-          <MoreVertical className="w-5 h-5 text-muted-foreground hover:text-primary" />
-        </button>
+        <Button className="p-0 size-4" variant="ghost" size="icon">
+          <SquarePen className="size-4 text-muted-foreground hover:text-primary" />
+        </Button>
       </div>
 
       <div className="flex items-end gap-4 justify-between">
@@ -90,7 +90,7 @@ export const SalesCartItemCard = ({
 
       <div className="flex items-center justify-between">
         <p className="font-medium text-xl text-green-600">
-          {formatCurrency(Number(item.sale_price))}
+          {formatCurrency(Number(item.sale_price) * item.qty)}
         </p>
 
         <div className="flex items-center gap-4">
@@ -147,12 +147,16 @@ export const SalesCartItemCard = ({
               <Minus className="w-4 h-4" />
             </Button>
 
-            <p className="min-w-12 text-center font-medium">
+            <Button
+              type="button"
+              variant="ghost"
+              className="min-w-12 h-8 p-0 gap-1 text-base text-center font-medium"
+            >
               {item.qty}
-              <span className="text-muted-foreground text-[10px] ml-1">
+              <span className="text-muted-foreground text-[10px]">
                 {item.unit_name}
               </span>
-            </p>
+            </Button>
 
             <Button
               variant="outline"

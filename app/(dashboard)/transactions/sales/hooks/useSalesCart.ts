@@ -45,7 +45,7 @@ export const useSalesCart = () => {
     const items = cartItems?.data || [];
     const totalItems = items.reduce((sum, item) => sum + item.qty, 0);
     const totalAmount = items.reduce(
-      (sum, item) => sum + parseFloat(item.sale_price),
+      (sum, item) => sum + parseFloat(item.sale_price) * item.qty,
       0
     );
     const totalDiscount = items.reduce(
@@ -157,13 +157,8 @@ export const useSalesCart = () => {
   const incrementQuantity = useCallback(
     (item: SalesCartItem) => {
       const newQty = item.qty + 1;
-      const unitPrice = parseFloat(item.base_price) / item.qty; // Get unit price
-      const newBasePrice = unitPrice * newQty;
 
       updateItem(item.id, {
-        base_price: newBasePrice.toString(),
-        discount_type: item.discount_type,
-        discount_value: item.discount_value,
         qty: newQty,
       });
     },
@@ -176,13 +171,8 @@ export const useSalesCart = () => {
       if (item.qty <= 1) return; // Don't allow quantity below 1
 
       const newQty = item.qty - 1;
-      const unitPrice = parseFloat(item.base_price) / item.qty; // Get unit price
-      const newBasePrice = unitPrice * newQty;
 
       updateItem(item.id, {
-        base_price: newBasePrice.toString(),
-        discount_type: item.discount_type,
-        discount_value: item.discount_value,
         qty: newQty,
       });
     },

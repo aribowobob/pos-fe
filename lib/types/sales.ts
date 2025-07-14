@@ -29,10 +29,10 @@ export type AddToCartRequest = {
 };
 
 export type UpdateCartItemRequest = {
-  base_price: string;
-  discount_type: 'fixed' | 'percentage';
-  discount_value: number;
-  qty: number;
+  base_price?: string;
+  discount_type?: 'fixed' | 'percentage';
+  discount_value?: number;
+  qty?: number;
 };
 
 export type CreateOrderRequest = {
