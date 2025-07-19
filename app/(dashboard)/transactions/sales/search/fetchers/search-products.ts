@@ -3,7 +3,8 @@ import { PaginatedResponse, ProductType } from '@/lib/types';
 
 export type SearchProductsRequest = {
   search?: string;
-  size?: string;
+  size?: number;
+  page?: number;
 };
 
 export const searchProductsFn = async (params: SearchProductsRequest) => {
@@ -13,8 +14,8 @@ export const searchProductsFn = async (params: SearchProductsRequest) => {
       {
         params: {
           ...(params?.search && { search: params.search }),
-          page: '1',
-          size: params.size || '20',
+          page: params.page ?? 1,
+          size: params.size ?? 20,
         },
       }
     );

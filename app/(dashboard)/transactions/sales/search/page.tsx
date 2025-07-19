@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronRightCircleIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 import { DashboardLayout } from '@/components/layouts/dashboard-layout';
+import { Pagination } from '@/components/pagination';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -21,16 +22,23 @@ import { useSearchProducts, useAddToCartFromSearch } from './hooks';
 export default function Page() {
   const { back } = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { data: productsData, isLoading } = useSearchProducts({
     search: searchQuery,
-    size: '20',
+    page: currentPage,
   });
+  const { data } = productsData ?? {};
+  const { items: products = [], total_pages, page } = data ?? {};
 
   const { addProductToCart, isLoading: isAddingToCart } =
     useAddToCartFromSearch();
 
-  const products = productsData?.data?.items || [];
+  useEffect(() => {
+    if (page) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [page]);
 
   const handleSearchChange = (search: string) => {
     setSearchQuery(search);
@@ -78,6 +86,12 @@ export default function Page() {
             onAddToCart={addProductToCart}
             isAddingToCart={isAddingToCart}
             searchQuery={searchQuery}
+          />
+
+          <Pagination
+            page={page ?? 1}
+            totalPages={total_pages ?? 1}
+            onPageChange={setCurrentPage}
           />
         </div>
       </div>

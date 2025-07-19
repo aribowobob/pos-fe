@@ -236,48 +236,48 @@ describe('useSalesCart - Cart Totals Calculation', () => {
 
   it('should calculate cart totals correctly with mixed discount types', async () => {
     const mockCartItems: SalesCartItem[] = [
-      // Item 1: No discount, qty 2
+      // Item 1: No discount, qty 2, per unit price 5000
       {
         id: 1,
         user_id: 1,
         store_id: 1,
         product_id: 1,
-        base_price: '10000', // 5000 per unit * 2 qty
+        base_price: '10000',
         qty: 2,
         discount_type: 'fixed',
         discount_value: 0,
         discount_amount: '0',
-        sale_price: '10000',
+        sale_price: '5000', // per unit price
         created_at: '2024-01-01T00:00:00Z',
         updated_at: '2024-01-01T00:00:00Z',
       },
-      // Item 2: Fixed discount 2000, qty 1
+      // Item 2: Fixed discount 2000, qty 1, per unit price 13000
       {
         id: 2,
         user_id: 1,
         store_id: 1,
         product_id: 2,
-        base_price: '15000', // 15000 per unit * 1 qty
+        base_price: '15000',
         qty: 1,
         discount_type: 'fixed',
         discount_value: 2000,
         discount_amount: '2000',
-        sale_price: '13000',
+        sale_price: '13000', // per unit price
         created_at: '2024-01-01T00:00:00Z',
         updated_at: '2024-01-01T00:00:00Z',
       },
-      // Item 3: Percentage discount 20%, qty 3
+      // Item 3: Percentage discount 20%, qty 3, per unit price 8000
       {
         id: 3,
         user_id: 1,
         store_id: 1,
         product_id: 3,
-        base_price: '30000', // 10000 per unit * 3 qty
+        base_price: '30000',
         qty: 3,
         discount_type: 'percentage',
         discount_value: 20,
-        discount_amount: '6000', // 20% of 30000
-        sale_price: '24000',
+        discount_amount: '6000',
+        sale_price: '8000', // per unit price
         created_at: '2024-01-01T00:00:00Z',
         updated_at: '2024-01-01T00:00:00Z',
       },
@@ -301,9 +301,11 @@ describe('useSalesCart - Cart Totals Calculation', () => {
     const summary = result.current.cartSummary;
 
     // Expected calculations:
-    // Total base amount: 10000 + 15000 + 30000 = 55000
-    // Total discount: 0 + 2000 + 6000 = 8000
+    // Item 1: 5000 * 2 = 10000
+    // Item 2: 13000 * 1 = 13000
+    // Item 3: 8000 * 3 = 24000
     // Total sale amount: 10000 + 13000 + 24000 = 47000
+    // Total discount: 0 + 2000 + 6000 = 8000
     // Total items: 2 + 1 + 3 = 6
     // Item count: 3 (number of different items)
 
@@ -828,11 +830,8 @@ describe('useSalesCart - Increment & Decrement Quantity', () => {
     });
 
     // Verify the mutation was called with correct parameters
-    // Expected: qty should be incremented by 1, prices should be calculated accordingly
+    // Expected: only qty should be passed, as per the new implementation
     expect(updateSalesCartItemFn).toHaveBeenCalledWith(mockCartItem.id, {
-      base_price: '15000', // 5000 per unit * 3 qty
-      discount_type: 'fixed',
-      discount_value: 0,
       qty: 3, // incremented from 2 to 3
     });
   });
@@ -889,11 +888,8 @@ describe('useSalesCart - Increment & Decrement Quantity', () => {
     });
 
     // Verify the mutation was called with correct parameters
-    // Expected: qty should be decremented by 1, prices should be calculated accordingly
+    // Expected: only qty should be passed, as per the new implementation
     expect(updateSalesCartItemFn).toHaveBeenCalledWith(mockCartItem.id, {
-      base_price: '10000', // 5000 per unit * 2 qty
-      discount_type: 'fixed',
-      discount_value: 0,
       qty: 2, // decremented from 3 to 2
     });
   });
