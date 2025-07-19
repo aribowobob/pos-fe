@@ -1,3 +1,4 @@
+export { EditItemDialog } from './edit-item-dialog';
 export { EmptyCartState } from './empty-cart-state';
 export { SalesCartItemCard } from './sales-cart-item-card';
 export { SalesCartList } from './sales-cart-list';

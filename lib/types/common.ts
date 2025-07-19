@@ -36,3 +36,8 @@ export interface PaginatedResponse<T> {
   message: string;
   data: PaginatedData<T>;
 }
+
+export enum DiscountType {
+  FIXED = 'fixed',
+  PERCENTAGE = 'percentage',
+}

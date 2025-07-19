@@ -1,3 +1,5 @@
+import { DiscountType } from './common';
+
 export type SalesCartItem = {
   id: number;
   user_id: number;
@@ -5,7 +7,7 @@ export type SalesCartItem = {
   product_id: number;
   base_price: string;
   qty: number;
-  discount_type: 'fixed' | 'percentage';
+  discount_type: DiscountType;
   discount_value: number;
   discount_amount: string;
   sale_price: string;
@@ -20,7 +22,7 @@ export type SalesCartItem = {
 export type AddToCartRequest = {
   base_price: string;
   discount_amount: string;
-  discount_type: 'fixed' | 'percentage';
+  discount_type: DiscountType;
   discount_value: number;
   product_id: number;
   qty: number;
@@ -30,7 +32,7 @@ export type AddToCartRequest = {
 
 export type UpdateCartItemRequest = {
   base_price?: string;
-  discount_type?: 'fixed' | 'percentage';
+  discount_type?: DiscountType;
   discount_value?: number;
   qty?: number;
 };
@@ -64,7 +66,7 @@ export type SalesOrderDetail = {
   product_id: number;
   qty: number;
   base_price: string;
-  discount_type: 'fixed' | 'percentage';
+  discount_type: DiscountType;
   discount_value: string;
   discount_amount: string;
   sale_price: string;

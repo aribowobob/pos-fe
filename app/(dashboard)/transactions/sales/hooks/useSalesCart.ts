@@ -23,6 +23,7 @@ export const useSalesCart = () => {
   const { user } = useUserStore();
   const queryClient = useQueryClient();
   const [isProcessingOrder, setIsProcessingOrder] = useState(false);
+  const [editItem, setEditItem] = useState<SalesCartItem | null>(null);
 
   const storeId = user?.store?.id;
 
@@ -73,6 +74,10 @@ export const useSalesCart = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sales-cart', storeId] });
       toast.success('Item berhasil diperbarui');
+
+      if (editItem) {
+        setEditItem(null);
+      }
     },
     onError: error => {
       const errorMessage = handleApiError(error);
@@ -183,6 +188,10 @@ export const useSalesCart = () => {
     // Data
     cartItems: cartItems?.data || [],
     cartSummary: cartSummary(),
+    editItem,
+
+    // Setters
+    setEditItem,
 
     // Loading states
     isLoading,

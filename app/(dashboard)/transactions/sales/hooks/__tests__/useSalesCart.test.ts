@@ -2,7 +2,7 @@ import { renderHook, act, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 
-import { SalesCartItem } from '@/lib/types';
+import { DiscountType, SalesCartItem } from '@/lib/types';
 
 // Mock all external dependencies
 jest.mock('sonner', () => ({
@@ -124,7 +124,7 @@ describe('useSalesCart - Basic Functionality', () => {
       product_id: 1,
       base_price: '10000',
       qty: 1,
-      discount_type: 'fixed' as const,
+      discount_type: DiscountType.FIXED as const,
       discount_value: 0,
       discount_amount: '0',
       sale_price: '10000',
@@ -179,7 +179,7 @@ describe('useSalesCart - Basic Functionality', () => {
       product_id: 1,
       base_price: '10000', // Total for qty 2
       qty: 2,
-      discount_type: 'fixed' as const,
+      discount_type: DiscountType.FIXED as const,
       discount_value: 1000,
       discount_amount: '1000',
       sale_price: '10000',
@@ -244,7 +244,7 @@ describe('useSalesCart - Cart Totals Calculation', () => {
         product_id: 1,
         base_price: '10000',
         qty: 2,
-        discount_type: 'fixed',
+        discount_type: DiscountType.FIXED,
         discount_value: 0,
         discount_amount: '0',
         sale_price: '5000', // per unit price
@@ -259,7 +259,7 @@ describe('useSalesCart - Cart Totals Calculation', () => {
         product_id: 2,
         base_price: '15000',
         qty: 1,
-        discount_type: 'fixed',
+        discount_type: DiscountType.FIXED,
         discount_value: 2000,
         discount_amount: '2000',
         sale_price: '13000', // per unit price
@@ -274,7 +274,7 @@ describe('useSalesCart - Cart Totals Calculation', () => {
         product_id: 3,
         base_price: '30000',
         qty: 3,
-        discount_type: 'percentage',
+        discount_type: DiscountType.PERCENTAGE,
         discount_value: 20,
         discount_amount: '6000',
         sale_price: '8000', // per unit price
@@ -355,7 +355,7 @@ describe('useSalesCart - Update Item Mutation', () => {
       product_id: 1,
       base_price: '10000',
       qty: 2,
-      discount_type: 'fixed',
+      discount_type: DiscountType.FIXED,
       discount_value: 0,
       discount_amount: '0',
       sale_price: '10000',
@@ -365,7 +365,7 @@ describe('useSalesCart - Update Item Mutation', () => {
 
     const updateData = {
       base_price: '15000',
-      discount_type: 'fixed' as const,
+      discount_type: DiscountType.FIXED as const,
       discount_value: 1000,
       qty: 3,
     };
@@ -786,7 +786,7 @@ describe('useSalesCart - Increment & Decrement Quantity', () => {
       product_id: 1,
       base_price: '10000',
       qty: 2,
-      discount_type: 'fixed',
+      discount_type: DiscountType.FIXED,
       discount_value: 0,
       discount_amount: '0',
       sale_price: '10000',
@@ -844,7 +844,7 @@ describe('useSalesCart - Increment & Decrement Quantity', () => {
       product_id: 1,
       base_price: '15000', // 5000 per unit * 3 qty
       qty: 3,
-      discount_type: 'fixed',
+      discount_type: DiscountType.FIXED,
       discount_value: 0,
       discount_amount: '0',
       sale_price: '15000',
@@ -902,7 +902,7 @@ describe('useSalesCart - Increment & Decrement Quantity', () => {
       product_id: 1,
       base_price: '5000',
       qty: 1,
-      discount_type: 'fixed',
+      discount_type: DiscountType.FIXED,
       discount_value: 0,
       discount_amount: '0',
       sale_price: '5000',

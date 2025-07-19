@@ -4,7 +4,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 
 import { useAddToCartFromSearch } from '../useAddToCartFromSearch';
-import { ProductType } from '@/lib/types';
+import { DiscountType, ProductType } from '@/lib/types';
 
 // Mock external dependencies
 jest.mock('sonner', () => ({
@@ -90,7 +90,7 @@ describe('useAddToCartFromSearch', () => {
       product_id: 1,
       base_price: '15000',
       qty: 1,
-      discount_type: 'percentage' as const,
+      discount_type: DiscountType.PERCENTAGE as const,
       discount_value: 0,
       discount_amount: '0',
       sale_price: '15000',
@@ -137,7 +137,7 @@ describe('useAddToCartFromSearch', () => {
       product_id: 1,
       base_price: '15000',
       qty: 1,
-      discount_type: 'percentage',
+      discount_type: DiscountType.PERCENTAGE,
       discount_value: 0,
       discount_amount: '0',
       sale_price: '15000',

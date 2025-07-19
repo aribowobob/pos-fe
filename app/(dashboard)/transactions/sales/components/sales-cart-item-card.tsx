@@ -16,12 +16,14 @@ import {
 import { SalesCartItem } from '@/lib/types';
 import { formatCurrency } from '@/lib/utils/common';
 import { Separator } from '@/components/ui/separator';
+import { ProductPrice } from '@/components/product-price';
 
 interface SalesCartItemCardProps {
   item: SalesCartItem;
   onIncrement: (item: SalesCartItem) => void;
   onDecrement: (item: SalesCartItem) => void;
   onDelete: (itemId: number) => void;
+  onEditItem: (item: SalesCartItem | null) => void;
   isUpdating?: boolean;
   isDeleting?: boolean;
 }
@@ -31,6 +33,7 @@ export const SalesCartItemCard = ({
   onIncrement,
   onDecrement,
   onDelete,
+  onEditItem,
   isUpdating = false,
   isDeleting = false,
 }: SalesCartItemCardProps) => {
@@ -39,14 +42,6 @@ export const SalesCartItemCard = ({
   const handleDeleteConfirm = () => {
     onDelete(item.id);
     setIsDeleteDialogOpen(false);
-  };
-
-  const formatDiscountType = (
-    type: 'fixed' | 'percentage',
-    value: number
-  ): string => {
-    const discountText = type === 'fixed' ? formatCurrency(value) : `${value}%`;
-    return `Diskon ${discountText}`;
   };
 
   return (
@@ -61,28 +56,23 @@ export const SalesCartItemCard = ({
           </h3>
         </div>
 
-        <Button className="p-0 size-4" variant="ghost" size="icon">
+        <Button
+          className="p-0 size-4"
+          variant="ghost"
+          size="icon"
+          onClick={() => onEditItem(item)}
+        >
           <SquarePen className="size-4 text-muted-foreground hover:text-primary" />
         </Button>
       </div>
 
       <div className="flex items-end gap-4 justify-between">
-        <div className="flex flex-col gap-1">
-          {item.discount_value > 0 && (
-            <p className="text-xs bg-destructive/10 text-destructive px-1 rounded self-start">
-              {formatDiscountType(item.discount_type, item.discount_value)}
-            </p>
-          )}
-
-          <div className="flex items-start gap-1">
-            <p>{formatCurrency(item.sale_price)}</p>
-            {item.discount_value > 0 && (
-              <p className="text-xs text-muted-foreground line-through">
-                {formatCurrency(item.base_price)}
-              </p>
-            )}
-          </div>
-        </div>
+        <ProductPrice
+          discountType={item.discount_type}
+          discountValue={item.discount_value}
+          basePrice={item.base_price}
+          salePrice={item.sale_price}
+        />
         <p className="text-sm">{`Stok: ${0}`}</p>
       </div>
 
@@ -151,6 +141,7 @@ export const SalesCartItemCard = ({
               type="button"
               variant="ghost"
               className="min-w-12 h-8 p-0 gap-1 text-base text-center font-medium"
+              onClick={() => onEditItem(item)}
             >
               {item.qty}
               <span className="text-muted-foreground text-[10px]">

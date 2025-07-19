@@ -13,13 +13,14 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 
-import { SalesCartList } from './components';
+import { EditItemDialog, SalesCartList } from './components';
 import { useSalesCart } from './hooks/useSalesCart';
 
 export default function Page() {
   const {
     cartItems,
     cartSummary,
+    editItem,
     isLoading,
     isUpdatingItem,
     isDeletingItem,
@@ -30,6 +31,8 @@ export default function Page() {
     deleteItem,
     clearCart,
     createOrder,
+    setEditItem,
+    updateItem,
   } = useSalesCart();
 
   return (
@@ -74,8 +77,15 @@ export default function Page() {
           onDeleteItem={deleteItem}
           onClearCart={clearCart}
           onCreateOrder={createOrder}
+          onEditItem={setEditItem}
         />
       </div>
+
+      <EditItemDialog
+        item={editItem}
+        onClose={() => setEditItem(null)}
+        onSave={updateItem}
+      />
     </DashboardLayout>
   );
 }

@@ -22,6 +22,7 @@ interface SalesCartListProps {
   onDeleteItem: (itemId: number) => void;
   onClearCart: () => void;
   onCreateOrder?: (order: CreateOrderRequest) => void;
+  onEditItem: (item: SalesCartItem | null) => void;
 }
 
 export const SalesCartList = ({
@@ -37,6 +38,7 @@ export const SalesCartList = ({
   onDeleteItem,
   onClearCart,
   onCreateOrder,
+  onEditItem,
 }: SalesCartListProps) => {
   if (isLoading) {
     return (
@@ -86,6 +88,7 @@ export const SalesCartList = ({
           onIncrement={onIncrement}
           onDecrement={onDecrement}
           onDelete={onDeleteItem}
+          onEditItem={onEditItem}
           isUpdating={isUpdating}
           isDeleting={isDeleting}
         />

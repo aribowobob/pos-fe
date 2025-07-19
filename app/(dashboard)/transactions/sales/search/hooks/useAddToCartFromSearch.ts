@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { useUserStore } from '@/lib/store/user-store';
 import { handleApiError } from '@/lib/api/api-client';
-import { AddToCartRequest, ProductType } from '@/lib/types';
+import { AddToCartRequest, DiscountType, ProductType } from '@/lib/types';
 import { addToSalesCartFn } from '../fetchers';
 
 export const useAddToCartFromSearch = () => {
@@ -40,7 +40,7 @@ export const useAddToCartFromSearch = () => {
       product_id: product.id,
       base_price: product.sale_price,
       qty: 1,
-      discount_type: 'percentage',
+      discount_type: DiscountType.PERCENTAGE,
       discount_value: 0,
       discount_amount: '0',
       sale_price: product.sale_price,
