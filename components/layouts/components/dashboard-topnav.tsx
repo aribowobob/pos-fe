@@ -24,7 +24,7 @@ const DashboardTopNav = () => {
             {user?.company_name}
           </h1>
         </div>
-        <div className="flex items-center gap-x-4 lg:gap-x-6">
+        <div className="flex items-center gap-x-2 lg:gap-x-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm">

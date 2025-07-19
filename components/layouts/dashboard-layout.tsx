@@ -20,12 +20,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   ];
 
   return (
-    <div className="flex min-h-screen">
+    <div className="min-h-screen md:pl-50">
       {/* Sidebar for desktop */}
       <DashboardSidebarNav navigation={navigation} />
 
       {/* Main content */}
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 pb-16 md:pb-0">
         <DashboardTopNav />
 
         <main className="flex-1 p-4 md:p-6">{children}</main>

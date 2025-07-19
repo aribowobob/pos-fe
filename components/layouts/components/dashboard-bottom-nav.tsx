@@ -9,7 +9,7 @@ const DashboardBottomNav = ({ navigation }: DashboardNavProps) => {
   const pathname = usePathname();
   return (
     <div className="fixed bottom-0 left-0 z-50 h-16 w-full border-t bg-white md:hidden">
-      <div className="mx-auto grid h-full max-w-lg grid-cols-5">
+      <div className="mx-auto grid h-full max-w-lg grid-cols-4">
         {navigation.map(item => (
           <Link
             key={item.name}
