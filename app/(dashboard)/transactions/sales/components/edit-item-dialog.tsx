@@ -14,13 +14,14 @@ import {
   SalesCartItem,
   UpdateCartItemRequest,
 } from '@/lib/types';
-import { cn, formatCurrency } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Input } from '@/components/ui/input';
 import { ProductPrice } from '@/components/product-price';
 import { Equal, ShoppingBasket, X } from 'lucide-react';
+import { InputNumber } from '@/components/input-number';
 
 interface EditItemDialogProps {
   isUpdatingItem?: boolean;
@@ -151,28 +152,31 @@ export const EditItemDialog = ({
                     <div className="flex flex-col gap-1">
                       <Label htmlFor="discount-value">Nilai Diskon</Label>
                       <div className="relative">
-                        {discountType === DiscountType.FIXED ? (
-                          <span className="absolute left-2 top-1/2 -translate-y-1/2">
-                            Rp
-                          </span>
-                        ) : (
-                          <span className="absolute right-2 top-1/2 -translate-y-1/2">
-                            %
-                          </span>
-                        )}
-                        <Input
-                          type="text"
+                        <InputNumber
                           value={discountValue}
-                          onChange={e => {
-                            setDiscountValue(e.target.value);
+                          onChange={value => {
+                            setDiscountValue(value);
                           }}
-                          placeholder="0"
-                          className={cn(
-                            'w-40',
+                          placeholder={
+                            discountType === DiscountType.FIXED ? 'Rp 0' : '0%'
+                          }
+                          prefix={
                             discountType === DiscountType.FIXED
-                              ? 'pl-8'
-                              : 'pr-8'
-                          )}
+                              ? 'Rp '
+                              : undefined
+                          }
+                          suffix={
+                            discountType === DiscountType.PERCENTAGE
+                              ? '%'
+                              : undefined
+                          }
+                          id="discount-value"
+                          min={0}
+                          max={
+                            discountType === DiscountType.PERCENTAGE
+                              ? 100
+                              : undefined
+                          }
                         />
                       </div>
                     </div>

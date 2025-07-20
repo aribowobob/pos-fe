@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { InputNumber } from '@/components/input-number';
 
 export function AddProductForm() {
   const {
@@ -88,11 +89,12 @@ export function AddProductForm() {
                   <FormItem>
                     <FormLabel>Harga Beli</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Masukkan harga beli"
+                      <InputNumber
+                        placeholder="Rp 0"
+                        min={0}
+                        prefix="Rp "
                         {...field}
-                        onChange={e => {
-                          const value = e.target.value.replace(/[^0-9]/g, '');
+                        onChange={value => {
                           field.onChange(value);
                         }}
                       />
@@ -109,11 +111,12 @@ export function AddProductForm() {
                   <FormItem>
                     <FormLabel>Harga Jual</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Masukkan harga jual"
+                      <InputNumber
+                        placeholder="Rp 0"
+                        min={0}
+                        prefix="Rp "
                         {...field}
-                        onChange={e => {
-                          const value = e.target.value.replace(/[^0-9]/g, '');
+                        onChange={value => {
                           field.onChange(value);
                         }}
                       />

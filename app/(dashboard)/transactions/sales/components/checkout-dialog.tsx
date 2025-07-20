@@ -19,6 +19,7 @@ import {
 import { CreateOrderRequest } from '@/lib/types';
 import { useUserStore } from '@/lib/store/user-store';
 import { formatCurrency } from '@/lib/utils/common';
+import { InputNumber } from '@/components/input-number';
 
 interface CheckoutDialogProps {
   onCreateOrder: (order: CreateOrderRequest) => void;
@@ -42,7 +43,7 @@ export const CheckoutDialog = ({
   const [isOpen, setIsOpen] = useState(false);
   const [orderNumber, setOrderNumber] = useState('');
   const [paymentCash, setPaymentCash] = useState('');
-  const [paymentNonCash, setPaymentNonCash] = useState('0');
+  const [paymentNonCash, setPaymentNonCash] = useState('');
   const [orderDate, setOrderDate] = useState<string | undefined>(
     new Date().toISOString().split('T')[0]
   );
@@ -57,9 +58,9 @@ export const CheckoutDialog = ({
     if (open) {
       // Generate new order number when dialog opens
       setOrderNumber(generateOrderNumber());
-      // Set default cash payment to total amount
-      setPaymentCash(cartSummary.totalAmount.toString());
-      setPaymentNonCash('0');
+      // Set default cash & non-cash payment to blank
+      setPaymentCash('');
+      setPaymentNonCash('');
     }
     setIsOpen(open);
   };
@@ -167,27 +168,27 @@ export const CheckoutDialog = ({
 
           {/* Payment Cash */}
           <div className="space-y-2">
-            <Label htmlFor="payment-cash">Pembayaran Tunai (Rp)</Label>
-            <Input
+            <Label htmlFor="payment-cash">Pembayaran Tunai</Label>
+            <InputNumber
               id="payment-cash"
-              type="number"
-              min="0"
+              min={0}
               value={paymentCash}
-              onChange={e => setPaymentCash(e.target.value)}
-              placeholder="0"
+              onChange={value => setPaymentCash(value)}
+              placeholder="Rp 0"
+              prefix="Rp "
             />
           </div>
 
           {/* Payment Non-Cash */}
           <div className="space-y-2">
-            <Label htmlFor="payment-non-cash">Pembayaran Non-Tunai (Rp)</Label>
-            <Input
+            <Label htmlFor="payment-non-cash">Pembayaran Non-Tunai</Label>
+            <InputNumber
               id="payment-non-cash"
-              type="number"
-              min="0"
+              min={0}
               value={paymentNonCash}
-              onChange={e => setPaymentNonCash(e.target.value)}
-              placeholder="0"
+              onChange={value => setPaymentNonCash(value)}
+              placeholder="Rp 0"
+              prefix="Rp "
             />
           </div>
 
