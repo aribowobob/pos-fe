@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import { format } from 'date-fns';
 import { Calendar as CalendarIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -12,7 +11,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+import { cn, formatApiDate, formatDisplayDate } from '@/lib/utils';
 
 interface DatePickerProps {
   className?: string;
@@ -41,7 +40,7 @@ export function DatePicker({
 
   const handleChange = (date?: Date) => {
     if (onChange) {
-      onChange(date ? format(date, 'yyyy-MM-dd') : undefined);
+      onChange(date ? formatApiDate(date) : undefined);
     }
     setOpen(false);
   };
@@ -58,7 +57,7 @@ export function DatePicker({
           )}
         >
           <CalendarIcon />
-          {value ? format(value, 'd MMMM yyyy') : <span>{placeholder}</span>}
+          {value ? formatDisplayDate(value) : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
