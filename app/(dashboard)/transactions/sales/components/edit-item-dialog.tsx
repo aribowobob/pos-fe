@@ -20,7 +20,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Input } from '@/components/ui/input';
 import { ProductPrice } from '@/components/product-price';
-import { Equal, X } from 'lucide-react';
+import { Equal, ShoppingBasket, X } from 'lucide-react';
 
 interface EditItemDialogProps {
   isUpdatingItem?: boolean;
@@ -94,7 +94,10 @@ export const EditItemDialog = ({
       <DialogContent>
         <form onSubmit={onSubmit}>
           <DialogHeader>
-            <DialogTitle>Ubah Isi Keranjang</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <ShoppingBasket className="size-5" />
+              Ubah Isi Keranjang
+            </DialogTitle>
             <DialogDescription>
               Lakukan perubahan pada keranjang belanja Anda. Pastikan semua
               informasi sudah benar sebelum menyimpan.

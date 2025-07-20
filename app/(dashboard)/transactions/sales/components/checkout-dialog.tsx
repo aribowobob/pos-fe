@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { BanknoteArrowUp, CreditCard } from 'lucide-react';
 
+import { DatePicker } from '@/components/date-picker';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -42,6 +43,9 @@ export const CheckoutDialog = ({
   const [orderNumber, setOrderNumber] = useState('');
   const [paymentCash, setPaymentCash] = useState('');
   const [paymentNonCash, setPaymentNonCash] = useState('0');
+  const [orderDate, setOrderDate] = useState<string | undefined>(
+    new Date().toISOString().split('T')[0]
+  );
 
   const generateOrderNumber = () => {
     const now = new Date();
@@ -61,7 +65,7 @@ export const CheckoutDialog = ({
   };
 
   const handleCreateOrder = () => {
-    if (!user?.store?.id) return;
+    if (!user?.store?.id || !orderDate) return;
 
     const totalPayment =
       parseFloat(paymentCash || '0') + parseFloat(paymentNonCash || '0');
@@ -70,12 +74,10 @@ export const CheckoutDialog = ({
       return;
     }
 
-    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
-
     const order: CreateOrderRequest = {
       order_number: orderNumber,
       store_id: user.store.id,
-      date: today,
+      date: orderDate,
       payment_cash: paymentCash || '0',
       payment_non_cash: paymentNonCash || '0',
     };
@@ -103,7 +105,7 @@ export const CheckoutDialog = ({
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <CreditCard className="w-5 h-5" />
+            <CreditCard className="size-5" />
             Checkout Penjualan
           </DialogTitle>
           <DialogDescription>
@@ -141,14 +143,24 @@ export const CheckoutDialog = ({
             </div>
           </div>
 
+          {/* Order Date */}
+          <div className="space-y-2">
+            <Label>Tanggal Penjualan</Label>
+            <DatePicker
+              value={orderDate}
+              onChange={setOrderDate}
+              maxDate={new Date().toISOString().split('T')[0]} // Prevent future dates
+            />
+          </div>
+
           {/* Order Number */}
           <div className="space-y-2">
-            <Label htmlFor="order-number">Nomor Pesanan</Label>
+            <Label htmlFor="order-number">Nomor Penjualan</Label>
             <Input
               id="order-number"
               value={orderNumber}
               onChange={e => setOrderNumber(e.target.value)}
-              placeholder="Masukkan nomor pesanan"
+              placeholder="Masukkan nomor penjualan"
               required
             />
           </div>
