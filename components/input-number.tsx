@@ -45,7 +45,6 @@ export const InputNumber = ({
         }
       }}
       isAllowed={({ floatValue }) => {
-        console.log('floatValue', floatValue);
         if (max !== undefined && floatValue && floatValue > max) return false;
         if (min !== undefined && floatValue && floatValue < min) return false;
         return true;
