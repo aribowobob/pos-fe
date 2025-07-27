@@ -50,20 +50,24 @@ export type SalesOrder = {
   id: number;
   order_number: string;
   user_id: number;
+  user_initial: string;
   store_id: number;
+  store_initial: string;
   date: string;
   grand_total: string;
   payment_cash: string;
   payment_non_cash: string;
   receivable: string;
   created_at: string;
-  customer_id?: number;
+  customer_id?: number | null;
 };
 
 export type SalesOrderDetail = {
   id: number;
   order_id: number;
   product_id: number;
+  product_name: string;
+  sku: string;
   qty: number;
   base_price: string;
   discount_type: DiscountType;
@@ -73,7 +77,7 @@ export type SalesOrderDetail = {
   total_price: string;
 };
 
-export type CreateOrderResponse = {
+export type OrderDetailResponse = {
   order: SalesOrder;
   details: SalesOrderDetail[];
 };

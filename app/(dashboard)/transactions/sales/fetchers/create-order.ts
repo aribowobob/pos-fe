@@ -2,15 +2,13 @@ import { postData } from '@/lib/api/api-client';
 import {
   APIResponse,
   CreateOrderRequest,
-  CreateOrderResponse,
+  OrderDetailResponse,
 } from '@/lib/types';
 
-export const createSalesOrderFn = async (
-  data: CreateOrderRequest
-): Promise<APIResponse<CreateOrderResponse>> => {
+export const createSalesOrderFn = async (data: CreateOrderRequest) => {
   try {
     const response = await postData<
-      APIResponse<CreateOrderResponse>,
+      APIResponse<OrderDetailResponse>,
       CreateOrderRequest
     >('/api/sales/orders', data);
     return response;
