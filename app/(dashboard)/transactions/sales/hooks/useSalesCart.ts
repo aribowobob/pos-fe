@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
 import { useUserStore } from '@/lib/store/user-store';
@@ -10,6 +11,7 @@ import {
   SalesCartItem,
   UpdateCartItemRequest,
   CreateOrderRequest,
+  SalesCartSummaryType,
 } from '@/lib/types';
 
 // Import fetcher functions
@@ -20,6 +22,7 @@ import { clearSalesCartFn } from '../fetchers/clear-sales-cart';
 import { createSalesOrderFn } from '../fetchers/create-order';
 
 export const useSalesCart = () => {
+  const { replace } = useRouter();
   const { user } = useUserStore();
   const queryClient = useQueryClient();
   const [isProcessingOrder, setIsProcessingOrder] = useState(false);
@@ -42,7 +45,7 @@ export const useSalesCart = () => {
   });
 
   // Calculate cart totals
-  const cartSummary = useCallback(() => {
+  const cartSummary = useMemo<SalesCartSummaryType>(() => {
     const items = cartItems?.data || [];
     const totalItems = items.reduce((sum, item) => sum + item.qty, 0);
     const totalAmount = items.reduce(
@@ -118,11 +121,9 @@ export const useSalesCart = () => {
   const createOrderMutation = useMutation({
     mutationFn: createSalesOrderFn,
     onSuccess: data => {
+      const orderId = data.data.order.id;
       queryClient.invalidateQueries({ queryKey: ['sales-cart', storeId] });
-      toast.success(
-        `Order berhasil dibuat dengan nomor: ${data.data.order.order_number}`
-      );
-      setIsProcessingOrder(false);
+      replace(`/transactions/sales/${orderId}?success=true`);
     },
     onError: error => {
       const errorMessage = handleApiError(error);
@@ -187,7 +188,7 @@ export const useSalesCart = () => {
   return {
     // Data
     cartItems: cartItems?.data || [],
-    cartSummary: cartSummary(),
+    cartSummary,
     editItem,
 
     // Setters

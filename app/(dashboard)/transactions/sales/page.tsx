@@ -25,12 +25,10 @@ export default function Page() {
     isUpdatingItem,
     isDeletingItem,
     isClearingCart,
-    isCreatingOrder,
     incrementQuantity,
     decrementQuantity,
     deleteItem,
     clearCart,
-    createOrder,
     setEditItem,
     updateItem,
   } = useSalesCart();
@@ -40,10 +38,6 @@ export default function Page() {
       <div className="space-y-6">
         <Breadcrumb>
           <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink href="/transactions">Transaksi</BreadcrumbLink>
             </BreadcrumbItem>
@@ -58,7 +52,7 @@ export default function Page() {
           <h1 className="text-2xl font-semibold">Transaksi Penjualan</h1>
           <Button asChild>
             <Link href="/transactions/sales/search">
-              <Plus className="h-4 w-4 mr-2" />
+              <Plus className="h-4 w-4" />
               Tambah Produk ke Keranjang
             </Link>
           </Button>
@@ -70,13 +64,11 @@ export default function Page() {
           isUpdating={isUpdatingItem}
           isDeleting={isDeletingItem}
           isClearingCart={isClearingCart}
-          isCreatingOrder={isCreatingOrder}
           cartSummary={cartSummary}
           onIncrement={incrementQuantity}
           onDecrement={decrementQuantity}
           onDeleteItem={deleteItem}
           onClearCart={clearCart}
-          onCreateOrder={createOrder}
           onEditItem={setEditItem}
         />
       </div>

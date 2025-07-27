@@ -50,10 +50,6 @@ export default function Page() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/dashboard">Dashboard</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
               <BreadcrumbLink href="/transactions">Transaksi</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />

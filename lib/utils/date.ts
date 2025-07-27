@@ -12,7 +12,7 @@ export const indonesianLocale: Locale = id;
  */
 export function formatDateIndonesian(
   date: string | Date,
-  formatString: string = 'dd MMMM yyyy'
+  formatString: string = 'd MMM yyyy'
 ): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   return formatDate(dateObj, formatString, { locale: indonesianLocale });
@@ -24,7 +24,7 @@ export function formatDateIndonesian(
  * @returns Formatted date string like "20 Juli 2025"
  */
 export function formatDisplayDate(date: string | Date): string {
-  return formatDateIndonesian(date, 'd MMMM yyyy');
+  return formatDateIndonesian(date, 'd MMM yyyy');
 }
 
 /**

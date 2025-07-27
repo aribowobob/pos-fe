@@ -77,3 +77,10 @@ export type CreateOrderResponse = {
   order: SalesOrder;
   details: SalesOrderDetail[];
 };
+
+export type SalesCartSummaryType = {
+  totalItems: number;
+  totalAmount: number;
+  totalDiscount: number;
+  itemCount: number;
+};

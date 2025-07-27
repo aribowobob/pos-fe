@@ -1,8 +1,9 @@
-import { SalesCartItem, CreateOrderRequest } from '@/lib/types';
-import { SalesCartItemCard } from './sales-cart-item-card';
-import { EmptyCartState } from './empty-cart-state';
-import { SalesCartSummary } from './sales-cart-summary';
 import { Separator } from '@/components/ui/separator';
+import { SalesCartItem, SalesCartSummaryType } from '@/lib/types';
+
+import { EmptyCartState } from './empty-cart-state';
+import { SalesCartItemCard } from './sales-cart-item-card';
+import { SalesCartSummary } from './sales-cart-summary';
 
 interface SalesCartListProps {
   items: SalesCartItem[];
@@ -10,18 +11,11 @@ interface SalesCartListProps {
   isUpdating?: boolean;
   isDeleting?: boolean;
   isClearingCart?: boolean;
-  isCreatingOrder?: boolean;
-  cartSummary: {
-    totalItems: number;
-    totalAmount: number;
-    totalDiscount: number;
-    itemCount: number;
-  };
+  cartSummary: SalesCartSummaryType;
   onIncrement: (item: SalesCartItem) => void;
   onDecrement: (item: SalesCartItem) => void;
   onDeleteItem: (itemId: number) => void;
   onClearCart: () => void;
-  onCreateOrder?: (order: CreateOrderRequest) => void;
   onEditItem: (item: SalesCartItem | null) => void;
 }
 
@@ -31,13 +25,11 @@ export const SalesCartList = ({
   isUpdating = false,
   isDeleting = false,
   isClearingCart = false,
-  isCreatingOrder = false,
   cartSummary,
   onIncrement,
   onDecrement,
   onDeleteItem,
   onClearCart,
-  onCreateOrder,
   onEditItem,
 }: SalesCartListProps) => {
   if (isLoading) {
@@ -97,10 +89,8 @@ export const SalesCartList = ({
       {/* Cart Summary */}
       <SalesCartSummary
         summary={cartSummary}
-        onCreateOrder={onCreateOrder}
         onClearCart={onClearCart}
         isClearingCart={isClearingCart}
-        isCreatingOrder={isCreatingOrder}
       />
     </div>
   );

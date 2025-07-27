@@ -1,33 +1,28 @@
-import { CheckoutDialog } from './checkout-dialog';
-import { CreateOrderRequest } from '@/lib/types';
+import { BanknoteArrowUp } from 'lucide-react';
+import Link from 'next/link';
+
+import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/lib/utils/common';
+
 import { ClearCartDialog } from './clear-cart-dialog';
+import { SalesCartSummaryType } from '@/lib/types';
 
 interface SalesCartSummaryProps {
-  summary: {
-    totalItems: number;
-    totalAmount: number;
-    totalDiscount: number;
-    itemCount: number;
-  };
-  onCreateOrder?: (order: CreateOrderRequest) => void;
+  summary: SalesCartSummaryType;
   onClearCart: () => void;
-  isCreatingOrder?: boolean;
   isClearingCart?: boolean;
 }
 
 export const SalesCartSummary = ({
   summary,
-  onCreateOrder,
   onClearCart,
-  isCreatingOrder = false,
   isClearingCart = false,
 }: SalesCartSummaryProps) => {
   const subtotal = summary.totalAmount + summary.totalDiscount;
 
   return (
-    <div className="border border-border rounded-lg p-4 bg-gray-50 space-y-3">
-      <h3 className="font-semibold text-lg mb-4">Ringkasan Keranjang</h3>
+    <div className="border border-border rounded-sm p-4 bg-gray-50 space-y-3">
+      <h3 className="font-semibold text-lg mb-2">Ringkasan Keranjang</h3>
 
       <div className="space-y-1 text-sm">
         <div className="flex justify-between">
@@ -64,14 +59,16 @@ export const SalesCartSummary = ({
           isClearingCart={isClearingCart}
         />
 
-        {onCreateOrder && (
-          <CheckoutDialog
-            onCreateOrder={onCreateOrder}
-            cartSummary={summary}
-            isLoading={isCreatingOrder}
+        <Link href="/transactions/sales/payment">
+          <Button
+            className="w-fit"
+            size="lg"
             disabled={summary.itemCount === 0}
-          />
-        )}
+          >
+            <BanknoteArrowUp className="w-4 h-4" />
+            Lanjutkan ke Pembayaran
+          </Button>
+        </Link>
       </div>
     </div>
   );
