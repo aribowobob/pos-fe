@@ -23,9 +23,12 @@ export const devLog = (...args: unknown[]): void => {
  * @returns Formatted currency string
  */
 export function formatCurrency(
-  value: number | string,
+  value?: number | string,
   options?: { withSymbol?: boolean }
 ): string {
+  if (value === undefined || value === null) {
+    return '';
+  }
   const withSymbol = options?.withSymbol ?? true;
   const formatter = new Intl.NumberFormat('id-ID', {
     style: withSymbol ? 'currency' : 'decimal',

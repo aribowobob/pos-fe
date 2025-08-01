@@ -23,7 +23,8 @@ export function formatDateIndonesian(
  * @param date Date to format
  * @returns Formatted date string like "20 Juli 2025"
  */
-export function formatDisplayDate(date: string | Date): string {
+export function formatDisplayDate(date?: string | Date): string {
+  if (!date) return '';
   return formatDateIndonesian(date, 'd MMM yyyy');
 }
 
