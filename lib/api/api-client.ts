@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import { devLog } from '../utils';
 
 export const API_URL =
   process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
@@ -29,20 +30,18 @@ apiClient.interceptors.response.use(
   (error: AxiosError) => {
     // Handle expired tokens, unauthorized access, etc.
     if (error.response?.status === 401) {
-      console.log('[API Client] Received 401 Unauthorized error');
+      devLog('[API Client] Received 401 Unauthorized error');
 
       // No need to manually clear cookies - they are HTTP-only from server
       // We'll use the logout endpoint to clear cookies on unauthorized access
-      console.log(
-        '[API Client] Calling logout endpoint to clear HTTP-only cookies'
-      );
+      devLog('[API Client] Calling logout endpoint to clear HTTP-only cookies');
       apiClient.post('/auth/logout', {}).catch(() => {
         // Silently ignore errors from logout endpoint
       });
 
       // Let middleware handle redirects instead of forcing it here
       // This avoids competing redirects with React components
-      console.log(
+      devLog(
         '[API Client] Token cleared, will rely on middleware for redirect'
       );
     }

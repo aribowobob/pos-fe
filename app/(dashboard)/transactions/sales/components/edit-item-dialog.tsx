@@ -66,13 +66,7 @@ export const EditItemDialog = ({
         ? parseFloat(discountValue || '0')
         : (basePrice * parseFloat(discountValue || '0')) / 100
       : 0;
-    console.log({
-      basePrice,
-      discountAmount,
-      hasDiscount,
-      discountType,
-      discountValue,
-    });
+
     return basePrice - discountAmount;
   }, [item, hasDiscount, discountType, discountValue]);
   const finalPrice = useMemo(() => {
