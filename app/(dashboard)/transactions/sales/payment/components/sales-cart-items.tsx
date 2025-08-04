@@ -1,5 +1,5 @@
-import { DiscountType, SalesCartItem, SalesCartSummaryType } from '@/lib/types';
-import { formatCurrency } from '@/lib/utils';
+import { SalesCartItem, SalesCartSummaryType } from '@/lib/types';
+import { formatCurrency, itemSubTotalCalculation } from '@/lib/utils';
 
 interface SalesCartItemsProps {
   cartItems: SalesCartItem[];
@@ -16,29 +16,8 @@ export const SalesCartItems = ({
 
       <div className="flex flex-col gap-4">
         {cartItems.map((item, index) => {
-          const basePrice = formatCurrency(item.base_price);
-          let discount = '';
-          if (
-            item.discount_type === DiscountType.FIXED &&
-            item.discount_value > 0
-          ) {
-            discount = `(- ${formatCurrency(item.discount_value)})`;
-          } else if (
-            item.discount_type === DiscountType.PERCENTAGE &&
-            item.discount_value > 0
-          ) {
-            discount = `(- ${item.discount_value}%)`;
-          }
-          const subTotal = parseFloat(item.sale_price) * item.qty;
-          const subTotalCalculationLabel = [
-            basePrice,
-            discount,
-            `x ${item.qty}`,
-            '=',
-            formatCurrency(subTotal),
-          ]
-            .filter(Boolean)
-            .join(' ');
+          const subTotalCalculationLabel = itemSubTotalCalculation(item);
+
           return (
             <div key={item.id} className="flex gap-2 items-start text-sm">
               <span className="shrink-0">{index + 1}.</span>

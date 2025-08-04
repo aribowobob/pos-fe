@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { toast } from 'sonner';
+import { DiscountType, ItemSubTotalCalculationParam } from '../types';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -54,4 +55,31 @@ export function handleError(error: unknown): void {
   const errorMessage = error instanceof Error ? error.message : String(error);
   toast.error(errorMessage || 'Terjadi kesalahan');
   console.error(error);
+}
+
+export function itemSubTotalCalculation(
+  item: ItemSubTotalCalculationParam
+): string {
+  const basePrice = formatCurrency(item.base_price);
+  let discount = '';
+  if (item.discount_type === DiscountType.FIXED && item.discount_value > 0) {
+    discount = `(- ${formatCurrency(item.discount_value)})`;
+  } else if (
+    item.discount_type === DiscountType.PERCENTAGE &&
+    item.discount_value > 0
+  ) {
+    discount = `(- ${item.discount_value}%)`;
+  }
+  const subTotal = parseFloat(item.sale_price) * item.qty;
+  const subTotalCalculationLabel = [
+    basePrice,
+    discount,
+    `x ${item.qty}`,
+    '=',
+    formatCurrency(subTotal),
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  return subTotalCalculationLabel;
 }

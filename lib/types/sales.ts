@@ -88,3 +88,42 @@ export type SalesCartSummaryType = {
   totalDiscount: number;
   itemCount: number;
 };
+
+export type SalesReportRequest = {
+  startDate?: string;
+  endDate?: string;
+  branchId: string;
+};
+
+export interface SalesReportOrder extends SalesOrder {
+  items: SalesOrderDetail[];
+}
+
+export interface SkuSummaryItem {
+  product_id: number;
+  product_name: string;
+  sku: string;
+  total_qty: number;
+  total_price: string;
+}
+
+export interface SalesReportSummary {
+  total_payment_cash: string;
+  total_payment_non_cash: string;
+  total_receivable: string;
+  total_orders: number;
+}
+
+export type SalesReportResponse = {
+  orders: SalesReportOrder[];
+  sku_summary: SkuSummaryItem[];
+  summary: SalesReportSummary;
+};
+
+export type ItemSubTotalCalculationParam = {
+  base_price: string;
+  discount_type: DiscountType;
+  discount_value: number;
+  qty: number;
+  sale_price: string;
+};
