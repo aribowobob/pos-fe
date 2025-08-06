@@ -51,12 +51,12 @@ export default function Page() {
     return null;
   }
 
-  if (!order || !details) {
-    return null;
-  }
-
   if (error) {
     notFound();
+  }
+
+  if (!order || !details) {
+    return null;
   }
 
   return (
