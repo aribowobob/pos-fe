@@ -10,13 +10,15 @@ import {
 import { EditProductForm } from './components';
 
 interface EditProductPageProps {
-  params: {
+  params: Promise<{
     productId: string;
-  };
+  }>;
 }
 
-export default function EditProductPage({ params }: EditProductPageProps) {
-  const { productId } = params;
+export default async function EditProductPage({
+  params,
+}: EditProductPageProps) {
+  const { productId } = await params;
 
   return (
     <DashboardLayout>
