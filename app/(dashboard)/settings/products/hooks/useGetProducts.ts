@@ -1,5 +1,5 @@
-import { GetProductsRequest } from '@/lib/types';
 import { useQuery } from '@tanstack/react-query';
+import { GetProductsRequest } from '@/lib/types';
 import { getProductsFn } from '../fetchers/get-products';
 
 const useGetProducts = (params: GetProductsRequest) => {
