@@ -1,13 +1,13 @@
 import { postData } from '@/lib/api/api-client';
-import { CreateProductRequest, CreateProductResponse } from '@/lib/types';
+import { UpsertProductRequest, CreateProductResponse } from '@/lib/types';
 
 export const createProductFn = async (
-  data: CreateProductRequest
+  data: UpsertProductRequest
 ): Promise<CreateProductResponse> => {
   try {
     const response = await postData<
       CreateProductResponse,
-      CreateProductRequest
+      UpsertProductRequest
     >('/api/products', data);
 
     return response;

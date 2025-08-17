@@ -1,12 +1,16 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { UpsertProductRequest } from '@/lib/types';
-import { createProductFn } from '../fetchers/create-product';
+import { UpdateProductParams } from '@/lib/types';
+import { updateProductFn } from '../fetchers/update-product';
 
-const useCreateProduct = () => {
+const useUpdateProduct = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: UpsertProductRequest) => createProductFn(data),
+    mutationFn: (params: UpdateProductParams) => {
+      const { id, ...data } = params;
+
+      return updateProductFn(id, data);
+    },
     onSuccess: () => {
       // Invalidate products queries to refresh the product list
       queryClient.invalidateQueries({
@@ -16,4 +20,4 @@ const useCreateProduct = () => {
   });
 };
 
-export default useCreateProduct;
+export default useUpdateProduct;

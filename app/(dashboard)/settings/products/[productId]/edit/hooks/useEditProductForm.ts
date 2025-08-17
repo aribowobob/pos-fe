@@ -5,8 +5,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
-import useCreateProduct from './useCreateProduct';
-import useGetProductCategories from './useGetProductCategories';
+import { useEffect } from 'react';
+import useGetDetailProduct from '../../../hooks/useGetDetailProduct';
+import useUpdateProduct from '../../../hooks/useUpdateProduct';
+import useGetProductCategories from '../../../add/hooks/useGetProductCategories';
 import { handleApiError } from '@/lib/api/api-client';
 import { ProductFormData } from '@/components/forms';
 
@@ -32,13 +34,18 @@ const formSchema = z.object({
   category_id: z.string().min(1, 'Kategori harus dipilih'),
 });
 
-export type FormData = z.infer<typeof formSchema>;
-
-export function useAddProductForm() {
+export function useEditProductForm(productId: string) {
   const { back } = useRouter();
-  const createProductMutation = useCreateProduct();
+  const updateProductMutation = useUpdateProduct();
   const { data: categoriesData, isLoading: categoriesLoading } =
     useGetProductCategories();
+
+  // Get product detail
+  const {
+    data: productData,
+    isLoading: productLoading,
+    error: productError,
+  } = useGetDetailProduct(parseInt(productId));
 
   const form = useForm<ProductFormData>({
     resolver: zodResolver(formSchema),
@@ -47,14 +54,30 @@ export function useAddProductForm() {
       name: '',
       purchase_price: '',
       sale_price: '',
-      unit_name: 'pcs',
+      unit_name: '',
       category_id: '',
     },
   });
 
+  // Set form values when product data is loaded
+  useEffect(() => {
+    if (productData?.data) {
+      const product = productData.data;
+      form.reset({
+        sku: product.sku,
+        name: product.name,
+        purchase_price: product.purchase_price,
+        sale_price: product.sale_price,
+        unit_name: product.unit_name,
+        category_id: product.category_id.toString(),
+      });
+    }
+  }, [productData, form]);
+
   const onSubmit = async (data: ProductFormData) => {
     try {
-      await createProductMutation.mutateAsync({
+      await updateProductMutation.mutateAsync({
+        id: parseInt(productId),
         sku: data.sku,
         name: data.name,
         purchase_price: data.purchase_price,
@@ -63,7 +86,7 @@ export function useAddProductForm() {
         category_id: parseInt(data.category_id),
       });
 
-      toast.success('Produk berhasil ditambahkan!');
+      toast.success('Produk berhasil diperbarui!');
       back();
     } catch (error) {
       const errorMessage = handleApiError(error);
@@ -74,9 +97,12 @@ export function useAddProductForm() {
   return {
     form,
     onSubmit,
-    isSubmitting: createProductMutation.isPending,
+    isSubmitting: updateProductMutation.isPending,
     back,
     categoriesData,
     categoriesLoading,
+    productData: productData?.data,
+    productLoading,
+    productError,
   };
 }

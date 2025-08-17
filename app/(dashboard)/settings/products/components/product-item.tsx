@@ -22,12 +22,14 @@ import { ProductType } from '@/lib/types';
 import useDeleteProduct from '../hooks/useDeleteProduct';
 import { handleApiError } from '@/lib/api/api-client';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 interface ProductItemProps {
   product: ProductType;
 }
 
 const ProductItem = ({ product }: ProductItemProps) => {
+  const { push } = useRouter();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const deleteProduct = useDeleteProduct();
   const handleDeleteProduct = async () => {
@@ -58,7 +60,9 @@ const ProductItem = ({ product }: ProductItemProps) => {
             <EllipsisVertical className="cursor-pointer h-4 w-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent side="bottom" align="end">
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => push(`/settings/products/${product.id}/edit`)}
+            >
               <Edit />
               Edit
             </DropdownMenuItem>

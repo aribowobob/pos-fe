@@ -4,7 +4,7 @@ export type GetProductsRequest = {
   size: string;
 };
 
-export type CreateProductRequest = {
+export type UpsertProductRequest = {
   sku: string;
   name: string;
   purchase_price: string;
@@ -18,6 +18,10 @@ export type CreateProductResponse = {
   message: string;
   data: ProductType;
 };
+
+export interface UpdateProductParams extends UpsertProductRequest {
+  id: number;
+}
 
 export type ProductType = {
   id: number;
