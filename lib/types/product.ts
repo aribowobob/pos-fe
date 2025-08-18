@@ -32,7 +32,7 @@ export type ProductType = {
   company_id: number;
   unit_name: string;
   category_id: number;
-  category_name?: string;
+  category_name: string | null;
   stock?: number;
   deleted_at: null | string;
   created_at: string;

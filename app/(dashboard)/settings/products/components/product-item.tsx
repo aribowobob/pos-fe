@@ -23,6 +23,7 @@ import useDeleteProduct from '../hooks/useDeleteProduct';
 import { handleApiError } from '@/lib/api/api-client';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { formatCurrency } from '@/lib/utils';
 
 interface ProductItemProps {
   product: ProductType;
@@ -50,10 +51,13 @@ const ProductItem = ({ product }: ProductItemProps) => {
   return (
     <div key={product.id} className="border border-border rounded-sm p-4">
       <div className="flex items-start justify-between">
-        <p className="flex flex-col">
-          <span className="text-muted-foreground text-xs">{`SKU: ${product.sku}`}</span>
-          <span className="font-medium">{product.name}</span>
-        </p>
+        <div className="flex flex-col">
+          <p className="text-muted-foreground text-xs">{`SKU: ${product.sku}`}</p>
+          <p className="font-medium">
+            {product.name}
+            <small className="ml-1 text-muted-foreground">{`(${product.unit_name})`}</small>
+          </p>
+        </div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -73,15 +77,29 @@ const ProductItem = ({ product }: ProductItemProps) => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="flex items-center justify-between mt-4">
-        <div className="flex items-center gap-2">
-          <span className="bg-red-200 text-red-800 px-2 py-1 rounded text-xs">
-            {Number(product.purchase_price).toLocaleString('id-ID')}
-          </span>
+      <div className="flex items-end justify-between mt-2 gap-4">
+        <div className="flex items-start gap-2">
+          <div className="flex flex-col gap-1">
+            <span className="text-xs text-muted-foreground">Harga Beli</span>
+            <span className="bg-red-200 text-red-800 px-2 py-1 rounded text-xs">
+              {formatCurrency(product.purchase_price)}
+            </span>
+          </div>
 
-          <span className="bg-green-200 text-green-800 px-2 py-1 rounded text-xs">
-            {Number(product.sale_price).toLocaleString('id-ID')}
-          </span>
+          <div className="flex flex-col gap-1">
+            <span className="text-xs text-muted-foreground">Harga Jual</span>
+            <span className="bg-green-200 text-green-800 px-2 py-1 rounded text-xs">
+              {formatCurrency(product.sale_price)}
+            </span>
+          </div>
+        </div>
+
+        <div className="flex items-start gap-2">
+          {product.category_name && (
+            <span className="bg-amber-200 text-amber-800 px-2 py-1 rounded text-xs">
+              {product.category_name}
+            </span>
+          )}
         </div>
       </div>
 

@@ -63,16 +63,38 @@ export function useEditProductForm(productId: string) {
   useEffect(() => {
     if (productData?.data) {
       const product = productData.data;
-      form.reset({
-        sku: product.sku,
-        name: product.name,
-        purchase_price: product.purchase_price,
-        sale_price: product.sale_price,
-        unit_name: product.unit_name,
-        category_id: product.category_id.toString(),
-      });
+
+      // Set all values except category_id first
+      form.setValue('sku', product.sku);
+      form.setValue('name', product.name);
+      form.setValue('purchase_price', product.purchase_price);
+      form.setValue('sale_price', product.sale_price);
+      form.setValue('unit_name', product.unit_name);
+
+      // Set category_id with a small delay to ensure Select component is ready
+      setTimeout(() => {
+        form.setValue('category_id', product.category_id.toString());
+      }, 100);
     }
   }, [productData, form]);
+
+  // Re-set category_id when categories finish loading to fix Select component value loss
+  useEffect(() => {
+    if (
+      productData?.data &&
+      categoriesData?.data?.items &&
+      !categoriesLoading
+    ) {
+      const productCategoryId = productData.data.category_id.toString();
+
+      // Always set the category_id when categories are loaded to ensure it's not lost
+      setTimeout(() => {
+        form.setValue('category_id', productCategoryId, {
+          shouldValidate: true,
+        });
+      }, 50);
+    }
+  }, [categoriesData, categoriesLoading, productData, form]);
 
   const onSubmit = async (data: ProductFormData) => {
     try {

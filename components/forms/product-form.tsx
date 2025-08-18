@@ -172,8 +172,12 @@ export function ProductForm({
                   <FormItem>
                     <FormLabel>Kategori</FormLabel>
                     <Select
+                      key={`category-select-${
+                        categoriesLoading ? 'loading' : 'loaded'
+                      }-${field.value}`}
                       onValueChange={field.onChange}
-                      value={field.value}
+                      value={field.value || undefined}
+                      defaultValue={field.value || undefined}
                       disabled={categoriesLoading}
                     >
                       <FormControl>
@@ -204,7 +208,7 @@ export function ProductForm({
               />
             </div>
 
-            <div className="flex gap-4 pt-6">
+            <div className="flex gap-4">
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? 'Menyimpan...' : submitButtonText}
               </Button>

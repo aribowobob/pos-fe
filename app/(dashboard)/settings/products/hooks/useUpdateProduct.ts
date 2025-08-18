@@ -16,6 +16,11 @@ const useUpdateProduct = () => {
       queryClient.invalidateQueries({
         predicate: query => query.queryKey[0] === 'get-products',
       });
+
+      // Invalidate product detail queries to refresh the product details
+      queryClient.invalidateQueries({
+        predicate: query => query.queryKey[0] === 'get-detail-product',
+      });
     },
   });
 };
