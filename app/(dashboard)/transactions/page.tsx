@@ -15,7 +15,7 @@ export default function DashboardPage() {
         </Link>
 
         <Link
-          href="/transactions/purchase"
+          href="/transactions/purchases"
           className="text-blue-500 hover:underline"
         >
           Transaksi Pembelian

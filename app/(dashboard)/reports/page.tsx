@@ -12,7 +12,7 @@ export default function Page() {
         </Link>
 
         <Link
-          href="/reports/purchase"
+          href="/reports/purchases"
           className="text-blue-500 hover:underline"
         >
           Laporan Pembelian
