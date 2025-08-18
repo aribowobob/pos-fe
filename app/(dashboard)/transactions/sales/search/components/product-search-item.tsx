@@ -31,7 +31,7 @@ export const ProductSearchItem = ({
           {formatCurrency(parseFloat(product.sale_price))}
         </span>
 
-        <span className="text-sm">Stok: {product.stock || 0}</span>
+        <span className="text-sm">Stok: {product.stock ?? 0}</span>
       </div>
     </div>
   );

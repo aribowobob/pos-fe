@@ -14,7 +14,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { SalesCartItem } from '@/lib/types';
-import { formatCurrency } from '@/lib/utils/common';
+import { cn, formatCurrency } from '@/lib/utils/common';
 import { Separator } from '@/components/ui/separator';
 import { ProductPrice } from '@/components/product-price';
 
@@ -43,6 +43,7 @@ export const SalesCartItemCard = ({
     onDelete(item.id);
     setIsDeleteDialogOpen(false);
   };
+  const itemStock = item.stock ?? 0;
 
   return (
     <div className="border border-border rounded-sm p-4 bg-white flex flex-col gap-4">
@@ -73,7 +74,14 @@ export const SalesCartItemCard = ({
           basePrice={item.base_price}
           salePrice={item.sale_price}
         />
-        <p className="text-sm">{`Stok: ${0}`}</p>
+        <p
+          className={cn(
+            'text-sm',
+            itemStock < item.qty ? 'text-destructive' : 'text-foreground'
+          )}
+        >{`Stok: ${formatCurrency(itemStock, {
+          withSymbol: false,
+        })}`}</p>
       </div>
 
       <Separator />

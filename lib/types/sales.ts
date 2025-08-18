@@ -17,6 +17,7 @@ export type SalesCartItem = {
   sku?: string;
   product_name?: string;
   unit_name?: string;
+  stock: number | null;
 };
 
 export type AddToCartRequest = {

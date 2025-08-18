@@ -18,15 +18,18 @@ import { Button } from '@/components/ui/button';
 
 import { ProductSearchInput, ProductSearchList } from './components';
 import { useSearchProducts, useAddToCartFromSearch } from './hooks';
+import { useUserStore } from '@/lib/store/user-store';
 
 export default function Page() {
   const { back } = useRouter();
+  const { user } = useUserStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
 
   const { data: productsData, isLoading } = useSearchProducts({
     search: searchQuery,
     page: currentPage,
+    store_id: user?.store?.id,
   });
   const { data } = productsData ?? {};
   const { items: products = [], total_pages, page } = data ?? {};

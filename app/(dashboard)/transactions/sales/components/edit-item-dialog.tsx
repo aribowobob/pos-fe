@@ -14,7 +14,7 @@ import {
   SalesCartItem,
   UpdateCartItemRequest,
 } from '@/lib/types';
-import { formatCurrency } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -72,6 +72,7 @@ export const EditItemDialog = ({
   const finalPrice = useMemo(() => {
     return salePrice * quantity;
   }, [salePrice, quantity]);
+  const itemStock = item?.stock ?? 0;
 
   useEffect(() => {
     if (!item) return;
@@ -104,7 +105,14 @@ export const EditItemDialog = ({
               <p className="bg-green-200 text-green-800 px-2 py-1 rounded font-medium">{`Harga: ${formatCurrency(
                 item?.base_price ?? 0
               )}`}</p>
-              <p>{`Stok: ${formatCurrency(0, { withSymbol: false })}`}</p>
+              <p
+                className={cn(
+                  'text-sm',
+                  itemStock < quantity ? 'text-destructive' : 'text-foreground'
+                )}
+              >{`Stok: ${formatCurrency(item?.stock ?? 0, {
+                withSymbol: false,
+              })}`}</p>
             </div>
 
             <div className="flex items-start gap-2">
