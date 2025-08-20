@@ -5,20 +5,19 @@ import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/lib/utils/common';
 
 import { ClearCartDialog } from './clear-cart-dialog';
-import { SalesCartSummaryType } from '@/lib/types';
+import { PurchasesCartSummaryType } from '@/lib/types';
 
-interface SalesCartSummaryProps {
-  summary: SalesCartSummaryType;
+interface PurchasesCartSummaryProps {
+  summary: PurchasesCartSummaryType;
   onClearCart: () => void;
   isClearingCart?: boolean;
 }
 
-export const SalesCartSummary = ({
+export const PurchasesCartSummary = ({
   summary,
   onClearCart,
   isClearingCart = false,
-}: SalesCartSummaryProps) => {
-  const totalAmount = summary.totalAmount - summary.totalDiscount;
+}: PurchasesCartSummaryProps) => {
   return (
     <div className="border border-border rounded-sm p-4 bg-gray-50 space-y-3">
       <h3 className="font-semibold text-lg mb-2">Ringkasan Keranjang</h3>
@@ -27,28 +26,28 @@ export const SalesCartSummary = ({
         <div className="flex justify-between">
           <span className="text-muted-foreground">Total Item:</span>
           <span className="font-medium">
-            {formatCurrency(summary.itemCount, { withSymbol: false })} item
+            {formatCurrency(summary.totalItems, { withSymbol: false })} item
           </span>
         </div>
 
         <div className="flex justify-between">
           <span className="text-muted-foreground">Total Kuantitas:</span>
           <span className="font-medium">
-            {formatCurrency(summary.totalItems, { withSymbol: false })}
+            {formatCurrency(summary.totalQty, { withSymbol: false })}
           </span>
         </div>
 
         <div className="flex justify-between">
           <span className="text-muted-foreground">Subtotal:</span>
           <span className="font-medium">
-            {formatCurrency(summary.totalAmount)}
+            {formatCurrency(summary.totalPurchaseAmount)}
           </span>
         </div>
 
         <div className="flex justify-between">
           <span className="text-muted-foreground">Total Diskon:</span>
           <span className="font-medium text-red-600">
-            -{formatCurrency(summary.totalDiscount)}
+            -{formatCurrency(summary.totalDiscountAmount)}
           </span>
         </div>
 
@@ -57,23 +56,23 @@ export const SalesCartSummary = ({
         <div className="flex justify-between text-lg">
           <span className="font-semibold">Total:</span>
           <span className="font-bold text-green-600">
-            {formatCurrency(totalAmount)}
+            {formatCurrency(summary.grandTotal)}
           </span>
         </div>
       </div>
 
       <div className="pt-4 flex items-center justify-between">
         <ClearCartDialog
-          itemCount={summary.itemCount}
+          itemCount={summary.totalItems}
           onClearCart={onClearCart}
           isClearingCart={isClearingCart}
         />
 
-        <Link href="/transactions/sales/payment">
+        <Link href="/transactions/purchases/payment">
           <Button
             className="w-fit"
             size="lg"
-            disabled={summary.itemCount === 0}
+            disabled={summary.totalItems === 0}
           >
             <BanknoteArrowUp className="w-4 h-4" />
             Lanjutkan ke Pembayaran

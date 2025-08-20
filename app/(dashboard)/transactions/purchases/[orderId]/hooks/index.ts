@@ -1,0 +1,1 @@
+export { usePurchasesOrderDetail } from './usePurchasesOrderDetail';

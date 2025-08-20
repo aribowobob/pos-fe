@@ -8,25 +8,25 @@ import { toast } from 'sonner';
 import { useUserStore } from '@/lib/store/user-store';
 import { handleApiError } from '@/lib/api/api-client';
 import {
-  SalesCartItem,
-  UpdateCartItemRequest,
-  CreateOrderRequest,
-  SalesCartSummaryType,
+  PurchasesCartItem,
+  UpdatePurchasesCartItemRequest,
+  CreatePurchasesOrderRequest,
+  PurchasesCartSummaryType,
 } from '@/lib/types';
 
 // Import fetcher functions
-import { getSalesCartItemsFn } from '../fetchers/get-items';
-import { updateSalesCartItemFn } from '../fetchers/update-item';
-import { deleteSalesCartItemFn } from '../fetchers/delete-item';
-import { clearSalesCartFn } from '../fetchers/clear-sales-cart';
-import { createSalesOrderFn } from '../fetchers/create-order';
+import { getPurchasesCartItemsFn } from '../fetchers/get-items';
+import { updatePurchasesCartItemFn } from '../fetchers/update-item';
+import { deletePurchasesCartItemFn } from '../fetchers/delete-item';
+import { clearPurchasesCartFn } from '../fetchers/clear-purchases-cart';
+import { createPurchasesOrderFn } from '../fetchers/create-order';
 
-export const useSalesCart = () => {
+export const usePurchasesCart = () => {
   const { replace } = useRouter();
   const { user } = useUserStore();
   const queryClient = useQueryClient();
   const [isProcessingOrder, setIsProcessingOrder] = useState(false);
-  const [editItem, setEditItem] = useState<SalesCartItem | null>(null);
+  const [editItem, setEditItem] = useState<PurchasesCartItem | null>(null);
 
   const storeId = user?.store?.id;
 
@@ -36,32 +36,35 @@ export const useSalesCart = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['sales-cart', storeId],
+    queryKey: ['purchases-cart', storeId],
     queryFn: () => {
       if (!storeId) throw new Error('Store ID is required');
-      return getSalesCartItemsFn(storeId);
+      return getPurchasesCartItemsFn(storeId);
     },
     enabled: !!storeId,
   });
 
   // Calculate cart totals
-  const cartSummary = useMemo<SalesCartSummaryType>(() => {
-    const items = cartItems?.data || [];
-    const totalItems = items.reduce((sum, item) => sum + item.qty, 0);
-    const totalAmount = items.reduce(
+  const cartSummary = useMemo<PurchasesCartSummaryType>(() => {
+    const items = cartItems?.data ?? [];
+    const totalItems = items.length;
+    const totalQty = items.reduce((sum, item) => sum + item.qty, 0);
+    const totalPurchaseAmount = items.reduce(
       (sum, item) => sum + parseFloat(item.base_price) * item.qty,
       0
     );
-    const totalDiscount = items.reduce(
+    const totalDiscountAmount = items.reduce(
       (sum, item) => sum + parseFloat(item.discount_amount) * item.qty,
       0
     );
+    const grandTotal = totalPurchaseAmount - totalDiscountAmount;
 
     return {
       totalItems,
-      totalAmount,
-      totalDiscount,
-      itemCount: items.length,
+      totalQty,
+      totalPurchaseAmount,
+      totalDiscountAmount,
+      grandTotal,
     };
   }, [cartItems]);
 
@@ -72,10 +75,10 @@ export const useSalesCart = () => {
       update,
     }: {
       itemId: number;
-      update: UpdateCartItemRequest;
-    }) => updateSalesCartItemFn(itemId, update),
+      update: UpdatePurchasesCartItemRequest;
+    }) => updatePurchasesCartItemFn(itemId, update),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sales-cart', storeId] });
+      queryClient.invalidateQueries({ queryKey: ['purchases-cart', storeId] });
       toast.success('Item berhasil diperbarui');
 
       if (editItem) {
@@ -90,9 +93,9 @@ export const useSalesCart = () => {
 
   // Delete item mutation
   const deleteItemMutation = useMutation({
-    mutationFn: deleteSalesCartItemFn,
+    mutationFn: deletePurchasesCartItemFn,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sales-cart', storeId] });
+      queryClient.invalidateQueries({ queryKey: ['purchases-cart', storeId] });
       toast.success('Item berhasil dihapus dari keranjang');
     },
     onError: error => {
@@ -105,10 +108,10 @@ export const useSalesCart = () => {
   const clearCartMutation = useMutation({
     mutationFn: () => {
       if (!storeId) throw new Error('Store ID is required');
-      return clearSalesCartFn(storeId);
+      return clearPurchasesCartFn(storeId);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sales-cart', storeId] });
+      queryClient.invalidateQueries({ queryKey: ['purchases-cart', storeId] });
       toast.success('Keranjang berhasil dikosongkan');
     },
     onError: error => {
@@ -119,11 +122,11 @@ export const useSalesCart = () => {
 
   // Create order mutation
   const createOrderMutation = useMutation({
-    mutationFn: createSalesOrderFn,
+    mutationFn: createPurchasesOrderFn,
     onSuccess: data => {
-      const orderId = data.data.order.id;
-      queryClient.invalidateQueries({ queryKey: ['sales-cart', storeId] });
-      replace(`/transactions/sales/${orderId}?success=true`);
+      const orderId = data.data.id; // API returns PurchasesOrder directly
+      queryClient.invalidateQueries({ queryKey: ['purchases-cart', storeId] });
+      replace(`/transactions/purchases/${orderId}?success=true`);
     },
     onError: error => {
       const errorMessage = handleApiError(error);
@@ -134,7 +137,7 @@ export const useSalesCart = () => {
 
   // Helper functions
   const updateItem = useCallback(
-    (itemId: number, update: UpdateCartItemRequest) => {
+    (itemId: number, update: UpdatePurchasesCartItemRequest) => {
       updateItemMutation.mutate({ itemId, update });
     },
     [updateItemMutation]
@@ -152,7 +155,7 @@ export const useSalesCart = () => {
   }, [clearCartMutation]);
 
   const createOrder = useCallback(
-    (order: CreateOrderRequest) => {
+    (order: CreatePurchasesOrderRequest) => {
       setIsProcessingOrder(true);
       createOrderMutation.mutate(order);
     },
@@ -161,7 +164,7 @@ export const useSalesCart = () => {
 
   // Increment item quantity
   const incrementQuantity = useCallback(
-    (item: SalesCartItem) => {
+    (item: PurchasesCartItem) => {
       const newQty = item.qty + 1;
 
       updateItem(item.id, {
@@ -173,7 +176,7 @@ export const useSalesCart = () => {
 
   // Decrement item quantity
   const decrementQuantity = useCallback(
-    (item: SalesCartItem) => {
+    (item: PurchasesCartItem) => {
       if (item.qty <= 1) return; // Don't allow quantity below 1
 
       const newQty = item.qty - 1;

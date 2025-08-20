@@ -11,10 +11,10 @@ import {
 } from '@/components/ui/dialog';
 import {
   DiscountType,
-  SalesCartItem,
-  UpdateCartItemRequest,
+  PurchasesCartItem,
+  UpdatePurchasesCartItemRequest,
 } from '@/lib/types';
-import { cn, formatCurrency } from '@/lib/utils';
+import { formatCurrency } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -24,16 +24,17 @@ import { Equal, ShoppingBasket, X } from 'lucide-react';
 import { InputNumber } from '@/components/input-number';
 
 interface EditItemDialogProps {
-  isUpdatingItem?: boolean;
-  item: SalesCartItem | null;
+  isUpdating?: boolean;
+  item: PurchasesCartItem | null;
   onClose: () => void;
-  onSave: (itemId: number, update: UpdateCartItemRequest) => void;
+  onUpdate: (itemId: number, update: UpdatePurchasesCartItemRequest) => void;
 }
 
 export const EditItemDialog = ({
   item,
   onClose,
-  onSave,
+  onUpdate,
+  isUpdating,
 }: EditItemDialogProps) => {
   const [hasDiscount, setHasDiscount] = useState(false);
   const [discountType, setDiscountType] = useState<DiscountType>(
@@ -41,16 +42,18 @@ export const EditItemDialog = ({
   );
   const [discountValue, setDiscountValue] = useState<string>('');
   const [quantity, setQuantity] = useState<number>(1);
+
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (item) {
-      onSave(item.id, {
+      onUpdate(item.id, {
         qty: quantity,
         discount_type: discountType,
         discount_value: parseFloat(discountValue || '0'),
       });
     }
   };
+
   const handleChangeToggleDiscount = (checked: boolean) => {
     setHasDiscount(checked);
     if (!checked) {
@@ -58,7 +61,8 @@ export const EditItemDialog = ({
       setDiscountValue('');
     }
   };
-  const salePrice = useMemo(() => {
+
+  const purchasePrice = useMemo(() => {
     if (!item) return 0;
     const basePrice = parseFloat(item.base_price);
     const discountAmount = hasDiscount
@@ -69,9 +73,11 @@ export const EditItemDialog = ({
 
     return basePrice - discountAmount;
   }, [item, hasDiscount, discountType, discountValue]);
+
   const finalPrice = useMemo(() => {
-    return salePrice * quantity;
-  }, [salePrice, quantity]);
+    return purchasePrice * quantity;
+  }, [purchasePrice, quantity]);
+
   const itemStock = item?.stock ?? 0;
 
   useEffect(() => {
@@ -95,7 +101,7 @@ export const EditItemDialog = ({
               Ubah Isi Keranjang
             </DialogTitle>
             <DialogDescription>
-              Lakukan perubahan pada keranjang belanja Anda. Pastikan semua
+              Lakukan perubahan pada keranjang pembelian Anda. Pastikan semua
               informasi sudah benar sebelum menyimpan.
             </DialogDescription>
           </DialogHeader>
@@ -105,12 +111,7 @@ export const EditItemDialog = ({
               <p className="bg-green-200 text-green-800 px-2 py-1 rounded font-medium">{`Harga: ${formatCurrency(
                 item?.base_price ?? 0
               )}`}</p>
-              <p
-                className={cn(
-                  'text-sm',
-                  itemStock < quantity ? 'text-destructive' : 'text-foreground'
-                )}
-              >{`Stok: ${formatCurrency(item?.stock ?? 0, {
+              <p className="text-sm">{`Stok: ${formatCurrency(itemStock, {
                 withSymbol: false,
               })}`}</p>
             </div>
@@ -209,7 +210,7 @@ export const EditItemDialog = ({
                 discountType={discountType}
                 discountValue={parseFloat(discountValue || '0')}
                 basePrice={item?.base_price ?? 0}
-                salePrice={salePrice ?? 0}
+                salePrice={purchasePrice ?? 0}
               />
 
               <X className="size-6" />
@@ -223,10 +224,12 @@ export const EditItemDialog = ({
           </div>
 
           <DialogFooter>
-            <Button variant="secondary" onClick={onClose}>
+            <Button variant="secondary" onClick={onClose} disabled={isUpdating}>
               Batal
             </Button>
-            <Button type="submit">Simpan Perubahan</Button>
+            <Button type="submit" disabled={isUpdating}>
+              {isUpdating ? 'Menyimpan...' : 'Simpan Perubahan'}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

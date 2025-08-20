@@ -1,0 +1,40 @@
+import { PurchasesCartItem, PurchasesCartSummaryType } from '@/lib/types';
+import { formatCurrency, itemSubTotalCalculation } from '@/lib/utils';
+
+interface PurchasesCartItemsProps {
+  cartItems: PurchasesCartItem[];
+  cartSummary: PurchasesCartSummaryType;
+}
+
+export const PurchasesCartItems = ({
+  cartItems,
+  cartSummary,
+}: PurchasesCartItemsProps) => {
+  return (
+    <div className="space-y-2">
+      <h4 className="font-semibold mb-2">Rincian</h4>
+
+      <div className="flex flex-col gap-4">
+        {cartItems.map((item, index) => {
+          const subTotalCalculationLabel = itemSubTotalCalculation(item);
+
+          return (
+            <div key={item.id} className="flex gap-2 items-start text-sm">
+              <span className="shrink-0">{index + 1}.</span>
+              <div className="grow flex flex-col">
+                <span className="text-right">{`${item.product_name} x ${item.qty} @${item.base_price}`}</span>
+                <span className="text-right">{subTotalCalculationLabel}</span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <p className="border-t border-dashed pt-2 flex justify-between text-sm">
+        <span className="font-medium">Total</span>
+        <span className="bg-green-50 text-green-600 px-2 py-1 rounded">
+          {formatCurrency(cartSummary.grandTotal)}
+        </span>
+      </p>
+    </div>
+  );
+};
