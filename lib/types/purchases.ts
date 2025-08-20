@@ -80,7 +80,7 @@ export type PurchasesOrderDetail = {
 
 export type PurchasesOrderDetailResponse = {
   order: PurchasesOrder;
-  details: PurchasesOrderDetail[];
+  order_details: PurchasesOrderDetail[];
 };
 
 export type CreatePurchasesOrderResponse = PurchasesOrder;

@@ -23,7 +23,7 @@ export default function Page() {
   const searchParams = useSearchParams();
   const success = searchParams.get('success');
   const { orderDetail, isLoading, error } = usePurchasesOrderDetail(orderId);
-  const { order, details } = orderDetail ?? {};
+  const { order, order_details } = orderDetail ?? {};
   const {
     order_number,
     date,
@@ -55,7 +55,7 @@ export default function Page() {
     notFound();
   }
 
-  if (!order || !details) {
+  if (!order || !order_details) {
     return null;
   }
 
@@ -109,7 +109,7 @@ export default function Page() {
             </p>
           </div>
           <div className="flex flex-col gap-4">
-            {details.map((item, index) => {
+            {order_details.map((item, index) => {
               const basePrice = formatCurrency(item.base_price);
               let discount = '';
               if (
